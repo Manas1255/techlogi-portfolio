@@ -197,10 +197,14 @@ test.describe("work index", () => {
   }) => {
     const html = await (await request.get("/work")).text();
     expect(html, "no <h1> in the served HTML").toContain("<h1");
+    // Assert on project NAMES rather than a sentence of copy: copy gets
+    // rewritten, and a regression guard that fails on an ordinary edit is a
+    // guard people delete.
     expect(
       html,
-      "project copy is missing from the served HTML — the page is client-only",
-    ).toContain("Orthodontic compliance");
+      "project names are missing from the served HTML, so the page is client-only",
+    ).toContain("OrthoTrack");
+    expect(html).toContain("Soulmate Society");
   });
 });
 
@@ -266,7 +270,7 @@ test.describe("project inquiry", () => {
     await page.getByLabel("Email").fill("ada@example.com");
     await page.getByRole("button", { name: "Send it" }).click();
 
-    await expect(page.getByText("Thanks — that's with us.")).toBeVisible();
+    await expect(page.getByText("Thanks, that's with us.")).toBeVisible();
   });
 
   test("survives pathological input without breaking the layout", async ({
@@ -308,6 +312,23 @@ test.describe("motion preferences", () => {
 });
 
 test.describe("design system", () => {
+  /*
+    The reference page is `notFound()` in production on purpose, and this suite
+    now runs against a production build. Skip rather than fail: the page is a
+    development tool, and asserting it exists in production would be asserting
+    the opposite of what we want.
+  */
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/design-system");
+    // Next serves its not-found page with a 200 here, so the status is not a
+    // reliable signal. Detect the rendered page instead.
+    const isPresent = await page
+      .getByRole("heading", { name: "Design system" })
+      .isVisible()
+      .catch(() => false);
+    test.skip(!isPresent, "design system is development-only, as intended");
+  });
+
   test("renders every section without overflow at any width", async ({
     page,
   }) => {

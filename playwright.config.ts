@@ -35,10 +35,21 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 5"] } },
   ],
 
+  /*
+    A PRODUCTION build, not `next dev`.
+
+    The sweep used to run against the dev server, which meant it could not see
+    anything that only goes wrong in a real build: streaming boundaries that
+    drop content from the prerendered HTML, a route that turns out to be
+    client-only, CSS that does not ship. Those are exactly the defects this
+    suite exists to catch, and it was structurally blind to all of them.
+
+    It costs a build per run. That is the correct price.
+  */
   webServer: {
-    command: "npm run dev -- -p 3100",
+    command: "npm run build && npm run start -- -p 3100",
     url: "http://localhost:3100/",
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 240_000,
   },
 });
