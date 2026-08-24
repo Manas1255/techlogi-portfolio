@@ -12,6 +12,8 @@ export { FeaturedWork } from "./featured-work";
 export { ServicesSection } from "./services-section";
 export { ProcessSection } from "./process-section";
 export { TechnologiesSection } from "./technologies-section";
+export { CapabilitiesSection } from "./capabilities-section";
+export { DifferenceSection } from "./difference-section";
 export { TestimonialsSection } from "./testimonials-section";
 export { CaseStudyHero, heroMediaCount } from "./case-study-hero";
 export {

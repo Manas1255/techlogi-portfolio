@@ -1,12 +1,12 @@
 import { OrganizationSchema } from "@/components/layout/structured-data";
 import {
+  CapabilitiesSection,
   ClosingCta,
+  DifferenceSection,
   FeaturedWork,
   Hero,
   ProcessSection,
-  ServicesSection,
   Showreel,
-  TechnologiesSection,
   TestimonialsSection,
 } from "@/components/sections";
 
@@ -25,9 +25,9 @@ export function HomeScreen() {
       <Hero />
       <Showreel />
       <FeaturedWork />
-      <ServicesSection />
+      <CapabilitiesSection />
+      <DifferenceSection />
       <ProcessSection />
-      <TechnologiesSection />
       <TestimonialsSection />
       <ClosingCta origin="home-close" />
     </>

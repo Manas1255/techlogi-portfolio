@@ -219,6 +219,36 @@ export const capabilitySchema = z.object({
   description: z.string().min(1),
 });
 
+/** A named technology in a capability diagram. */
+export const techChipSchema = z.object({
+  label: z.string().min(1),
+});
+
+/**
+ * A capability card on the home page: what we can build, illustrated with the
+ * technology we actually shipped it with.
+ */
+export const homeCapabilitySchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  description: z.string().min(1),
+  /** `orbit` for a toolset, `flow` for a pipeline. */
+  diagram: z.enum(["orbit", "flow"]),
+  icon: z.enum([
+    "smartphone",
+    "server",
+    "sparkles",
+    "monitor",
+    "radio",
+    "palette",
+  ]),
+  /** The emphasised chip. One per card, the thing the diagram is about. */
+  focus: z.string().min(1),
+  chips: z.array(techChipSchema).min(2),
+  /** Where this was shipped. Null when the evidence is this site itself. */
+  projectSlug: z.string().nullable(),
+});
+
 export const serviceGroupSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
@@ -232,7 +262,9 @@ export const serviceGroupSchema = z.object({
 });
 
 export type ServiceGroup = z.infer<typeof serviceGroupSchema>;
-export type Capability = z.infer<typeof capabilitySchema>;
+export type ServiceCapability = z.infer<typeof capabilitySchema>;
+export type TechChip = z.infer<typeof techChipSchema>;
+export type Capability = z.infer<typeof homeCapabilitySchema>;
 
 /* ─── Process ────────────────────────────────────────────────────────────── */
 

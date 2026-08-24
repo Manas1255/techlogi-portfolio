@@ -27,3 +27,4 @@ export {
   type Choice,
   type ChoiceCardsProps,
 } from "./choice-cards";
+export { CapabilityDiagram } from "./capability-diagram";
