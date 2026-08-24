@@ -1,4 +1,4 @@
-# Techlogi — Build Plan
+# GA Studio — Build Plan
 
 Living document. Updated as the build progresses.
 
@@ -9,12 +9,12 @@ Living document. Updated as the build progresses.
 ### How it was created
 
 ```bash
-npx jinn-web@2.2.0 create techlogi \
-  --app-name "Techlogi" \
+npx jinn-web@2.2.0 create ga-studio \
+  --app-name "GA Studio" \
   --no-roles \
   --locales en \
   --brand "#E24A1E" \
-  --api-url "https://api.techlogi.com" \
+  --api-url "https://api.gastudio.com" \
   --auth client \
   --pm npm --no-git
 ```
@@ -50,7 +50,7 @@ default export, explicit return types on exported functions.
 
 ### Deviations from the scaffold, and why
 
-The scaffold's shape is an **authenticated dashboard app**. Techlogi's site is a **public
+The scaffold's shape is an **authenticated dashboard app**. GA Studio's site is a **public
 marketing site**. Where those genuinely conflict, the brief's intent wins and the deviation is
 recorded here.
 
@@ -81,7 +81,7 @@ recorded here.
    brief mandates and duplicating it into a message catalog would give one string two owners.
    A second locale translates content modules alongside catalogs.
 7. **The theme is dark-first.** The scaffold shipped a light slate/blue palette with a complete
-   but disabled `.dark` block. Techlogi's direction is ink-on-near-black with light "bone"
+   but disabled `.dark` block. GA Studio's direction is ink-on-near-black with light "bone"
    sections for rhythm, so the token *values* are rewritten while every token *name* is kept —
    shadcn primitives and the shared catalog keep working untouched. Surface inversion is
    token-scoped per section (`[data-surface]`), not per component.
@@ -168,7 +168,7 @@ npm audit --omit=dev # 0 vulnerabilities
 
 ## Portfolio content
 
-The six fictional projects the site was built against have been replaced with **real Techlogi
+The six fictional projects the site was built against have been replaced with **real GA Studio
 work**, using real screen captures from `~/Personal/MockUps` (kaprayy deliberately excluded):
 
 | Project | What it is | Stack evidence |

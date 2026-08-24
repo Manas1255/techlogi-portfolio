@@ -1,7 +1,7 @@
 import type { Media, Project } from "./schemas";
 
 /**
- * PORTFOLIO CONTENT, real Techlogi work.
+ * PORTFOLIO CONTENT, real GA Studio work.
  *
  * Every feature, stack entry and date below comes from the engineer who built
  * these, via their own written project descriptions, not inferred from the
@@ -216,13 +216,7 @@ export const projects: Project[] = [
       "Backend Systems",
     ],
     platforms: ["iOS", "Android", "API"],
-    technologies: [
-      "Flutter",
-      "Dart",
-      "BLoC/Cubit",
-      "Node.js",
-      "MongoDB",
-    ],
+    technologies: ["Flutter", "Dart", "BLoC/Cubit", "Node.js", "MongoDB"],
     categories: ["mobile", "ai"],
     period: "May, Jun 2026",
     heroMedia: shot(

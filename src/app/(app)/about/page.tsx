@@ -5,12 +5,12 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "How Techlogi works: written plans, validation at every boundary, every UI state designed, and a team that stays on after launch.",
+    "How GA Studio works: written plans, validation at every boundary, every UI state designed, and a team that stays on after launch.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: `About · ${siteConfig.name}`,
     description:
-      "How Techlogi works, the operating principles behind the engagements.",
+      "How GA Studio works, the operating principles behind the engagements.",
     url: `${siteConfig.url}/about`,
   },
 };

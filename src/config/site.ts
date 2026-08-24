@@ -34,7 +34,7 @@ export interface SiteSocial {
 export const siteConfig = {
   name: clientEnv.NEXT_PUBLIC_APP_NAME,
   /** Legal entity, used in the copyright line. */
-  legalName: "Techlogi", // TODO: replace with the registered company name.
+  legalName: "GA Studio", // TODO: replace with the registered company name.
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
 
   /** One line. Used in metadata, the footer and Open Graph. */
@@ -43,11 +43,11 @@ export const siteConfig = {
 
   /** ~155 characters. This is the default meta description. */
   description:
-    "Techlogi is a product engineering studio. We build web applications, SaaS platforms, mobile apps and AI systems, and stay on after launch to keep them fast and worth using.",
+    "GA Studio is a product engineering studio. We build web applications, SaaS platforms, mobile apps and AI systems, and stay on after launch to keep them fast and worth using.",
 
   contact: {
     /** TODO: replace with the real inbox that answers inquiries. */
-    email: "hello@techlogi.com",
+    email: "hello@gastudio.com",
     /** Null hides the phone line entirely rather than printing a placeholder. */
     phone: null as string | null, // TODO: add a real number, or leave null.
     /** Shown next to the inquiry form as an expectation, not a promise. */

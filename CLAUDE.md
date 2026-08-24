@@ -1,8 +1,8 @@
 @AGENTS.md
 
-# Techlogi — Architecture Guide
+# GA Studio — Architecture Guide
 
-Next.js **16** (App Router) app for **Techlogi**, built on the Codeable web architecture: **external-backend
+Next.js **16** (App Router) app for **GA Studio**, built on the Codeable web architecture: **external-backend
 repositories, BFF cookie auth, React Query, Zustand, Zod, Tailwind v4 tokens, shadcn/ui, typed
 i18n**. Read this before adding code so the structure stays consistent.
 

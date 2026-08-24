@@ -8,7 +8,7 @@ import { HeroInquiryForm } from "@/features/inquiry";
 /**
  * THE HERO.
  *
- * Four questions in the first seconds: who Techlogi is, what it builds, why to
+ * Four questions in the first seconds: who GA Studio is, what it builds, why to
  * trust it, and what to do next. The headline answers the first two, the
  * capability rail answers the third by naming artifacts rather than adjectives,
  * and the fourth is not a button that routes somewhere, it is a form, right

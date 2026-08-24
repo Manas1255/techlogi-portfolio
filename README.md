@@ -1,6 +1,6 @@
-# Techlogi
+# GA Studio
 
-The flagship site for Techlogi, a product engineering studio.
+The flagship site for GA Studio, a product engineering studio.
 
 Scaffolded with [jinn-web](https://github.com/jinn-tea/web-cli) — Next.js 16 App Router (Turbopack),
 TypeScript strict, Tailwind v4 tokens, shadcn/ui, React Query, Zod, typed i18n, Vitest + Playwright.

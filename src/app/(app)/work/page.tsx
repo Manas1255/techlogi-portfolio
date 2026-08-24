@@ -6,7 +6,7 @@ import { activeCategories, type ProjectCategory } from "@/content";
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Selected product engineering work by Techlogi: SaaS platforms, web applications, mobile apps, data platforms and AI systems, with the problem and approach behind each one.",
+    "Selected product engineering work by GA Studio: SaaS platforms, web applications, mobile apps, data platforms and AI systems, with the problem and approach behind each one.",
   alternates: { canonical: "/work" },
   openGraph: {
     title: `Work · ${siteConfig.name}`,

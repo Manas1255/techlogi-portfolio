@@ -21,7 +21,7 @@ import type { BuildTypeId } from "@/content/schemas";
  *   "phone":       "…",                   // optional, omitted when empty
  *   "attachment":  File,                  // optional, ≤ 10MB, multipart only
  *   "submittedAt": "2026-01-01T00:00:00.000Z",
- *   "source":      "site:techlogi.com"
+ *   "source":      "site:gastudio.com"
  * }
  * ```
  *

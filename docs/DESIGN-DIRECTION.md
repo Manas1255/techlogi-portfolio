@@ -1,8 +1,8 @@
-# Techlogi — Design Direction
+# GA Studio — Design Direction
 
 ## The thesis
 
-> **Techlogi is a product company that takes contracts. The site should read like the changelog of
+> **GA Studio is a product company that takes contracts. The site should read like the changelog of
 > a team that ships — evidence first, adjectives last — not the brochure of a vendor that bids.**
 
 Every decision below answers to that sentence. The test for any element: *does this make the work
@@ -31,7 +31,7 @@ and the decision.
 
 ### Taken, conceptually
 
-| Mechanic | Why it works | How Techlogi uses it |
+| Mechanic | Why it works | How GA Studio uses it |
 |---|---|---|
 | **Sticky project metadata against a scrolling media column** | Separates *what this is* from *what it looks like*, so a scanner and a reader are both served by one section. | Case-study hero and the `/work` index: the left rail pins name / industry / services / stack while media scrolls past it. |
 | **Editorial type as the primary graphic** | A studio confident in its work doesn't need ornament; scale and weight contrast alone build hierarchy and feel expensive. | A 4-step display scale topping out at ~clamp(3.5rem, 9vw, 7.5rem), tight negative tracking, mixed weights inside one headline. |
@@ -47,7 +47,7 @@ and the decision.
 ### Deliberately rejected
 
 - **A hero showreel as the largest contentful element.** Cinematic, and it puts a multi-megabyte
-  video on the critical path. Techlogi's hero paints text and a poster frame first; motion arrives
+  video on the critical path. GA Studio's hero paints text and a poster frame first; motion arrives
   after.
 - **Custom cursors and cursor-follow blobs.** They read as portfolio-site flourish, break on touch,
   and fight the product screenshots for attention.
@@ -68,7 +68,7 @@ and the decision.
 
 **Headline:** *We build production software for companies that can't afford a rewrite.*
 
-**Positioning statement:** Techlogi is a product engineering studio. We take web applications, SaaS
+**Positioning statement:** GA Studio is a product engineering studio. We take web applications, SaaS
 platforms, mobile apps and AI systems from discovery to production — and stay on after launch to
 keep them fast, secure and worth using.
 

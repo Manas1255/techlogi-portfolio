@@ -3,7 +3,7 @@ import { publishedSocials, siteConfig } from "@/config/site";
 /**
  * Organization structured data.
  *
- * One block, on the home page only, describing what Techlogi is. Deliberately
+ * One block, on the home page only, describing what GA Studio is. Deliberately
  * minimal: `aggregateRating`, `review` and `award` markup would be fabricated
  * here, and search engines treat invented structured data far less kindly than
  * its absence.

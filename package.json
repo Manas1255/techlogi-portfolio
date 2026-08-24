@@ -1,5 +1,5 @@
 {
-  "name": "techlogi",
+  "name": "ga-studio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,8 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "verify": "npm run typecheck && npm run lint && npm run test",
     "sweep": "playwright test",
-    "sweep:ui": "playwright test --ui"
+    "sweep:ui": "playwright test --ui",
+    "serve": "./scripts/serve-prod.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
@@ -60,5 +61,5 @@
     "typescript": "^5",
     "vitest": "^4.1.10"
   },
-  "description": "Techlogi — product engineering studio building web apps, SaaS platforms, mobile apps and AI products."
+  "description": "GA Studio \u2014 product engineering studio building web apps, SaaS platforms, mobile apps and AI products."
 }

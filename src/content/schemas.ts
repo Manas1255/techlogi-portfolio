@@ -177,7 +177,7 @@ export const projectSchema = z.object({
   summary: z.string().min(1),
   industry: z.string().min(1),
   productType: z.string().min(1),
-  /** What Techlogi actually did, in one sentence. */
+  /** What GA Studio actually did, in one sentence. */
   whatWeDid: z.string().min(1),
   /** Qualitative and placeholder-safe, no numbers here. */
   outcome: z.string().min(1),

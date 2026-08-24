@@ -58,7 +58,7 @@ export function AboutScreen() {
           <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16">
             <div className="flex flex-col gap-6">
               <Reveal variant="fade">
-                <Eyebrow>About Techlogi</Eyebrow>
+                <Eyebrow>About GA Studio</Eyebrow>
               </Reveal>
               <Reveal delay={60}>
                 <h1 className="text-display-1 text-balance">

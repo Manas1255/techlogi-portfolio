@@ -12,7 +12,7 @@
   NEVER hardcode a hex value in a component — add or adjust a token here and
   the whole site follows. See /design-system for the living reference.
 
-  SURFACES. Techlogi is light-first: `:root` is the paper ground. A section can
+  SURFACES. GA Studio is light-first: `:root` is the paper ground. A section can
   flip the whole palette for its subtree with `data-surface="slab"` (dark) or
   `data-surface="paper"` (back to the default) — every child, including shadcn
   primitives, adapts because they consume semantic slots and never raw ramp

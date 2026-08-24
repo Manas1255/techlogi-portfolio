@@ -65,7 +65,7 @@ export const useInquiryStore = create<InquiryState>()(
       reset: () => set({ ...EMPTY, isOpen: false }),
     }),
     {
-      name: "techlogi-inquiry",
+      name: "ga-studio-inquiry",
       storage: createJSONStorage(() => sessionStorage),
       partialize: (state) => ({ step: state.step, values: state.values }),
     },

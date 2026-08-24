@@ -23,13 +23,13 @@ export default function Icon() {
         justifyContent: "center",
         background: "#e24a1e",
         color: "#ffffff",
-        fontSize: 42,
+        fontSize: 26,
         fontWeight: 700,
         letterSpacing: "-0.05em",
         borderRadius: 14,
       }}
     >
-      T
+      GA
     </div>,
     size,
   );

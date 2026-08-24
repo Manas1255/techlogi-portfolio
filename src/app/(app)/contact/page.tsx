@@ -5,12 +5,12 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Start a project with Techlogi. One question to begin, four short steps, and a person replies within one business day.",
+    "Start a project with GA Studio. One question to begin, four short steps, and a person replies within one business day.",
   alternates: { canonical: "/contact" },
   openGraph: {
     title: `Contact · ${siteConfig.name}`,
     description:
-      "Start a project with Techlogi. A person reads and answers every inquiry.",
+      "Start a project with GA Studio. A person reads and answers every inquiry.",
     url: `${siteConfig.url}/contact`,
   },
 };
