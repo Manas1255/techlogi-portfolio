@@ -1,4 +1,5 @@
 import {
+  BookingLink,
   Container,
   Eyebrow,
   HairlineList,
@@ -42,6 +43,9 @@ export function ContactScreen() {
               </Reveal>
               <Reveal variant="fade" delay={180}>
                 <InquiryLauncher origin="contact-page" columns={2} />
+              </Reveal>
+              <Reveal variant="fade" delay={220}>
+                <BookingLink />
               </Reveal>
             </div>
 

@@ -28,3 +28,4 @@ export {
   type ChoiceCardsProps,
 } from "./choice-cards";
 export { CapabilityDiagram } from "./capability-diagram";
+export { BookingLink } from "./booking-link";

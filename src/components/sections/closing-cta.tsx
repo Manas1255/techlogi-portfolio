@@ -1,4 +1,9 @@
-import { Container, Eyebrow, Reveal } from "@/components/marketing";
+import {
+  BookingLink,
+  Container,
+  Eyebrow,
+  Reveal,
+} from "@/components/marketing";
 import { siteConfig } from "@/config/site";
 import { InquiryLauncher } from "@/features/inquiry";
 
@@ -39,6 +44,10 @@ export function ClosingCta({
 
           <Reveal variant="fade" delay={80}>
             <InquiryLauncher origin={origin} columns={4} />
+          </Reveal>
+
+          <Reveal variant="fade" delay={120}>
+            <BookingLink />
           </Reveal>
 
           <Reveal variant="fade" delay={140}>

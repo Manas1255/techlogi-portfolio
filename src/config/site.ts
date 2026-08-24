@@ -45,6 +45,30 @@ export const siteConfig = {
   description:
     "GA Studio is a product engineering studio. We build web applications, SaaS platforms, mobile apps and AI systems, and stay on after launch to keep them fast and worth using.",
 
+  /**
+   * DIRECT BOOKING.
+   *
+   * The strongest evidence in the whole research pass was about response time,
+   * not form design: a Harvard Business Review study of 1.25 million leads
+   * found that responding within an hour makes a lead roughly 60x more likely
+   * to qualify than responding after a day. A booking link collapses that to
+   * zero, because the prospect picks the slot themselves.
+   *
+   * Set this to a Cal.com or Calendly URL and it appears beside the inquiry
+   * form as a secondary path. Leave it null, the shipped default, and nothing
+   * renders: an empty booking page is worse than no link at all.
+   *
+   * Deliberately a LINK, not an embed. A booking iframe is heavy, renders
+   * badly at narrow widths, and is a cross-origin frame you cannot style or
+   * fix when it breaks. On a phone that is a bad trade for the primary
+   * conversion path.
+   */
+  booking: {
+    url: null as string | null, // TODO: e.g. "https://cal.com/ga-studio/intro".
+    /** Shown on the link, so the commitment is bounded before the click. */
+    label: "Book a 30-minute call",
+  },
+
   contact: {
     /** TODO: replace with the real inbox that answers inquiries. */
     email: "hello@gastudio.com",
