@@ -24,7 +24,7 @@ export function TestimonialsSection() {
   if (featured.length === 0) return null;
 
   return (
-    <Section rhythm="loose" className="bg-sunken">
+    <Section surface="tint" rhythm="loose">
       <SectionIntro
         index={6}
         eyebrow="Client proof"

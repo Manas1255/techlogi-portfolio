@@ -2,12 +2,19 @@ import { Container, type ContainerWidth } from "./container";
 import { cn } from "@/lib/utils";
 
 /**
- * `slab` and `paper` re-declare every colour token for the subtree, so a
+ * Each named surface re-declares every colour token for the subtree, so a
  * section flips ground without any child knowing which one it landed on.
- * `inherit` leaves the surrounding ground alone, which, since the site is
- * light by default, is what most sections want.
+ *
+ *   paper    white, the default
+ *   tint     warm sand, the band that separates two paper sections
+ *   slab     dark, a chapter break. Twice on the home page, no more.
+ *   inherit  leave the surrounding ground alone
+ *
+ * ADJACENT SECTIONS MUST NOT SHARE A GROUND. A run of white sections separated
+ * by a hairline reads as one undifferentiated scroll, which is exactly the
+ * feedback that put the tint here.
  */
-export type Surface = "paper" | "slab" | "inherit";
+export type Surface = "paper" | "tint" | "slab" | "inherit";
 
 /**
  * Three steps, and only three. Restricting vertical rhythm to a fixed set is

@@ -348,6 +348,74 @@
   --chart-5: #bdb7b1;
 }
 
+/*
+  ─────────────────────────────────────────────────────────────────────────
+  TINT, the third ground.
+
+  Paper and slab alone were not enough: a long page had five consecutive white
+  sections separated by a one-pixel hairline, and readers reported it as a
+  single undifferentiated scroll. Adding more dark was not the answer, because
+  two dark interruptions is what gives the page its chapters; a third would
+  make it stripes.
+
+  So this is a warm sand about 4% off white. Enough that the band boundary is
+  unmistakable, light enough that product screenshots still sit on it without
+  the ground competing. `--sunken` here goes the other way, toward white, so a
+  raised card inside a tinted section still reads as raised.
+  ─────────────────────────────────────────────────────────────────────────
+*/
+[data-surface="tint"] {
+  --canvas: #f7f2ec;
+  --background: #f7f2ec;
+  --foreground: #1a1512;
+  --card: #ffffff;
+  --card-foreground: #1a1512;
+  --popover: #ffffff;
+  --popover-foreground: #1a1512;
+  --raised: #ffffff;
+  --sunken: #f1eae2;
+  --hairline: #1a151217;
+  --hairline-strong: #1a15122e;
+
+  --primary: var(--brand-700);
+  --primary-foreground: #ffffff;
+  --secondary: #ece4da;
+  --secondary-foreground: #1a1512;
+  --muted: #ece4da;
+  --muted-foreground: #6b625b;
+  --accent: var(--brand-50);
+  --accent-foreground: var(--brand-800);
+  --border: #1a151217;
+  --input: #1a15122e;
+  --ring: var(--brand-600);
+
+  --success: #17794a;
+  --success-foreground: #ffffff;
+  --warning: #9a6206;
+  --warning-foreground: #ffffff;
+  --danger: #c02c39;
+  --danger-foreground: #ffffff;
+  --info: var(--brand-700);
+  --info-foreground: #ffffff;
+  --destructive: #c02c39;
+
+  --success-subtle: #edf7f1;
+  --success-subtle-foreground: #12603a;
+  --success-border: #c2e3d1;
+  --warning-subtle: #fdf5e7;
+  --warning-subtle-foreground: #7a4d05;
+  --warning-border: #eed9ad;
+  --danger-subtle: #fdeef0;
+  --danger-subtle-foreground: #97212c;
+  --danger-border: #f2cbd0;
+  --info-subtle: var(--brand-50);
+  --info-subtle-foreground: var(--brand-800);
+  --info-border: var(--brand-200);
+  --neutral-subtle: #ece4da;
+  --neutral-subtle-foreground: #514c46;
+  --neutral-border: #1a15122e;
+}
+
 /* Explicit return to the default ground, for a light child of a dark section. */
 [data-surface="paper"] {
   --canvas: #ffffff;

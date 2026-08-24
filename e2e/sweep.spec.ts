@@ -286,6 +286,53 @@ test.describe("project inquiry", () => {
   });
 });
 
+test.describe("section rhythm", () => {
+  /*
+    Readers reported the home page as one undifferentiated scroll: five
+    consecutive white sections separated by a one-pixel hairline. The fix was a
+    third ground (tint) and a rule that adjacent sections never share one.
+    Assert the rule, because it is the kind of thing a later section insertion
+    quietly breaks.
+  */
+  test("no two adjacent sections share a ground", async ({ page }) => {
+    await page.goto("/");
+    const grounds = await page.evaluate(() =>
+      [...document.querySelectorAll("main > section, main > div > section")].map(
+        (section) => {
+          // Two things matter. A transparent section shows whatever is
+          // behind it, so resolve up the tree rather than comparing
+          // "transparent". And a gradient wash is a background-IMAGE over a
+          // colour, so a colour-only comparison would call the hero plain
+          // white and miss that it is visually its own ground.
+          let node: Element | null = section;
+          while (node && node !== document.documentElement) {
+            const style = getComputedStyle(node);
+            if (style.backgroundImage !== "none") {
+              return `image:${style.backgroundImage.slice(0, 60)}`;
+            }
+            const bg = style.backgroundColor;
+            if (bg && !bg.startsWith("rgba(0, 0, 0, 0)")) return bg;
+            node = node.parentElement;
+          }
+          return "none";
+        },
+      ),
+    );
+    expect(grounds.length).toBeGreaterThan(4);
+
+    const repeats: string[] = [];
+    for (let index = 1; index < grounds.length; index++) {
+      if (grounds[index] === grounds[index - 1]) {
+        repeats.push(`sections ${index} and ${index + 1} are both ${grounds[index]}`);
+      }
+    }
+    expect(
+      repeats,
+      `adjacent sections share a ground, so the page reads as one scroll: ${repeats.join("; ")}`,
+    ).toEqual([]);
+  });
+});
+
 test.describe("capability diagrams", () => {
   /*
     Regression guard. The looping drift, ring rotation and dash march are gated

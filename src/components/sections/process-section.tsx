@@ -23,7 +23,7 @@ import { processStages } from "@/content";
  */
 export function ProcessSection() {
   return (
-    <Section rhythm="loose" divided id="process">
+    <Section rhythm="loose" id="process">
       <SectionIntro
         index={6}
         eyebrow="How we work"

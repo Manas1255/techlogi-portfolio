@@ -27,7 +27,7 @@ export function FaqSection() {
   const [open, setOpen] = useState<Set<number>>(new Set());
 
   return (
-    <Section rhythm="loose" divided id="faq">
+    <Section rhythm="loose" id="faq">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionIntro

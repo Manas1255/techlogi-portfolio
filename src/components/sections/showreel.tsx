@@ -83,6 +83,7 @@ export function Showreel() {
 
   return (
     <section
+      data-surface="tint"
       className="border-hairline overflow-hidden border-t py-16 md:py-24"
       aria-roledescription="carousel"
       aria-label="Selected product interfaces"

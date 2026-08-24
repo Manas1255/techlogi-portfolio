@@ -22,7 +22,7 @@ import { capabilities, findProject } from "@/content";
  */
 export function CapabilitiesSection() {
   return (
-    <Section rhythm="loose" divided id="capabilities">
+    <Section surface="tint" rhythm="loose" id="capabilities">
       <SectionIntro
         index={4}
         eyebrow="What we build"
