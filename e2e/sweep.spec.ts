@@ -286,6 +286,82 @@ test.describe("project inquiry", () => {
   });
 });
 
+test.describe("capability diagrams", () => {
+  /*
+    Regression guard. The looping drift, ring rotation and dash march are gated
+    on `data-onstage`, which an observer toggles BOTH ways. Six diagrams
+    compositing forever while the reader is three screens away costs real
+    battery and shows up in no synthetic test, so assert the OFF direction
+    specifically: the on direction failing is visible, the off direction
+    failing is not.
+  */
+  test("diagram animation stops when it scrolls out of view", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.evaluate(() =>
+      document.querySelector("#capabilities")?.scrollIntoView(),
+    );
+    await page.waitForTimeout(400);
+    const onstage = await page.evaluate(
+      () => document.querySelectorAll("[data-diagram][data-onstage]").length,
+    );
+    expect(onstage, "no diagram animated while in view").toBeGreaterThan(0);
+
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(700);
+    const stillOn = await page.evaluate(
+      () => document.querySelectorAll("[data-diagram][data-onstage]").length,
+    );
+    expect(
+      stillOn,
+      "diagrams kept animating after scrolling away, which burns battery for nothing",
+    ).toBe(0);
+  });
+
+  test("every chip is visible once its card has revealed", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() =>
+      document.querySelector("#capabilities")?.scrollIntoView(),
+    );
+    await page.waitForTimeout(900);
+    const hidden = await page.evaluate(
+      () =>
+        [...document.querySelectorAll("[data-diagram] [data-chip]")].filter(
+          (chip) =>
+            chip.getBoundingClientRect().top < window.innerHeight &&
+            Number(getComputedStyle(chip).opacity) < 0.9,
+        ).length,
+    );
+    expect(hidden, "chips stayed hidden after their card revealed").toBe(0);
+  });
+});
+
+test.describe("frequently asked questions", () => {
+  /*
+    Regression guard. `onToggle` read `event.currentTarget.open` inside the
+    state updater, which runs during a later render once React has cleared the
+    event: the first click on any question threw and took the whole page to the
+    error boundary. Type checking cannot see it; only clicking can.
+  */
+  test("a question opens and closes without crashing the page", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const first = page.locator("#faq summary").first();
+    await first.click();
+    await expect(
+      page.getByText("Most work lands between"),
+      "the answer did not open",
+    ).toBeVisible();
+
+    await first.click();
+    await expect(page.getByText("Most work lands between")).toBeHidden();
+    // The error boundary replaces the whole page, so the heading is the tell.
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  });
+});
+
 test.describe("motion preferences", () => {
   test("no content stays hidden when motion is reduced", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });

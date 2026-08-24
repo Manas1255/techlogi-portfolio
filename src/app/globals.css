@@ -801,6 +801,74 @@
     transition: transform var(--dur-fast) var(--ease-in-out-quart);
   }
 
+  /*
+    ───────────────────────────────────────────────────────────────────────
+    CAPABILITY DIAGRAM MOTION
+
+    Three layers, all on transform/opacity so they stay on the compositor:
+
+      1. chips stagger IN when the card reveals, using --chip-index as the
+         delay multiplier so one rule serves any number of chips
+      2. everything then drifts on a slow loop, each chip on its own phase,
+         so the diagram breathes instead of sitting still
+      3. the orbit rings rotate, and the flow's dashes march toward the mark
+
+    Every loop is gated on `[data-onstage]`, which an IntersectionObserver
+    toggles BOTH ways. Six diagrams compositing forever while the reader is
+    three screens away is exactly the kind of cost that never shows up in a
+    synthetic test and drains a real phone battery.
+
+    The entrance is gated on `[data-motion="on"]` for the same reason the
+    scroll reveals are: with no JS, nothing is ever hidden.
+    ───────────────────────────────────────────────────────────────────────
+  */
+  [data-motion="on"] [data-diagram] [data-chip] {
+    opacity: 0;
+    transform: scale(0.94);
+    transition:
+      opacity var(--dur-slow) var(--ease-out-expo),
+      transform var(--dur-slow) var(--ease-out-expo);
+    transition-delay: calc(var(--chip-index, 0) * 70ms + 120ms);
+  }
+  [data-motion="on"] [data-revealed] [data-diagram] [data-chip],
+  [data-motion="on"] [data-diagram][data-revealed] [data-chip] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The drift. Applied to an inner wrapper so it cannot fight the entrance
+     transform on the same element. */
+  [data-diagram][data-onstage] [data-chip] [data-drift] {
+    animation: chip-drift 7s ease-in-out infinite;
+    animation-delay: calc(var(--chip-index, 0) * -1.3s);
+  }
+  [data-diagram][data-onstage] [data-rings] {
+    animation: rings-turn 48s linear infinite;
+  }
+  [data-diagram][data-onstage] [data-flow-line] {
+    animation: flow-march 2.4s linear infinite;
+  }
+
+  @keyframes chip-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -5px, 0);
+    }
+  }
+  @keyframes rings-turn {
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  @keyframes flow-march {
+    to {
+      stroke-dashoffset: -10;
+    }
+  }
+
   /* The one-shot stroke draw used by the synthetic chart compositions. */
   @keyframes synth-draw {
     from {
@@ -832,6 +900,11 @@
     transform: none;
   }
   [data-motion="on"] .mask-line > * {
+    transform: none;
+  }
+  /* Diagrams arrive assembled rather than easing in, and nothing loops. */
+  [data-motion="on"] [data-diagram] [data-chip] {
+    opacity: 1;
     transform: none;
   }
   *,

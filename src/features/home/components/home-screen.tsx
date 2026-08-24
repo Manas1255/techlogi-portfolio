@@ -3,6 +3,7 @@ import {
   CapabilitiesSection,
   ClosingCta,
   DifferenceSection,
+  FaqSection,
   FeaturedWork,
   Hero,
   ProcessSection,
@@ -29,6 +30,7 @@ export function HomeScreen() {
       <DifferenceSection />
       <ProcessSection />
       <TestimonialsSection />
+      <FaqSection />
       <ClosingCta origin="home-close" />
     </>
   );

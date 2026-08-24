@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Monitor,
   Palette,
@@ -6,6 +8,7 @@ import {
   Smartphone,
   Sparkles,
 } from "lucide-react";
+import { useOnstage } from "@/hooks/use-onstage";
 import type { Capability } from "@/content/schemas";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +30,13 @@ import { cn } from "@/lib/utils";
  *
  * It is decorative: every fact it shows is repeated in the card's prose, so it
  * is hidden from assistive technology rather than described twice.
+ *
+ * MOTION. Chips stagger in as the card reveals, then drift on slow individual
+ * loops; the rings turn and the flow's dashes march. All of it is CSS on
+ * transform and opacity, and all of it is gated on `data-onstage`, which an
+ * observer toggles both ways so nothing composites while it is off screen.
+ * `prefers-reduced-motion` resolves the durations to 1ms at the token level, so
+ * the diagram simply arrives assembled.
  */
 
 const ICONS = {
@@ -56,9 +66,12 @@ export function CapabilityDiagram({
   className?: string;
 }) {
   const Icon = ICONS[capability.icon];
+  const onstageRef = useOnstage<HTMLDivElement>();
 
   return (
     <div
+      ref={onstageRef}
+      data-diagram=""
       aria-hidden="true"
       className={cn(
         "border-hairline bg-sunken relative isolate w-full overflow-hidden rounded-xl border",
@@ -97,9 +110,11 @@ function OrbitDiagram({
 }) {
   return (
     <>
-      {/* Concentric rings behind the mark, to imply orbit without drawing one. */}
+      {/* Concentric rings behind the mark, to imply orbit without drawing one.
+          Dashed, so the rotation is visible at all. */}
       <span
-        className="border-hairline absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border"
+        data-rings=""
+        className="border-hairline absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed"
         style={{ width: "52cqw", height: "52cqw" }}
       />
       <span
@@ -119,7 +134,7 @@ function OrbitDiagram({
       </span>
 
       {capability.chips.slice(0, 6).map((chip, index) => (
-        <Chip key={chip.label} style={ORBIT_POSITIONS[index]}>
+        <Chip key={chip.label} index={index} style={ORBIT_POSITIONS[index]}>
           {chip.label}
         </Chip>
       ))}
@@ -148,6 +163,7 @@ function FlowDiagram({
         {[16, 33, 50, 67].slice(0, nodes.length).map((y) => (
           <path
             key={y}
+            data-flow-line=""
             d={`M 46 ${y} C 82 ${y}, 86 52, 118 52`}
             fill="none"
             stroke="var(--hairline-strong)"
@@ -167,16 +183,19 @@ function FlowDiagram({
           width: "48cqw",
         }}
       >
-        {nodes.map((chip) => (
+        {nodes.map((chip, index) => (
           <span
             key={chip.label}
-            className="border-hairline bg-card text-foreground truncate rounded-full border text-center shadow-sm"
-            style={{
-              fontSize: "3.1cqw",
-              padding: "1.5cqw 2.4cqw",
-            }}
+            data-chip=""
+            style={{ ["--chip-index" as string]: index }}
           >
-            {chip.label}
+            <span
+              data-drift=""
+              className="border-hairline bg-card text-foreground block truncate rounded-full border text-center shadow-sm"
+              style={{ fontSize: "3.1cqw", padding: "1.5cqw 2.4cqw" }}
+            >
+              {chip.label}
+            </span>
           </span>
         ))}
       </div>
@@ -202,24 +221,38 @@ function FlowDiagram({
   );
 }
 
+/**
+ * Two nested spans on purpose. The outer one owns the entrance transform, the
+ * inner one owns the drift loop. Sharing an element would mean the loop's
+ * keyframes overwrite the transition's transform the instant it starts, and the
+ * chip would snap to its final position instead of easing there.
+ */
 function Chip({
   children,
+  index,
   style,
 }: {
   children: React.ReactNode;
+  index: number;
   style: React.CSSProperties;
 }) {
   return (
     <span
-      className="border-hairline bg-card text-foreground absolute truncate rounded-full border shadow-sm"
+      data-chip=""
+      className="absolute"
       style={{
-        fontSize: "3.1cqw",
-        padding: "1.4cqw 2.4cqw",
+        ["--chip-index" as string]: index,
         maxWidth: "42cqw",
         ...style,
       }}
     >
-      {children}
+      <span
+        data-drift=""
+        className="border-hairline bg-card text-foreground block truncate rounded-full border shadow-sm"
+        style={{ fontSize: "3.1cqw", padding: "1.4cqw 2.4cqw" }}
+      >
+        {children}
+      </span>
     </span>
   );
 }
@@ -228,15 +261,21 @@ function Chip({
 function FocusPill({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="bg-primary text-primary-foreground absolute left-1/2 -translate-x-1/2 rounded-full font-medium shadow-lg"
+      data-chip=""
+      className="absolute left-1/2 -translate-x-1/2"
       style={{
         bottom: "5%",
-        fontSize: "3.4cqw",
-        padding: "1.8cqw 3.4cqw",
+        ["--chip-index" as string]: 6,
         maxWidth: "70cqw",
       }}
     >
-      {children}
+      <span
+        data-drift=""
+        className="bg-primary text-primary-foreground block truncate rounded-full text-center font-medium shadow-lg"
+        style={{ fontSize: "3.4cqw", padding: "1.8cqw 3.4cqw" }}
+      >
+        {children}
+      </span>
     </span>
   );
 }

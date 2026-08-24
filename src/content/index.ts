@@ -12,6 +12,7 @@ export { serviceGroups, buildTypes } from "./services";
 export { processStages } from "./process";
 export { techGroups } from "./technologies";
 export { capabilities, differences } from "./capabilities";
+export { faqs, type Faq } from "./faqs";
 export { testimonials } from "./testimonials";
 
 import { projects } from "./projects";
