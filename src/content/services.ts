@@ -202,9 +202,7 @@ export const serviceGroups: ServiceGroup[] = [
           "Assistants over your own documents and systems, with permissions that hold.",
       },
     ],
-    // TODO: point at a shipped AI engagement once one is public. Better to
-    // show nothing than to attach this group to unrelated work.
-    relatedProjectSlug: null,
+    relatedProjectSlug: "zyuela",
   },
   {
     id: "evolution",

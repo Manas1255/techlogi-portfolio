@@ -110,10 +110,14 @@ export function MediaFrame({
             children, which shrink-wraps this box, and a shrink-wrapped parent
             gives the `w-full` screen inside it a width of zero. */}
         <div className="border-hairline-strong bg-raised media-lift relative w-full max-w-[17rem] overflow-hidden rounded-[2rem] border-[6px] p-0 shadow-[0_0_0_1px_var(--hairline)]">
-          <span
-            aria-hidden="true"
-            className="bg-sunken absolute top-2 left-1/2 z-10 h-1.5 w-16 -translate-x-1/2 rounded-full"
-          />
+          {/*
+            No drawn notch. Every device-framed image on this site is a real
+            device capture that already contains its own Dynamic Island, so a
+            second one was always redundant — and once the palette went
+            light-first, `bg-sunken` resolved to near-white and it rendered as
+            a white bar across the top of the phone. The shell is a bezel; the
+            screen supplies its own hardware.
+          */}
           <div
             style={{ aspectRatio: ratio }}
             className="synth-frame relative w-full overflow-hidden rounded-[1.6rem]"

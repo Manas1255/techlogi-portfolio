@@ -3,17 +3,16 @@ import type { Media, Project } from "./schemas";
 /**
  * PORTFOLIO CONTENT — real Techlogi work.
  *
- * ⚠️ READ BEFORE PUBLISHING. Every project below is a real, shipped product and
- * the screens are real captures. What is NOT verified is the written narrative:
- * `caseStudySections` were drafted from the product itself, not from the people
- * who built it, so each entry carries `isDraft: true` and the case-study page
- * says so plainly. Have the engineer or designer who did the work read theirs,
- * correct it, then set `isDraft: false`.
+ * Every feature, stack entry and date below comes from the engineer who built
+ * these, via their own written project descriptions — not inferred from the
+ * screenshots. Two earlier drafts were wrong in ways worth remembering: Zyuela
+ * was described as having no AI (it is an AI coaching product) and OrthoTrack's
+ * vision-model photo scoring, the most interesting thing in it, was missed
+ * entirely. Screens alone are not a spec.
  *
- * Also still to confirm (marked `TODO:` inline):
- *   · engagement dates — `period` is a best guess from the capture dates
- *   · backend/infrastructure for the projects where only the app was inspected
- *   · client names, and whether each client is happy to be named at all
+ * The narrative framing in `caseStudySections` is still editorial — the facts
+ * are the author's, the way they are told is the site's. Worth one read before
+ * a client sees it.
  *
  * `metrics` is deliberately EMPTY everywhere. No number goes on this site until
  * someone can point at where it was measured.
@@ -68,15 +67,15 @@ export const projects: Project[] = [
   {
     slug: "soulmate-society",
     name: "Soulmate Society",
-    tagline: "A values-first relationship app built around privacy",
+    tagline: "Intentional matchmaking, built on values rather than volume",
     summary:
-      "Most dating products optimise for volume: more profiles, faster swiping, more matches. Soulmate Society is built for the opposite — curated discovery, matching on values rather than proximity alone, and messaging designed so that people share on their own terms.",
+      "Most dating products optimise for volume: more profiles, faster swiping, more matches. Soulmate Society is built for the opposite — a compatibility score computed from core values and personality alignment, curated discovery on a map rather than an endless queue, and private conversations designed to actually start one.",
     industry: "Social",
     productType: "Mobile application",
     whatWeDid:
-      "Brand and product design, and a cross-platform Flutter build covering discovery, values-based matching, favourites and private messaging.",
+      "Built the mobile application end to end in Flutter, and integrated the real-time messaging and geospatial mapping services behind it.",
     outcome:
-      "A calmer product than the category default. Discovery is curated rather than endless, a match score is explainable, and the messaging surface is private by construction.",
+      "A calmer product than the category default. A match percentage is explainable rather than magical, discovery is finite, and the messaging surface is private by construction.",
     metrics: [],
     services: [
       "Product Strategy",
@@ -85,9 +84,17 @@ export const projects: Project[] = [
       "Cross-platform Applications",
     ],
     platforms: ["iOS", "Android"],
-    technologies: ["Flutter", "Dart"], // TODO: confirm the backend and infrastructure.
+    technologies: [
+      "Flutter",
+      "Dart",
+      "BLoC/Cubit",
+      "Mapbox",
+      "GetStream",
+      "Dio",
+      "GetIt",
+    ],
     categories: ["mobile"],
-    period: "2026", // TODO: confirm the real engagement dates.
+    period: "Mar — Apr 2026",
     heroMedia: shot(
       "/media/projects/soulmate-society/01-brand.jpg",
       1448,
@@ -128,13 +135,13 @@ export const projects: Project[] = [
         kind: "approach",
         title: "Match on stated values, and show the reasoning",
         body: [
-          "Compatibility is presented as a score with something behind it rather than a number that appears by magic. If the product is going to claim two people are a strong match, the claim has to be inspectable.",
-          "Discovery is curated and finite. There is a defined set to consider, not an infinite queue — which changes how much attention each profile actually gets.",
+          "Compatibility is a percentage computed from core values and personality alignment, not a number that appears by magic. If a product is going to claim two people are a strong match, the claim has to be inspectable.",
+          "Discovery is geospatial and curated: an interactive map of potential matches nearby, which is a defined set to consider rather than an infinite queue. That single change is what alters how much attention each profile actually gets.",
         ],
         points: [
-          "Values-based matching rather than proximity and photos alone",
-          "Curated, finite discovery instead of an endless feed",
-          "Privacy-first messaging: people share more as they choose to, not by default",
+          "A compatibility algorithm scoring core values and personality alignment",
+          "Map-based discovery of curated matches nearby, not an endless feed",
+          "Profiles built around personal stories and stated values, with favourites",
         ],
         media: shot(
           "/media/projects/soulmate-society/02-connection.jpg",
@@ -148,26 +155,28 @@ export const projects: Project[] = [
         kind: "design",
         title: "A premium register, deliberately unlike the category",
         body: [
-          "Deep navy and gold, a serif display face, generous space — the visual language is closer to a members' club than to a social feed, and that is the point. It sets an expectation about pace before a single interaction happens.",
-          "Photography is given room rather than cropped into a grid, and the compatibility badge sits on the image where a decision is actually being made.",
+          "Deep navy and gold, a serif display face, generous space — closer to a members' club than to a social feed, and that is the point. It sets an expectation about pace before a single interaction happens.",
+          "Photography is given room rather than cropped into a grid, and the compatibility badge sits on the image where the decision is actually being made.",
         ],
         points: [
           "A serif-led identity and restrained palette, uncommon in the category",
           "One profile at a time, at a size where it can be read rather than skimmed",
-          "Four flat destinations — discovery, favourites, messages, profile",
+          "Conversation prompts in the chat, so a first message is easier to send",
         ],
         media: null,
       },
       {
         kind: "build",
-        title: "One codebase, one design system",
+        title: "Two hard integrations, kept behind clean boundaries",
         body: [
-          "Built in Flutter so the identity lands identically on both platforms — with a design this specific, per-platform drift would have been visible immediately.",
-          "The design system was built before the screens, so the type ramp, the gold accent and the card treatment are defined once and consumed everywhere.",
+          "Real-time messaging and geospatial discovery are the two features that would otherwise dominate the codebase. Both run through third-party infrastructure — GetStream for low-latency chat, media handling and presence; Mapbox for map rendering and location-based discovery — so the product's own code stays about matching rather than about sockets and tiles.",
+          "Clean Architecture with BLoC and Cubit keeps each of those behind a boundary, which is what lets location services, matchmaking logic and the chat transport be reasoned about separately.",
         ],
         points: [
-          "Flutter for iOS and Android from one codebase",
-          "Tokens and components defined ahead of the screens",
+          "GetStream for real-time messaging, media and presence indicators",
+          "Mapbox SDK for map rendering and location-based discovery",
+          "Clean Architecture with BLoC/Cubit; GetIt for injection, Dio for transport",
+          "One Flutter codebase delivering a native experience on iOS and Android",
         ],
         media: null,
       },
@@ -183,36 +192,44 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    isDraft: true,
+    isDraft: false,
   },
   {
     slug: "zyuela",
     name: "Zyuela",
-    tagline: "A reflection and wellbeing app with no streaks to break",
+    tagline: "AI coaching, journalling and habits in one private space",
     summary:
-      "Wellbeing apps usually motivate through pressure: streaks, badges, a number that resets if you miss a day. Zyuela takes the opposite position — it opens with “You're not lazy” and is built around small, repeatable moments of awareness rather than a record to protect.",
+      "A mental wellbeing and coaching app: an AI coach you can actually talk to, guided journalling that tracks an emotional baseline over time, and habit work aimed at small consistent routines rather than large goals. The point is a private, clutter-free place to think — not another dashboard of streaks to protect.",
     industry: "Health & wellbeing",
-    productType: "Mobile application",
+    productType: "AI product",
     whatWeDid:
-      "Product and brand design, and a cross-platform Flutter build covering reflection, journalling and the daily practice surfaces.",
+      "Built the Flutter front end and the Node.js backend behind it, including authentication, data persistence and the calls to the AI APIs.",
     outcome:
-      "A product whose tone matches its purpose. Nothing in the interface punishes a missed day, and the daily practice is short enough to actually be repeatable.",
+      "Reflection, coaching and habit tracking live in one product instead of three, and the coaching responds to what the person is actually working through rather than serving generic prompts.",
     metrics: [],
     services: [
       "Product Discovery",
       "UX Design",
       "UI Design",
       "Cross-platform Applications",
+      "AI Integration",
+      "Backend Systems",
     ],
-    platforms: ["iOS", "Android"],
-    technologies: ["Flutter", "Dart"], // TODO: confirm the backend and infrastructure.
-    categories: ["mobile"],
-    period: "2026", // TODO: confirm the real engagement dates.
+    platforms: ["iOS", "Android", "API"],
+    technologies: [
+      "Flutter",
+      "Dart",
+      "BLoC/Cubit",
+      "Node.js",
+      "MongoDB",
+    ],
+    categories: ["mobile", "ai"],
+    period: "May — Jun 2026",
     heroMedia: shot(
       "/media/projects/zyuela/01-brand.jpg",
       1672,
       941,
-      "Zyuela's opening screen, reading “You're not lazy.” against a calm, near-white ground.",
+      "Zyuela's welcome screen: a calm, distraction-free opening built around self-awareness rather than targets.",
       "(min-width: 1024px) 46vw, 92vw",
     ),
     galleryMedia: [
@@ -220,14 +237,14 @@ export const projects: Project[] = [
         "/media/projects/zyuela/02-space.jpg",
         1672,
         941,
-        "Zyuela's core surfaces: reflection prompts, journalling and daily practice in one place.",
+        "Zyuela's core surfaces: home, journal, AI coach, tasks and profile in one supportive space.",
         "(min-width: 1024px) 46vw, 92vw",
       ),
       shot(
         "/media/projects/zyuela/03-reflect.jpg",
         1672,
         941,
-        "Zyuela's reflect-understand-move-forward sequence.",
+        "Zyuela's reflect, understand and move forward sequence, with its AI coaching chat and reflection prompts.",
         "(min-width: 1024px) 46vw, 92vw",
       ),
     ],
@@ -236,31 +253,32 @@ export const projects: Project[] = [
     caseStudySections: [
       {
         kind: "problem",
-        title: "Motivation by guilt has a short half-life",
+        title: "Reflection, coaching and habits lived in three different apps",
         body: [
-          "Streaks work until the first missed day, at which point the mechanic that was driving engagement becomes the reason to delete the app. For a product about self-understanding, that failure mode is not a detail — it contradicts the premise.",
-          "The brief was to build something that survives a bad week.",
+          "Journalling in one place, a habit tracker in another, and coaching — if any — in a third. None of them knew what the others held, so nothing could respond to what a person was actually working through.",
+          "The brief was one private space where the coaching has context: it can see the reflections and the routines, because they are in the same product.",
         ],
         points: [],
         media: null,
       },
       {
         kind: "approach",
-        title: "Design the tone first, then the features",
+        title: "One space, four surfaces, and a coach that has read the room",
         body: [
-          "The product's voice was settled before the feature set. “Small moments of awareness can lead to meaningful change” is not marketing copy bolted on afterwards — it is the constraint every screen was checked against.",
-          "That ruled several standard mechanics out immediately: no streak counters, no red states for a missed day, no leaderboard.",
+          "Home, journal, coach, tasks and profile are the whole product. Each is small on its own; the value is that they share a context, so guidance can be about this week rather than about wellbeing in general.",
+          "Habit work is deliberately scoped to consistent daily routines rather than large goals, and progress is presented as insight into change over time rather than as a score that resets.",
         ],
         points: [
-          "Voice and tone defined as a product constraint, not a copy pass",
-          "No streaks, no punitive states, no comparison to other people",
-          "Every session designed to be completable in a couple of minutes",
+          "An interactive AI coaching chat giving guidance and prompts in context",
+          "Guided journalling that tracks an emotional baseline over time",
+          "Task management aimed at small daily routines, not large goals",
+          "Profile insights that show change over time",
         ],
         media: shot(
           "/media/projects/zyuela/02-space.jpg",
           1672,
           941,
-          "Zyuela's supportive surfaces: prompts, journalling and daily practice.",
+          "Zyuela's home, journal, coach, tasks and profile surfaces.",
           "(min-width: 1024px) 42vw, 92vw",
         ),
       },
@@ -268,26 +286,27 @@ export const projects: Project[] = [
         kind: "design",
         title: "Quiet, warm, and almost entirely typographic",
         body: [
-          "A near-white ground, a deep green accent and a serif wordmark — closer to a printed journal than to a fitness tracker. There is very little chrome, because the writing is the product.",
-          "Prompts are set large and centred with nothing competing for attention, so the screen asks one thing at a time.",
+          "A near-white ground, a deep green accent and a serif wordmark — closer to a printed journal than to a fitness tracker. There is very little chrome, because the writing and the conversation are the product.",
+          "Prompts are set large and centred with nothing competing for attention, so the screen asks one thing at a time. The welcome screen sets that tone before any feature does.",
         ],
         points: [
           "A calm, paper-like palette with a single restrained accent",
-          "One prompt per screen, set at reading size",
-          "Progress shown as accumulation, never as a record that can break",
+          "One prompt per screen, at reading size",
+          "A distraction-free opening that establishes the pace of the product",
         ],
         media: null,
       },
       {
         kind: "build",
-        title: "Flutter, with the writing surface as the hard part",
+        title: "The model is a component with a job, not the product",
         body: [
-          "Most of the engineering attention went where the user spends their time: a text surface that never loses input, restores exactly where it was left, and behaves predictably with the keyboard up.",
-          "The rest of the app is deliberately simple, which is what leaves room to get that one surface right.",
+          "The Node.js and MongoDB backend owns authentication, persistence and every call out to the AI APIs. Keeping the model behind the server rather than in the client is what makes the key, the cost and the prompt something the product controls.",
+          "Clean Architecture with BLoC and Cubit on the Flutter side means the coaching surface is one feature among several rather than an assumption baked through the app — which is what lets it survive the feature growth a product like this attracts.",
         ],
         points: [
-          "One Flutter codebase for iOS and Android",
-          "Entry drafts preserved across interruption and app restart",
+          "Node.js and MongoDB owning auth, persistence and all AI API calls",
+          "Clean Architecture with BLoC/Cubit, so state stays predictable as features land",
+          "One Flutter codebase serving iOS and Android",
         ],
         media: null,
       },
@@ -295,39 +314,48 @@ export const projects: Project[] = [
         kind: "result",
         title: "A product you can come back to after a gap",
         body: [
-          "Returning after a week away costs nothing and is acknowledged as normal, which is the behaviour the whole design was aimed at.",
-          "The tone is the product's real differentiator, and it is now written down well enough that new features can be checked against it.",
+          "Because progress is framed as insight rather than as an unbroken record, returning after a week away costs nothing — which is the behaviour the whole design was aimed at.",
+          "The context-sharing between journal, tasks and coach is the durable idea: any new surface added later inherits it for free.",
         ],
         points: [],
         media: null,
       },
     ],
     featured: true,
-    isDraft: true,
+    isDraft: false,
   },
   {
     slug: "orthotrack",
     name: "OrthoTrack",
-    tagline: "Orthodontic compliance, from the clinic to the patient's phone",
+    tagline: "Orthodontic care that stays connected between appointments",
     summary:
-      "Orthodontic outcomes depend on things that happen at home — elastics worn, teeth brushed, photos taken at the right angle. Between appointments a clinician has no visibility of any of it. OrthoTrack gives the patient a short daily checklist and the practice a compliance record it can actually act on.",
+      "Orthodontic outcomes depend on what happens at home — elastics worn, teeth brushed, photos taken at a comparable angle. Between appointments a clinician can see none of it. OrthoTrack gives the patient a short daily check-in and scores their progress photos against therapist-set reference images automatically, so a problem reaches a human while it still matters.",
     industry: "Healthcare",
-    productType: "Two-sided mobile application",
+    productType: "Two-sided AI platform",
     whatWeDid:
-      "Product design and a cross-platform Flutter build for both sides: a patient app with daily tasks and guided photo capture, and a therapist app for patient records, reference poses and compliance review.",
+      "Built the cross-platform mobile application and the backend infrastructure powering it, including the automated photo review pipeline and the alerting behind it.",
     outcome:
-      "What used to be a question asked at the next appointment is now a record. Patients follow a short daily list, and clinicians see the week rather than reconstructing it from memory.",
+      "What used to be a question asked at the next appointment is now a record. Patients follow a short daily list, and a low-scoring photo alerts both sides the same day instead of waiting weeks for someone to notice.",
     metrics: [],
     services: [
       "Product Discovery",
       "UX Design",
       "Cross-platform Applications",
+      "AI Integration",
+      "Backend Systems",
       "APIs",
     ],
-    platforms: ["iOS", "Android"],
-    technologies: ["Flutter", "Dart"], // TODO: confirm the backend and infrastructure.
-    categories: ["mobile"],
-    period: "2026", // TODO: confirm the real engagement dates.
+    platforms: ["iOS", "Android", "API"],
+    technologies: [
+      "Flutter",
+      "Dart",
+      "BLoC/Cubit",
+      "Node.js",
+      "MongoDB",
+      "Firebase Cloud Messaging",
+    ],
+    categories: ["mobile", "ai"],
+    period: "Jul — Aug 2026",
     heroMedia: screen(
       "/media/projects/orthotrack/01-patient-home.png",
       "OrthoTrack's patient home: today's progress with elastics, brushing, photo upload and breathing, plus the assigned therapist.",
@@ -361,15 +389,16 @@ export const projects: Project[] = [
       },
       {
         kind: "approach",
-        title: "Two apps, one record",
+        title: "Two apps, one record, and a reviewer that never sleeps",
         body: [
           "Patient and clinician need genuinely different products — one is a two-minute daily habit, the other is a review tool — so the account chooses its side at sign-up and the interfaces diverge from there.",
-          "The piece that ties them together is reference poses: the clinician sets up to four reference images, and the patient sees them while taking their own photos. The comparison problem is solved at capture time rather than afterwards.",
+          "The piece that ties them together is reference images. A therapist assigns them; the patient sees them while taking their own photos; and a background job then scores each upload against them with a vision model. A low score alerts both the patient and their therapist, so a human looks sooner rather than at the next appointment.",
         ],
         points: [
           "One account model, two distinct interfaces chosen at sign-up",
-          "Clinician-set reference poses shown during patient capture",
-          "Compliance recorded as discrete daily tasks, not a self-reported summary",
+          "Therapist-maintained reference images, shown to the patient at capture",
+          "Automated scoring of every upload against those references",
+          "A low score notifies both sides the same day",
         ],
         media: screen(
           "/media/projects/orthotrack/03-roles.png",
@@ -380,13 +409,13 @@ export const projects: Project[] = [
         kind: "design",
         title: "A daily list short enough to actually complete",
         body: [
-          "The patient's home screen is four tasks and a progress ring. It is deliberately finite — a list you can finish is a list you come back to.",
-          "The clinician's side inverts the priority: patient search first, then a record with photos, compliance and reference poses as tabs, so a review takes seconds rather than navigation.",
+          "The patient's home screen is four tasks and a progress ring — elastics, brushing, a photo, a breathing exercise. It is deliberately finite: a list you can finish is a list you come back to, and the streak is there to reward the habit rather than to punish a missed day.",
+          "The clinician's side inverts the priority: patient search first, then a record with photos, compliance and reference images as tabs, so a review takes seconds rather than navigation.",
         ],
         points: [
           "Four daily tasks, completable in about two minutes",
-          "Progress shown as this week's rate, with history kept per day",
-          "Reminders timed to the end of the day, when there is still time to act",
+          "Weekly compliance rate and day streak on the same screen as the tasks",
+          "Reminders timed to the end of the day, while there is still time to act",
         ],
         media: screen(
           "/media/projects/orthotrack/02-compliance.png",
@@ -395,15 +424,16 @@ export const projects: Project[] = [
       },
       {
         kind: "build",
-        title: "Photo handling is the engineering problem",
+        title: "Scoring runs behind the request, not inside it",
         body: [
-          "Everything of consequence in this product is a photo: captured on a phone camera, uploaded on whatever connection the patient has, stored against a date, and later compared with the one before it.",
-          "Uploads queue locally and retry, so a capture taken with no signal is not lost — the patient has already done the part that was hard to get them to do.",
+          "Photo review is a background job, not part of the upload. The patient's capture completes immediately; the vision model scores it afterwards against the assigned references, and only a score below threshold pushes a notification. Putting the model in the request path would have made the slowest, least reliable dependency the thing standing between a patient and the one action you need them to take.",
+          "The Node.js and MongoDB backend holds patient records, media and the compliance history; Firebase Cloud Messaging carries the alerts.",
         ],
         points: [
-          "Queued, retrying uploads so a capture is never lost to a bad connection",
-          "Photos stored against a date and a reference pose, so they are comparable",
-          "One Flutter codebase serving both sides of the product",
+          "A background job scores uploads; the capture never waits on the model",
+          "Alerts pushed via Firebase Cloud Messaging only below a score threshold",
+          "Node.js and MongoDB for patient records, media and compliance history",
+          "Clean Architecture with BLoC/Cubit across one Flutter codebase for both sides",
         ],
         media: null,
       },
@@ -412,27 +442,27 @@ export const projects: Project[] = [
         title: "Compliance is now something you can look at",
         body: [
           "The appointment conversation changes when both sides are looking at the same record rather than negotiating recollections.",
-          "The reference-pose mechanism turned out to be the most valuable part: it is what makes a series of phone photos clinically comparable at all.",
+          "The reference-image mechanism turned out to be the load-bearing idea twice over: it is what makes a series of phone photos comparable at all, and it is what gives the scoring something to score against.",
         ],
         points: [],
         media: null,
       },
     ],
     featured: true,
-    isDraft: true,
+    isDraft: false,
   },
   {
     slug: "our-ummah",
     name: "OurUmmah",
-    tagline: "Mosque membership, check-ins and giving in one place",
+    tagline: "One place for a mosque, its members and the businesses around it",
     summary:
-      "Mosque communities run on membership fees, donations and attendance that are tracked, if at all, on paper and in someone's head. OurUmmah connects three sides — mosques, members and community partners — around a QR check-in, a points system and structured giving.",
+      "A multi-role community platform for local Muslim communities: a hub for events and announcements, QR check-ins that earn reward points at your mosque, giving that covers Zakat, Sadaqah and membership in one flow, and a directory connecting members to trusted local businesses.",
     industry: "Community & non-profit",
     productType: "Multi-sided mobile platform",
     whatWeDid:
-      "Product design and a cross-platform Flutter build on a Node.js and MongoDB backend, with QR check-in, a points model, Stripe payments and partner listings.",
+      "Built the Flutter front end and the Node.js backend behind it, including dynamic QR generation, the points model, Stripe payments and OAuth.",
     outcome:
-      "Attendance, membership and giving became one record instead of three. A member checks in with a scan; the mosque sees its membership; partners reach the community through a listing rather than a noticeboard.",
+      "Attendance, membership and giving became one record instead of three. A member checks in with a scan; the mosque sees its community; local businesses reach it through a listing rather than a noticeboard.",
     metrics: [],
     services: [
       "Product Strategy",
@@ -441,18 +471,18 @@ export const projects: Project[] = [
       "Backend Systems",
       "APIs",
     ],
-    platforms: ["iOS", "Android"],
+    platforms: ["iOS", "Android", "API"],
     technologies: [
       "Flutter",
       "Dart",
+      "BLoC/Cubit",
       "Node.js",
-      "Express",
       "MongoDB",
       "Stripe",
-      "AWS S3",
+      "OAuth",
     ],
     categories: ["mobile", "commerce"],
-    period: "2026", // TODO: confirm the real engagement dates.
+    period: "May — Jul 2026",
     heroMedia: screen(
       "/media/projects/our-ummah/01-home.png",
       "OurUmmah's home: a member's points balance, quick actions to scan, join a mosque or donate, and community partners.",
@@ -464,7 +494,7 @@ export const projects: Project[] = [
       ),
       screen(
         "/media/projects/our-ummah/03-donations.png",
-        "OurUmmah's giving flow, with donation categories including membership, project donations and community activities.",
+        "OurUmmah's giving flow, covering Zakat, Sadaqah, mosque membership and project donations.",
       ),
       screen(
         "/media/projects/our-ummah/04-qr.png",
@@ -489,12 +519,13 @@ export const projects: Project[] = [
         title: "Model all three sides from the first screen",
         body: [
           "The very first decision in onboarding is which of the three you are — mosque, member, or community partner. Retrofitting a second audience onto a product built for one is expensive, and this product had three from the start.",
-          "Attendance is the connective tissue: the mosque displays a QR, the member scans it, and that single event feeds points, membership standing and the mosque's own view of its community.",
+          "Attendance is the connective tissue: the mosque displays a dynamically generated QR code, the member scans it, and that single event feeds reward points, membership standing and the mosque's own view of its community.",
         ],
         points: [
           "Three account types, chosen at sign-up, each with its own surfaces",
-          "QR check-in as the shared event linking attendance, points and membership",
-          "Giving categorised the way communities actually think about it",
+          "Dynamic QR check-in as the shared event linking attendance and points",
+          "A community hub carrying local events, services and announcements",
+          "A member directory for managing community connections",
         ],
         media: screen(
           "/media/projects/our-ummah/02-roles.png",
@@ -511,29 +542,29 @@ export const projects: Project[] = [
         points: [
           "The points model explained in full on the screen that shows the balance",
           "Three quick actions — scan, join, donate — and nothing competing with them",
-          "Giving categories named in the community's own vocabulary",
+          "Giving named the way the community names it: Zakat, Sadaqah, membership",
         ],
         media: screen(
           "/media/projects/our-ummah/03-donations.png",
-          "OurUmmah's donation categories.",
+          "OurUmmah's giving categories.",
         ),
       },
       {
         kind: "build",
-        title: "Money, identity and files, handled properly",
+        title: "Money, identity and QR codes, handled properly",
         body: [
-          "Payments run through Stripe, member identity through hashed credentials and signed tokens, and uploaded media through object storage rather than the application server. For a product handling community donations, none of these were places to improvise.",
-          "Check-in codes are issued and renewable per mosque, so a code that leaks can be rotated without touching anyone's membership.",
+          "Payments run through Stripe and identity through OAuth. For a product handling Zakat and mosque memberships, neither was a place to improvise — the money is donated in trust, and the trust is the product.",
+          "Check-in codes are generated on the fly per mosque rather than printed once, so a code that leaks stops working without anyone's membership being touched.",
         ],
         points: [
-          "Stripe for donations and membership payments",
-          "Token-based auth with hashed credentials; rate limiting at the edge",
-          "Object storage for uploads, kept off the application server",
-          "Renewable per-mosque QR codes",
+          "Stripe for donations, Zakat, Sadaqah and membership payments",
+          "OAuth for authentication",
+          "Dynamic, per-mosque QR generation rather than a static printed code",
+          "Node.js and MongoDB handling the relational data and real-time updates",
         ],
         media: screen(
           "/media/projects/our-ummah/04-qr.png",
-          "A renewable mosque check-in QR code in OurUmmah.",
+          "A dynamically generated mosque check-in QR code in OurUmmah.",
         ),
       },
       {
@@ -548,126 +579,6 @@ export const projects: Project[] = [
       },
     ],
     featured: true,
-    isDraft: true,
-  },
-  {
-    slug: "codeable-hr",
-    name: "CodeAble HR",
-    tagline: "Attendance, leave and payroll visibility for employees",
-    summary:
-      "HR systems are usually built for the HR team, and employees get whatever is left — a portal they visit twice a year and cannot navigate. CodeAble HR inverts that: the employee app is the product, covering attendance, working hours, leave and salary in a view that answers a question in one glance.",
-    industry: "HR technology",
-    productType: "SaaS platform",
-    whatWeDid:
-      "Product design and a cross-platform Flutter application covering attendance and check-ins, leave records, working-hours tracking and salary visibility.",
-    outcome:
-      "Employees can answer their own questions — how many hours this month, how much leave is left, when did I check in — without opening a ticket with HR.",
-    metrics: [],
-    services: [
-      "Product Design",
-      "UX Design",
-      "Cross-platform Applications",
-      "SaaS Development",
-    ],
-    platforms: ["iOS", "Android"],
-    technologies: ["Flutter", "Dart"], // TODO: confirm the backend and infrastructure.
-    categories: ["mobile", "saas"],
-    period: "2026", // TODO: confirm the real engagement dates.
-    heroMedia: shot(
-      "/media/projects/codeable-hr/01-workday.jpg",
-      1571,
-      1700,
-      "CodeAble HR's workday summary: attendance and check-in updates, plus salary and HR support in one view.",
-      "(min-width: 1024px) 40vw, 92vw",
-    ),
-    galleryMedia: [
-      shot(
-        "/media/projects/codeable-hr/02-attendance.jpg",
-        785,
-        1700,
-        "CodeAble HR's attendance screen: present, absent, late and on-leave counts for the month, with a day-by-day record.",
-        "(min-width: 1024px) 24vw, 60vw",
-      ),
-      shot(
-        "/media/projects/codeable-hr/03-dashboard.jpg",
-        1024,
-        500,
-        "CodeAble HR's dashboard, bringing the employee's day into a single view.",
-        "(min-width: 1024px) 46vw, 92vw",
-      ),
-    ],
-    video: null,
-    testimonial: null,
-    caseStudySections: [
-      {
-        kind: "problem",
-        title: "Every simple question went through a person",
-        body: [
-          "How many hours did I work this month? How much leave do I have left? Was I marked late on the 12th? Each of these is a lookup, and each of them was arriving in HR's inbox.",
-          "The data existed. It was just not reachable by the person it was about.",
-        ],
-        points: [],
-        media: null,
-      },
-      {
-        kind: "approach",
-        title: "Build the employee's view first",
-        body: [
-          "We started from the questions employees actually ask, and designed the month summary to answer the four most common ones above the fold: present, absent, late, on leave, plus average hours a day.",
-          "Everything else — the day-by-day record, leave history, salary detail — sits one level below that summary rather than competing with it.",
-        ],
-        points: [
-          "The four most-asked questions answered in the first screenful",
-          "Day-level detail available, but never the landing view",
-          "Leave, attendance and salary in one place instead of three systems",
-        ],
-        media: shot(
-          "/media/projects/codeable-hr/02-attendance.jpg",
-          785,
-          1700,
-          "The monthly attendance summary in CodeAble HR, with filters for present, absent and late.",
-          "(min-width: 1024px) 24vw, 60vw",
-        ),
-      },
-      {
-        kind: "design",
-        title: "A month is a summary, then a list",
-        body: [
-          "Counts first, coloured by status, with average hours a day underneath. Then a filter row, then the days themselves — each showing check-in, check-out, hours worked and a status pill.",
-          "Statuses are their own thing rather than a colour alone: present, half day, late and on leave all read correctly without relying on the reader distinguishing green from orange.",
-        ],
-        points: [
-          "Status carried by a label, not by colour alone",
-          "Tabular figures throughout, so times and totals line up",
-          "Filters that show their own counts, so an empty state is never a surprise",
-        ],
-        media: null,
-      },
-      {
-        kind: "build",
-        title: "One codebase, an interface an employer can hand out",
-        body: [
-          "Flutter for both platforms, because the workforce carries whatever phone it carries and the product cannot be better on one of them.",
-          "The screens are read-heavy and cache-friendly, so opening the app on a poor connection still answers the question it was opened for.",
-        ],
-        points: [
-          "One Flutter codebase across iOS and Android",
-          "Read-heavy screens that stay useful on a poor connection",
-        ],
-        media: null,
-      },
-      {
-        kind: "result",
-        title: "The lookups stopped arriving in HR's inbox",
-        body: [
-          "Employees answer their own routine questions, which is the entire value: HR's time goes back to the cases that genuinely need a person.",
-          "The attendance model underneath is the reusable part — the same records drive the employee view, the manager view and payroll.",
-        ],
-        points: [],
-        media: null,
-      },
-    ],
-    featured: false,
-    isDraft: true,
+    isDraft: false,
   },
 ];
