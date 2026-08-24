@@ -1,3 +1,4 @@
+import { OrganizationSchema } from "@/components/layout/structured-data";
 import {
   ClosingCta,
   FeaturedWork,
@@ -20,6 +21,7 @@ import {
 export function HomeScreen() {
   return (
     <>
+      <OrganizationSchema />
       <Hero />
       <Showreel />
       <FeaturedWork />

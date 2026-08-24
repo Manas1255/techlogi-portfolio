@@ -1,0 +1,135 @@
+import Link from "next/link";
+import {
+  Container,
+  PlaceholderNote,
+  Reveal,
+  Section,
+} from "@/components/marketing";
+import { MediaFrame } from "@/components/media";
+import {
+  CaseStudyHero,
+  CaseStudySection,
+  ClosingCta,
+} from "@/components/sections";
+import { CaseStudySchema } from "@/components/layout/structured-data";
+import { caseStudyPath } from "@/constants";
+import { siteConfig } from "@/config/site";
+import { nextProject, type Project } from "@/content";
+
+/**
+ * A case study, assembled entirely from the content model.
+ *
+ * Nothing here is project-specific: the hero, the five narrative blocks, the
+ * gallery, the quote and the next-project link all read from the entry in
+ * `src/content/projects.ts`. Adding a case study is a data addition plus media.
+ */
+export function CaseStudyScreen({ project }: { project: Project }) {
+  const next = nextProject(project.slug);
+
+  return (
+    <>
+      <CaseStudySchema
+        name={`${project.name} — ${project.tagline}`}
+        description={project.summary}
+        url={`${siteConfig.url}${caseStudyPath(project.slug)}`}
+      />
+      <CaseStudyHero project={project} />
+
+      <Section surface="ink" rhythm="base" divided>
+        <div className="flex flex-col gap-16 md:gap-20">
+          {project.caseStudySections.map((section, index) => (
+            <CaseStudySection
+              key={section.kind}
+              section={section}
+              index={index}
+            />
+          ))}
+        </div>
+      </Section>
+
+      {project.galleryMedia.length > 0 && (
+        <Section surface="ink" width="wide" rhythm="base" divided>
+          <Reveal variant="fade" className="flex flex-col gap-8">
+            <p className="text-eyebrow text-muted-foreground">
+              More from {project.name}
+            </p>
+            <div className="grid gap-8 lg:grid-cols-2">
+              {project.galleryMedia.map((media, index) => (
+                <MediaFrame
+                  key={index}
+                  media={media}
+                  sizes="(min-width: 1024px) 46vw, 92vw"
+                />
+              ))}
+            </div>
+          </Reveal>
+        </Section>
+      )}
+
+      {project.testimonial !== null && (
+        <Section surface="bone" rhythm="base">
+          <Reveal
+            as="figure"
+            className="max-w-reading mx-auto flex flex-col gap-6"
+          >
+            <blockquote className="text-quote text-balance">
+              <span aria-hidden="true" className="text-primary">
+                &ldquo;
+              </span>
+              {project.testimonial.quote}
+              <span aria-hidden="true" className="text-primary">
+                &rdquo;
+              </span>
+            </blockquote>
+            <figcaption className="flex flex-col gap-1.5">
+              <span className="text-[0.9375rem] font-medium">
+                {project.testimonial.person}
+              </span>
+              <span className="text-muted-foreground text-sm">
+                {project.testimonial.role}, {project.testimonial.company}
+              </span>
+              {project.testimonial.isPlaceholder && (
+                <PlaceholderNote className="pt-2">
+                  Placeholder — awaiting an approved client quote.
+                </PlaceholderNote>
+              )}
+            </figcaption>
+          </Reveal>
+        </Section>
+      )}
+
+      {next !== undefined && (
+        <section data-surface="ink" className="border-hairline border-t">
+          <Container>
+            <Link
+              href={caseStudyPath(next.slug)}
+              className="group focus-visible:outline-ring flex flex-col gap-8 py-16 focus-visible:outline-2 focus-visible:-outline-offset-4 md:flex-row md:items-center md:justify-between md:py-20"
+            >
+              <div className="flex flex-col gap-3">
+                <span className="text-eyebrow text-muted-foreground">
+                  Next project
+                </span>
+                <span className="text-display-1">{next.name}</span>
+                <span className="text-muted-foreground text-lg">
+                  {next.tagline}
+                </span>
+              </div>
+              <div className="w-full shrink-0 md:w-80 lg:w-96">
+                <MediaFrame
+                  media={next.heroMedia}
+                  sizes="(min-width: 768px) 384px, 92vw"
+                />
+              </div>
+            </Link>
+          </Container>
+        </section>
+      )}
+
+      <ClosingCta
+        origin={`case-study:${project.slug}`}
+        title="Building something like this?"
+        lead="Start with one question. We'll tell you quickly whether we're the right team for it."
+      />
+    </>
+  );
+}
