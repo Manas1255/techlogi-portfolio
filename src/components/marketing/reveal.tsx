@@ -13,7 +13,7 @@ export interface RevealProps extends React.HTMLAttributes<HTMLElement> {
    * sits in, a `<div>` inside an `<ol>` is invalid, and screen readers stop
    * announcing the list.
    */
-  as?: "div" | "li" | "article" | "section" | "figure";
+  as?: "div" | "li" | "article" | "section" | "figure" | "span";
 }
 
 /**
@@ -47,6 +47,8 @@ export function Reveal({
       return <section {...shared} />;
     case "figure":
       return <figure {...shared} />;
+    case "span":
+      return <span {...shared} />;
     default:
       return <div {...shared} />;
   }

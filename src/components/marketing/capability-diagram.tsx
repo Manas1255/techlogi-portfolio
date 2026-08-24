@@ -122,6 +122,21 @@ function OrbitDiagram({
         style={{ width: "34cqw", height: "34cqw" }}
       />
 
+      {/* The sonar pulse, behind the mark. Two, offset in phase, so the
+          diagram is never momentarily still between beats. */}
+      {[0, 1].map((beat) => (
+        <span
+          key={beat}
+          data-sonar=""
+          className="border-primary/30 absolute top-1/2 left-1/2 rounded-full border"
+          style={{
+            width: "50cqw",
+            height: "50cqw",
+            animationDelay: `${beat * 1.6}s`,
+          }}
+        />
+      ))}
+
       {/* The central mark. */}
       <span
         className="border-hairline bg-card absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl border shadow-sm"
