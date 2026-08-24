@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * Progress indicator for multi-step flows.
  *
- * Shows where the user is AND how much is left — the main reason people abandon
+ * Shows where the user is AND how much is left, the main reason people abandon
  * a wizard is not knowing whether it's three steps or thirty. Completed steps
  * get a checkmark rather than only a color change, so state is readable without
  * relying on color perception.

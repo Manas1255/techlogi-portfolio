@@ -12,7 +12,7 @@ export interface DescriptionItem {
   label: string;
   /** A string is truncated automatically; pass a node for custom rendering. */
   value: React.ReactNode;
-  /** Span both columns — for addresses and notes. */
+  /** Span both columns, for addresses and notes. */
   wide?: boolean;
 }
 

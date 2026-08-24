@@ -25,7 +25,7 @@ export const useLocaleStore = create<LocaleState>()(
 /**
  * Read the active locale from NON-React code (the HTTP transport's
  * `Accept-Language` header, formatters, validators). Reading the store outside
- * React is the whole reason this exists — never duplicate the storage key.
+ * React is the whole reason this exists, never duplicate the storage key.
  */
 export function getLocale(): Locale {
   const { locale } = useLocaleStore.getState();

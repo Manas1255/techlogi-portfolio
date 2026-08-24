@@ -7,7 +7,7 @@ import { useMessageResolver } from "@/i18n";
  *
  * Zod messages in this app are authored as **i18n keys** (`"validation.email"`),
  * so validation errors translate like every other string. A message that isn't
- * a key — a sentence the server returned — passes through untouched, which is
+ * a key, a sentence the server returned, passes through untouched, which is
  * what lets both sources share one rendering path.
  */
 export function useFieldError(message?: string): string | undefined {

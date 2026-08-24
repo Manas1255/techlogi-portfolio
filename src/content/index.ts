@@ -1,5 +1,5 @@
 /**
- * CONTENT LAYER — authored site content, and the accessors that read it.
+ * CONTENT LAYER, authored site content, and the accessors that read it.
  *
  * Presentation components import from here and never from a data file
  * directly, so the shape of storage (a TS module today, a CMS later) stays
@@ -20,7 +20,7 @@ import type { Project, ProjectCategory } from "./schemas";
 /**
  * The project whose media opens the site. Named here rather than picked by
  * position so that reordering the portfolio cannot silently change which
- * product leads — and so the showreel can avoid opening on the same one.
+ * product leads, and so the showreel can avoid opening on the same one.
  */
 export const HERO_PROJECT_SLUG = "zyuela";
 
@@ -29,7 +29,7 @@ export function featuredProjects(): Project[] {
   return projects.filter((project) => project.featured);
 }
 
-/** One project, or undefined — the caller decides whether that's a 404. */
+/** One project, or undefined, the caller decides whether that's a 404. */
 export function findProject(slug: string): Project | undefined {
   return projects.find((project) => project.slug === slug);
 }
@@ -40,7 +40,7 @@ export function projectSlugs(): string[] {
 }
 
 /**
- * The next project, wrapping at the end — so a case study always has somewhere
+ * The next project, wrapping at the end, so a case study always has somewhere
  * to go rather than ending in a footer.
  */
 export function nextProject(slug: string): Project | undefined {
@@ -79,7 +79,7 @@ export function findServiceGroup(id: string) {
 
 /**
  * True while any case study is still an unreviewed draft. Drives the honest
- * notice on `/work` — see `siteConfig.hasVerifiedClientResults`.
+ * notice on `/work`, see `siteConfig.hasVerifiedClientResults`.
  */
 export function hasDraftCaseStudies(): boolean {
   return projects.some((project) => project.isDraft);

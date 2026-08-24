@@ -20,7 +20,7 @@ export const metadata: Metadata = {
  * The filter is read on the SERVER from the query string, which makes this
  * route dynamic. That is deliberate: rendering it on the client instead put a
  * `useSearchParams` consumer inside a Suspense boundary, and Next then drops
- * the whole boundary from the prerendered HTML — `/work` shipped no heading
+ * the whole boundary from the prerendered HTML, `/work` shipped no heading
  * and not one project to a crawler, and refilled on hydration for 0.56 CLS.
  *
  * A server render of five projects' worth of static content costs a few

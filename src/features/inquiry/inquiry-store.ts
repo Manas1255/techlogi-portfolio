@@ -7,8 +7,8 @@ import type { InquiryFormValues } from "./validations/inquiry.schema";
  * Open/closed state and the visitor's in-progress answers.
  *
  * Persisted to **sessionStorage**, which is what makes "close the dialog, read
- * a case study, come back" keep everything they typed — the brief's requirement
- * — without leaving a stale draft on a shared machine next week. `isOpen` is
+ * a case study, come back" keep everything they typed, the brief's requirement
+ *, without leaving a stale draft on a shared machine next week. `isOpen` is
  * deliberately NOT persisted: a dialog that reopens itself on the next page
  * load is a popup.
  *

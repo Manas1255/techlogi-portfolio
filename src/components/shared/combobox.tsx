@@ -20,7 +20,7 @@ import { useTranslations } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 /**
- * Searchable single-select — the picker for entity references (a customer, a
+ * Searchable single-select, the picker for entity references (a customer, a
  * warehouse) where a plain `<Select>` of 500 options is unusable.
  *
  * Search is CONTROLLED and pushed to the caller so it can drive a debounced,
@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
 export interface ComboboxOption {
   value: string;
   label: string;
-  /** Secondary line — a reference number, an address. */
+  /** Secondary line, a reference number, an address. */
   hint?: string;
 }
 

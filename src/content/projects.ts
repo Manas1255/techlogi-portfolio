@@ -1,16 +1,16 @@
 import type { Media, Project } from "./schemas";
 
 /**
- * PORTFOLIO CONTENT — real Techlogi work.
+ * PORTFOLIO CONTENT, real Techlogi work.
  *
  * Every feature, stack entry and date below comes from the engineer who built
- * these, via their own written project descriptions — not inferred from the
+ * these, via their own written project descriptions, not inferred from the
  * screenshots. Two earlier drafts were wrong in ways worth remembering: Zyuela
  * was described as having no AI (it is an AI coaching product) and OrthoTrack's
  * vision-model photo scoring, the most interesting thing in it, was missed
  * entirely. Screens alone are not a spec.
  *
- * The narrative framing in `caseStudySections` is still editorial — the facts
+ * The narrative framing in `caseStudySections` is still editorial, the facts
  * are the author's, the way they are told is the site's. Worth one read before
  * a client sees it.
  *
@@ -18,21 +18,21 @@ import type { Media, Project } from "./schemas";
  * someone can point at where it was measured.
  *
  * Adding a project:
- *   1. Add an entry here — the schema in `./schemas.ts` is the contract.
+ *   1. Add an entry here, the schema in `./schemas.ts` is the contract.
  *   2. Drop media in `public/media/projects/<slug>/`. An image declares its own
  *      `width`/`height`; the frame reserves its box from those.
  *   3. Routes, the home-page selection, `/work` filters, related-project links
  *      and the sitemap all derive from this file. Nothing else to wire.
  */
 
-/** A landscape marketing composite — the device is already drawn in the image. */
+/** A landscape marketing composite, the device is already drawn in the image. */
 function shot(
   src: string,
   width: number,
   height: number,
   alt: string,
   sizes = "(min-width: 1024px) 56vw, 92vw",
-  /** Hero media only — everything else stays lazy. */
+  /** Hero media only, everything else stays lazy. */
   priority = false,
 ): Media {
   return {
@@ -69,7 +69,7 @@ export const projects: Project[] = [
     name: "Soulmate Society",
     tagline: "Intentional matchmaking, built on values rather than volume",
     summary:
-      "Most dating products optimise for volume: more profiles, faster swiping, more matches. Soulmate Society is built for the opposite — a compatibility score computed from core values and personality alignment, curated discovery on a map rather than an endless queue, and private conversations designed to actually start one.",
+      "Most dating products optimise for volume: more profiles, faster swiping, more matches. Soulmate Society is built for the opposite: a compatibility score computed from core values and personality alignment, curated discovery on a map rather than an endless queue, and private conversations designed to actually start one.",
     industry: "Social",
     productType: "Mobile application",
     whatWeDid:
@@ -94,7 +94,7 @@ export const projects: Project[] = [
       "GetIt",
     ],
     categories: ["mobile"],
-    period: "Mar — Apr 2026",
+    period: "Mar, Apr 2026",
     heroMedia: shot(
       "/media/projects/soulmate-society/01-brand.jpg",
       1448,
@@ -126,7 +126,7 @@ export const projects: Project[] = [
         title: "The category's defaults work against the stated goal",
         body: [
           "An app that optimises for session length and swipe volume produces exactly that. It does not produce the outcome people say they came for, and the interface quietly communicates that everyone is interchangeable.",
-          "The brief was to build for a different measure — fewer, better-considered connections — which meant rejecting most of the patterns the category has settled on.",
+          "The brief was to build for a different measure, fewer and better-considered connections, which meant rejecting most of the patterns the category has settled on.",
         ],
         points: [],
         media: null,
@@ -155,7 +155,7 @@ export const projects: Project[] = [
         kind: "design",
         title: "A premium register, deliberately unlike the category",
         body: [
-          "Deep navy and gold, a serif display face, generous space — closer to a members' club than to a social feed, and that is the point. It sets an expectation about pace before a single interaction happens.",
+          "Deep navy and gold, a serif display face, generous space, closer to a members' club than to a social feed, and that is the point. It sets an expectation about pace before a single interaction happens.",
           "Photography is given room rather than cropped into a grid, and the compatibility badge sits on the image where the decision is actually being made.",
         ],
         points: [
@@ -169,7 +169,7 @@ export const projects: Project[] = [
         kind: "build",
         title: "Two hard integrations, kept behind clean boundaries",
         body: [
-          "Real-time messaging and geospatial discovery are the two features that would otherwise dominate the codebase. Both run through third-party infrastructure — GetStream for low-latency chat, media handling and presence; Mapbox for map rendering and location-based discovery — so the product's own code stays about matching rather than about sockets and tiles.",
+          "Real-time messaging and geospatial discovery are the two features that would otherwise dominate the codebase. Both run through third-party infrastructure: GetStream for low-latency chat, media handling and presence; Mapbox for map rendering and location-based discovery, so the product's own code stays about matching rather than about sockets and tiles.",
           "Clean Architecture with BLoC and Cubit keeps each of those behind a boundary, which is what lets location services, matchmaking logic and the chat transport be reasoned about separately.",
         ],
         points: [
@@ -185,7 +185,7 @@ export const projects: Project[] = [
         title: "A product that reads as considered",
         body: [
           "The app looks and behaves like the thing it claims to be, which is most of the credibility problem in this category solved.",
-          "The design system is the durable asset — new surfaces can be added without renegotiating the brand each time.",
+          "The design system is the durable asset. New surfaces can be added without renegotiating the brand each time.",
         ],
         points: [],
         media: null,
@@ -199,7 +199,7 @@ export const projects: Project[] = [
     name: "Zyuela",
     tagline: "AI coaching, journalling and habits in one private space",
     summary:
-      "A mental wellbeing and coaching app: an AI coach you can actually talk to, guided journalling that tracks an emotional baseline over time, and habit work aimed at small consistent routines rather than large goals. The point is a private, clutter-free place to think — not another dashboard of streaks to protect.",
+      "A mental wellbeing and coaching app: an AI coach you can actually talk to, guided journalling that tracks an emotional baseline over time, and habit work aimed at small consistent routines rather than large goals. The point is a private, clutter-free place to think, not another dashboard of streaks to protect.",
     industry: "Health & wellbeing",
     productType: "AI product",
     whatWeDid:
@@ -224,7 +224,7 @@ export const projects: Project[] = [
       "MongoDB",
     ],
     categories: ["mobile", "ai"],
-    period: "May — Jun 2026",
+    period: "May, Jun 2026",
     heroMedia: shot(
       "/media/projects/zyuela/01-brand.jpg",
       1672,
@@ -255,7 +255,7 @@ export const projects: Project[] = [
         kind: "problem",
         title: "Reflection, coaching and habits lived in three different apps",
         body: [
-          "Journalling in one place, a habit tracker in another, and coaching — if any — in a third. None of them knew what the others held, so nothing could respond to what a person was actually working through.",
+          "Journalling in one place, a habit tracker in another, and coaching (if any) in a third. None of them knew what the others held, so nothing could respond to what a person was actually working through.",
           "The brief was one private space where the coaching has context: it can see the reflections and the routines, because they are in the same product.",
         ],
         points: [],
@@ -286,7 +286,7 @@ export const projects: Project[] = [
         kind: "design",
         title: "Quiet, warm, and almost entirely typographic",
         body: [
-          "A near-white ground, a deep green accent and a serif wordmark — closer to a printed journal than to a fitness tracker. There is very little chrome, because the writing and the conversation are the product.",
+          "A near-white ground, a deep green accent and a serif wordmark, closer to a printed journal than to a fitness tracker. There is very little chrome, because the writing and the conversation are the product.",
           "Prompts are set large and centred with nothing competing for attention, so the screen asks one thing at a time. The welcome screen sets that tone before any feature does.",
         ],
         points: [
@@ -301,7 +301,7 @@ export const projects: Project[] = [
         title: "The model is a component with a job, not the product",
         body: [
           "The Node.js and MongoDB backend owns authentication, persistence and every call out to the AI APIs. Keeping the model behind the server rather than in the client is what makes the key, the cost and the prompt something the product controls.",
-          "Clean Architecture with BLoC and Cubit on the Flutter side means the coaching surface is one feature among several rather than an assumption baked through the app — which is what lets it survive the feature growth a product like this attracts.",
+          "Clean Architecture with BLoC and Cubit on the Flutter side means the coaching surface is one feature among several rather than an assumption baked through the app, which is what lets it survive the feature growth a product like this attracts.",
         ],
         points: [
           "Node.js and MongoDB owning auth, persistence and all AI API calls",
@@ -314,7 +314,7 @@ export const projects: Project[] = [
         kind: "result",
         title: "A product you can come back to after a gap",
         body: [
-          "Because progress is framed as insight rather than as an unbroken record, returning after a week away costs nothing — which is the behaviour the whole design was aimed at.",
+          "Because progress is framed as insight rather than as an unbroken record, returning after a week away costs nothing, which is the behaviour the whole design was aimed at.",
           "The context-sharing between journal, tasks and coach is the durable idea: any new surface added later inherits it for free.",
         ],
         points: [],
@@ -329,7 +329,7 @@ export const projects: Project[] = [
     name: "OrthoTrack",
     tagline: "Orthodontic care that stays connected between appointments",
     summary:
-      "Orthodontic outcomes depend on what happens at home — elastics worn, teeth brushed, photos taken at a comparable angle. Between appointments a clinician can see none of it. OrthoTrack gives the patient a short daily check-in and scores their progress photos against therapist-set reference images automatically, so a problem reaches a human while it still matters.",
+      "Orthodontic outcomes depend on what happens at home: elastics worn, teeth brushed, photos taken at a comparable angle. Between appointments a clinician can see none of it. OrthoTrack gives the patient a short daily check-in and scores their progress photos against therapist-set reference images automatically, so a problem reaches a human while it still matters.",
     industry: "Healthcare",
     productType: "Two-sided AI platform",
     whatWeDid:
@@ -355,7 +355,7 @@ export const projects: Project[] = [
       "Firebase Cloud Messaging",
     ],
     categories: ["mobile", "ai"],
-    period: "Jul — Aug 2026",
+    period: "Jul, Aug 2026",
     heroMedia: screen(
       "/media/projects/orthotrack/01-patient-home.png",
       "OrthoTrack's patient home: today's progress with elastics, brushing, photo upload and breathing, plus the assigned therapist.",
@@ -391,7 +391,7 @@ export const projects: Project[] = [
         kind: "approach",
         title: "Two apps, one record, and a reviewer that never sleeps",
         body: [
-          "Patient and clinician need genuinely different products — one is a two-minute daily habit, the other is a review tool — so the account chooses its side at sign-up and the interfaces diverge from there.",
+          "Patient and clinician need genuinely different products: one is a two-minute daily habit, the other is a review tool, so the account chooses its side at sign-up and the interfaces diverge from there.",
           "The piece that ties them together is reference images. A therapist assigns them; the patient sees them while taking their own photos; and a background job then scores each upload against them with a vision model. A low score alerts both the patient and their therapist, so a human looks sooner rather than at the next appointment.",
         ],
         points: [
@@ -409,7 +409,7 @@ export const projects: Project[] = [
         kind: "design",
         title: "A daily list short enough to actually complete",
         body: [
-          "The patient's home screen is four tasks and a progress ring — elastics, brushing, a photo, a breathing exercise. It is deliberately finite: a list you can finish is a list you come back to, and the streak is there to reward the habit rather than to punish a missed day.",
+          "The patient's home screen is four tasks and a progress ring: elastics, brushing, a photo, a breathing exercise. It is deliberately finite: a list you can finish is a list you come back to, and the streak is there to reward the habit rather than to punish a missed day.",
           "The clinician's side inverts the priority: patient search first, then a record with photos, compliance and reference images as tabs, so a review takes seconds rather than navigation.",
         ],
         points: [
@@ -482,7 +482,7 @@ export const projects: Project[] = [
       "OAuth",
     ],
     categories: ["mobile", "commerce"],
-    period: "May — Jul 2026",
+    period: "May, Jul 2026",
     heroMedia: screen(
       "/media/projects/our-ummah/01-home.png",
       "OurUmmah's home: a member's points balance, quick actions to scan, join a mosque or donate, and community partners.",
@@ -518,7 +518,7 @@ export const projects: Project[] = [
         kind: "approach",
         title: "Model all three sides from the first screen",
         body: [
-          "The very first decision in onboarding is which of the three you are — mosque, member, or community partner. Retrofitting a second audience onto a product built for one is expensive, and this product had three from the start.",
+          "The very first decision in onboarding is which of the three you are: mosque, member, or community partner. Retrofitting a second audience onto a product built for one is expensive, and this product had three from the start.",
           "Attendance is the connective tissue: the mosque displays a dynamically generated QR code, the member scans it, and that single event feeds reward points, membership standing and the mosque's own view of its community.",
         ],
         points: [
@@ -536,12 +536,12 @@ export const projects: Project[] = [
         kind: "design",
         title: "Explain the mechanism, in plain language, on the screen",
         body: [
-          "A points system that converts into a real financial benefit has to state its own rules where people can see them — how many points, what they cover, and what happens if the target is not reached. That explanation sits on the home screen rather than in a help page.",
+          "A points system that converts into a real financial benefit has to state its own rules where people can see them: how many points, what they cover, and what happens if the target is not reached. That explanation sits on the home screen rather than in a help page.",
           "The rest of the interface is three quick actions and a partner list. There is very little to learn, which matters for an audience that spans every level of comfort with an app.",
         ],
         points: [
           "The points model explained in full on the screen that shows the balance",
-          "Three quick actions — scan, join, donate — and nothing competing with them",
+          "Three quick actions, scan, join, donate, and nothing competing with them",
           "Giving named the way the community names it: Zakat, Sadaqah, membership",
         ],
         media: screen(
@@ -553,7 +553,7 @@ export const projects: Project[] = [
         kind: "build",
         title: "Money, identity and QR codes, handled properly",
         body: [
-          "Payments run through Stripe and identity through OAuth. For a product handling Zakat and mosque memberships, neither was a place to improvise — the money is donated in trust, and the trust is the product.",
+          "Payments run through Stripe and identity through OAuth. For a product handling Zakat and mosque memberships, neither was a place to improvise. The money is donated in trust, and the trust is the product.",
           "Check-in codes are generated on the fly per mosque rather than printed once, so a code that leaks stops working without anyone's membership being touched.",
         ],
         points: [
@@ -572,7 +572,7 @@ export const projects: Project[] = [
         title: "One record the whole community can see its own part of",
         body: [
           "Attendance, membership and giving are now the same system, which is what makes any of them reportable.",
-          "The partner side gives mosques a funding route that does not depend on asking the same members for more — which was the part that made the model work.",
+          "The partner side gives mosques a funding route that does not depend on asking the same members for more, which was the part that made the model work.",
         ],
         points: [],
         media: null,

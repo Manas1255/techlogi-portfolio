@@ -22,7 +22,7 @@ const STEPS = [
 ] as const;
 
 /**
- * An agent working inside an operations queue — the recommendation, and the
+ * An agent working inside an operations queue, the recommendation, and the
  * tool calls behind it, so a suggestion can be checked rather than trusted.
  */
 export function AgentConsoleComposition({

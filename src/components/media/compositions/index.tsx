@@ -12,7 +12,7 @@ import { OpsBoardComposition } from "./ops-board";
  * Synthetic interfaces exist so the site can show software behaving like
  * software before a single client asset is cleared for publication. They are
  * real DOM built from semantic tokens, which means they adapt to the ink or
- * bone ground they land on — something a screenshot can't do — and they stay
+ * bone ground they land on, something a screenshot can't do, and they stay
  * crisp at any size.
  *
  * They are placeholders with a defined exit: change a media entry's `kind` from

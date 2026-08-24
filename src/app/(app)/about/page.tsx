@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `About · ${siteConfig.name}`,
     description:
-      "How Techlogi works — the operating principles behind the engagements.",
+      "How Techlogi works, the operating principles behind the engagements.",
     url: `${siteConfig.url}/about`,
   },
 };

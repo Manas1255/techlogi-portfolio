@@ -13,7 +13,7 @@ import type { Project } from "@/content";
  * The case-study opening: the media at full width, with the project's facts
  * pinned beside the summary in a sticky rail.
  *
- * The rail is the mechanic worth borrowing from the best studio sites — what
+ * The rail is the mechanic worth borrowing from the best studio sites, what
  * this is stays on screen while the reader moves through what it took. It is
  * `position: sticky` on a grid column, so it costs nothing and degrades to
  * normal flow below `lg`.
@@ -28,7 +28,7 @@ function isPortrait(media: Project["heroMedia"]): boolean {
 /**
  * How many gallery items the hero consumes. A single phone alone in a
  * 1200px column reads as an accident rather than a composition, so a mobile
- * project opens on a row of three screens instead — and the gallery below
+ * project opens on a row of three screens instead, and the gallery below
  * skips the ones already shown.
  */
 export function heroMediaCount(project: Project): number {
@@ -50,7 +50,7 @@ export function CaseStudyHero({ project }: { project: Project }) {
           <Reveal variant="fade" className="flex flex-col gap-6">
             <Link
               href={APP_ROUTES.work}
-              className="text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
+              className="tap-target text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
             >
               ← All work
             </Link>

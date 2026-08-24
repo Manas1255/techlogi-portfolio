@@ -3,7 +3,7 @@ import type { ProcessStage } from "./schemas";
 /**
  * DEVELOPMENT PROCESS.
  *
- * Each stage says what happens and — the part a buyer is actually evaluating —
+ * Each stage says what happens and, the part a buyer is actually evaluating,
  * what they receive at the end of it. A stage with no deliverable is a meeting.
  */
 export const processStages: ProcessStage[] = [
@@ -32,7 +32,7 @@ export const processStages: ProcessStage[] = [
   {
     id: "design",
     name: "Design",
-    what: "Flows, then screens, then a system. We design every state — loading, empty, error, and too much data — because those are the ones that get discovered late.",
+    what: "Flows, then screens, then a system. We design every state: loading, empty, error, and too much data. This is because those are the ones that get discovered late.",
     receives: [
       "A design system: tokens, components and the rules for extending it",
       "High-fidelity designs for the full flow, all states included",
@@ -47,7 +47,7 @@ export const processStages: ProcessStage[] = [
     receives: [
       "A deployed environment updated every iteration, not a demo build",
       "Iteration notes: what shipped, what moved, what we learned",
-      "Access to the repository from day one — it is yours",
+      "Access to the repository from day one, it is yours",
     ],
     duration: "6–16 weeks, typically",
   },
@@ -58,7 +58,7 @@ export const processStages: ProcessStage[] = [
     receives: [
       "Accessibility and performance reports with the fixes applied",
       "Load and failure testing against expected volumes",
-      "A known-issues list — the honest one, not the empty one",
+      "A known-issues list, the honest one, not the empty one",
     ],
     duration: "1–2 weeks",
   },
@@ -80,7 +80,7 @@ export const processStages: ProcessStage[] = [
     receives: [
       "A post-launch review against the success measures agreed in Define",
       "A prioritised backlog from real usage, not from the original plan",
-      "Retained capacity, or a clean handover — decided up front, not at the end",
+      "Retained capacity, or a clean handover, decided up front, not at the end",
     ],
     duration: "Ongoing, or handover",
   },

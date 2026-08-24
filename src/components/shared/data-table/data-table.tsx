@@ -24,8 +24,8 @@ import { DataTablePagination } from "./data-table-pagination";
 /**
  * The one table in this app.
  *
- * It owns every state a data surface needs — loading (layout-matching
- * skeletons), error (with retry), empty, and loaded — so a list screen can't
+ * It owns every state a data surface needs, loading (layout-matching
+ * skeletons), error (with retry), empty, and loaded, so a list screen can't
  * accidentally ship only the happy path. Sorting and pagination are
  * SERVER-DRIVEN and read from URL state (`useTableParams`), which is what makes
  * a filtered view shareable and back-button-friendly.
@@ -158,7 +158,7 @@ export function DataTable<TData>({
         </div>
 
         {isError ? <ErrorState error={error} onRetry={onRetry} /> : null}
-        {showEmpty ? (emptyState ?? <EmptyState title="—" />) : null}
+        {showEmpty ? (emptyState ?? <EmptyState title=", " />) : null}
       </div>
 
       {pagination && onPageChange ? (

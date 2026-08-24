@@ -10,7 +10,7 @@ import type { ProjectCategory } from "@/content";
 import { WorkFilters } from "./work-filters";
 
 /**
- * `/work` — the portfolio index.
+ * `/work`, the portfolio index.
  *
  * The same editorial panels as the home page, at full length and filterable.
  * A grid of identical cards would be the easy answer and the wrong one: the
@@ -33,7 +33,7 @@ export function WorkScreen({ category }: { category: ProjectCategory | null }) {
             <Reveal delay={120}>
               <p className="text-lead text-muted-foreground">
                 Each case study covers the problem, the approach and the
-                trade-offs — including the decisions we would make differently.
+                trade-offs, including the decisions we would make differently.
               </p>
             </Reveal>
             {hasDraftCaseStudies() && (

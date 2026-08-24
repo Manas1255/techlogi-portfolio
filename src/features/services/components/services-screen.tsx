@@ -16,7 +16,7 @@ import { findProject, serviceGroups } from "@/content";
 import { ArrowLink } from "@/components/marketing";
 
 /**
- * `/services` — the long form of the capability index.
+ * `/services`, the long form of the capability index.
  *
  * The home page's tabbed version is for scanning; this one is for reading, so
  * every group is expanded and anchored (`/services#engineering`), which is what
@@ -125,7 +125,7 @@ export function ServicesScreen() {
       <ClosingCta
         origin="services-close"
         title="Which of these do you need?"
-        lead="Start with what you're building — we'll work out the rest together."
+        lead="Start with what you're building, we'll work out the rest together."
       />
     </>
   );

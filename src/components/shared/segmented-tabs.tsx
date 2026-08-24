@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Segmented control for switching between views of the SAME data (list/board,
- * all/mine). For navigating to different content, use tabs or links instead —
+ * all/mine). For navigating to different content, use tabs or links instead,
  * a segmented control implies the surface stays put.
  *
  * Bind `value` to URL state so the chosen view survives a refresh and a share.

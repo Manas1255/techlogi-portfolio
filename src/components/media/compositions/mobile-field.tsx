@@ -2,14 +2,14 @@ import { Chip, Dot, Label, Line, Panel, U } from "./parts";
 
 const HISTORY = [
   { when: "12 Mar", what: "Valve seat replaced" },
-  { when: "04 Jan", what: "Pressure test — passed" },
+  { when: "04 Jan", what: "Pressure test, passed" },
   { when: "18 Nov", what: "Flagged: corrosion, monitor" },
 ] as const;
 
 /**
  * The field app, in a phone frame.
  *
- * Portrait containers are narrow, so this sets a larger base unit — otherwise
+ * Portrait containers are narrow, so this sets a larger base unit, otherwise
  * every atom would render at two or three pixels. It is the same scale system,
  * tuned once, in one place.
  */

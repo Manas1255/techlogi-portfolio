@@ -6,7 +6,7 @@ import { z } from "zod";
  * Server-only vars live in `serverEnv`; anything the browser may read MUST be
  * prefixed `NEXT_PUBLIC_` and declared in `clientEnv`.
  *
- * This is the ONLY module allowed to touch `process.env` — every other call
+ * This is the ONLY module allowed to touch `process.env`, every other call
  * site imports from here (enforced by the ESLint guardrail pack).
  */
 

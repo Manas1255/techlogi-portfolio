@@ -36,8 +36,8 @@ export function Logo({
   return (
     <Link
       href={HOME_ROUTE}
-      className="focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
-      aria-label={`${siteConfig.name} — home`}
+      className="tap-target focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+      aria-label={`${siteConfig.name}, home`}
     >
       {mark}
     </Link>

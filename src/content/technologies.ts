@@ -4,7 +4,7 @@ import type { TechGroup } from "./schemas";
  * TECHNOLOGY.
  *
  * Grouped and reasoned, never a logo wall. Each group leads with why these
- * choices — technology is secondary to the outcome, and a list without an
+ * choices, technology is secondary to the outcome, and a list without an
  * argument is decoration.
  */
 export const techGroups: TechGroup[] = [

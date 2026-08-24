@@ -49,12 +49,12 @@ import { InquiryProgress } from "./inquiry-progress";
 /**
  * THE PROJECT INQUIRY.
  *
- * A centred dialog, mounted once, opened from anywhere via the store — so
+ * A centred dialog, mounted once, opened from anywhere via the store, so
  * "Start a Project" is reachable from the header, the hero, every section CTA
  * and the footer without any of them owning the form.
  *
  * Why a dialog rather than the side dialog it replaced: a dialog is a good
- * pattern for a task you dip into beside your work. This is not that — it is
+ * pattern for a task you dip into beside your work. This is not that, it is
  * the one thing the visitor came to do, and it deserves the centre of the
  * screen with the page dimmed behind it. The side panel also put the form in a
  * narrow column, which forced every choice into a cramped two-up grid.
@@ -75,12 +75,12 @@ import { InquiryProgress } from "./inquiry-progress";
  *
  * Accessibility comes from Radix's Dialog underneath: focus trapped while open,
  * Escape closes, focus returns to whatever opened it, the page behind inert and
- * scroll-locked. What is added here is the rest of the contract — one form
+ * scroll-locked. What is added here is the rest of the contract, one form
  * instance so going back never loses input, per-step validation so a field you
  * haven't seen can't block you, a live region announcing each step, and
  * designed loading, error and success states.
  *
- * The layout is a three-row grid — header, scrolling body, footer — so the
+ * The layout is a three-row grid, header, scrolling body, footer, so the
  * body scrolls WITHIN the dialog and the heading can never slide under the
  * header, which is exactly what the previous panel did.
  */
@@ -111,7 +111,7 @@ export function InquiryDialog() {
   const clearDraft = useInquiryStore((state) => state.clearDraft);
 
   // A File can't be serialized, so the attachment lives here rather than in the
-  // persisted store — losing it silently on rehydrate would be worse.
+  // persisted store, losing it silently on rehydrate would be worse.
   const [attachment, setAttachment] = useState<File | null>(null);
   const headingRef = useRef<HTMLParagraphElement>(null);
 
@@ -138,7 +138,7 @@ export function InquiryDialog() {
   useEffect(() => {
     if (!isOpen) return;
     form.reset({ ...form.getValues(), ...storedValues }, { keepErrors: true });
-    // `storedValues` is intentionally read once per open — reacting to every
+    // `storedValues` is intentionally read once per open, reacting to every
     // keystroke would fight the form for control of its own inputs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -178,7 +178,7 @@ export function InquiryDialog() {
       Clear the NEXT step's errors before showing it. The resolver validates the
       whole schema on every `trigger`, so arriving at the contact step would
       otherwise greet the visitor with "This field is required" under fields
-      they have not been shown yet — which reads as having already failed, and
+      they have not been shown yet, which reads as having already failed, and
       is the exact opposite of the reassurance this form is trying to give.
     */
     form.clearErrors(STEP_FIELDS[next]);
@@ -197,8 +197,8 @@ export function InquiryDialog() {
       { ...values, attachment: attachment ?? undefined },
       {
         onSuccess: () => {
-          // Clear the draft — a submitted inquiry shouldn't reappear
-          // half-filled — but leave the dialog open, because the success state
+          // Clear the draft, a submitted inquiry shouldn't reappear
+          // half-filled, but leave the dialog open, because the success state
           // is the whole point of having submitted.
           clearDraft();
           setAttachment(null);

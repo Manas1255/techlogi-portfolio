@@ -3,7 +3,7 @@
  *
  * Deliberately MEMORY-ONLY (BFF auth model): the long-lived refresh token sits
  * in an httpOnly cookie the browser cannot read, and the short-lived access
- * token never touches `localStorage` — so an XSS payload cannot exfiltrate a
+ * token never touches `localStorage`, so an XSS payload cannot exfiltrate a
  * durable session. On a reload the app re-derives an access token by calling
  * `/api/session/refresh`, which succeeds purely because the cookie rides along.
  *

@@ -36,7 +36,7 @@ export function isNetworkError(error: unknown): error is NetworkError {
   return error instanceof NetworkError;
 }
 
-/** True for an aborted request — never surface these as errors to the user. */
+/** True for an aborted request, never surface these as errors to the user. */
 export function isAbortError(error: unknown): boolean {
   return error instanceof DOMException && error.name === "AbortError";
 }
@@ -45,7 +45,7 @@ export function isAbortError(error: unknown): boolean {
  * The response didn't match the schema the repository expected.
  *
  * This is the inbound counterpart to parsing request bodies before they leave.
- * `backendClient.get<Order>(…)` is a CLAIM about the response, not a check —
+ * `backendClient.get<Order>(…)` is a CLAIM about the response, not a check,
  * TypeScript erases it, so without this a renamed backend field becomes
  * `undefined` flowing into a component and surfaces as a crash in a date
  * formatter three layers away, with a stack trace pointing at the formatter.
@@ -54,7 +54,7 @@ export function isAbortError(error: unknown): boolean {
  * and it happens at the one place that knows both.
  */
 export class ParseError extends Error {
-  /** e.g. `GET /orders` — the request whose response failed. */
+  /** e.g. `GET /orders`, the request whose response failed. */
   readonly endpoint: string;
   /** One `field.path: reason` per problem the schema found. */
   readonly issues: readonly string[];
@@ -74,7 +74,7 @@ export function isParseError(error: unknown): error is ParseError {
 /**
  * Normalize whatever a `parse` callback threw into a `ParseError`.
  *
- * Zod's own `error.message` is a JSON dump of every issue — accurate but
+ * Zod's own `error.message` is a JSON dump of every issue, accurate but
  * unreadable in a toast or a log line. Flattening to `path: reason` is what
  * makes the failure actionable at a glance.
  */

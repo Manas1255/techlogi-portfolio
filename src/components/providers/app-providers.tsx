@@ -12,7 +12,7 @@ import { attachQueryErrorReporting, getQueryClient } from "@/lib/query-client";
  *
  * Everything that needs browser context lives here so the rest of the tree can
  * stay Server Components. Adding `"use client"` further down is almost always a
- * mistake — check whether the component really needs state or effects first.
+ * mistake, check whether the component really needs state or effects first.
  *
  * A marketing site has no session to bootstrap. React Query is still here
  * because the project inquiry is a real mutation with real pending/error states,

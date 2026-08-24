@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * The ONE confirmation dialog. Never `window.confirm` (unstyled, blocking, and
  * invisible to the design system) and never a bespoke alert per feature.
  *
- * Every destructive action — delete, remove, leave, revoke — must pass through
+ * Every destructive action, delete, remove, leave, revoke, must pass through
  * here with `destructive`, so "irreversible" always looks the same.
  */
 export interface ConfirmDialogProps {

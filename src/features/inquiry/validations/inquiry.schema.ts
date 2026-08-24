@@ -4,7 +4,7 @@ import { emailField, nameField, phoneField } from "@/validations/fields";
 import { buildTypeSchema } from "@/content/schemas";
 
 /**
- * The inquiry form's shape — what the visitor SENDS, which is deliberately not
+ * The inquiry form's shape, what the visitor SENDS, which is deliberately not
  * the same as what comes back (that lives in `models/inquiry.model.ts`).
  *
  * Messages are i18n keys, resolved by `useFieldError`, so an error is
@@ -76,7 +76,7 @@ export type BudgetId = (typeof BUDGETS)[number]["id"];
  * THREE steps, and which fields each one owns.
  *
  * It was four. The scope step (timeline and budget) and the brief step were
- * merged, because every extra screen is another place to stop — and because
+ * merged, because every extra screen is another place to stop, and because
  * both of the scope questions are now optional, so a step that could be
  * skipped entirely does not deserve a screen of its own.
  */
@@ -93,7 +93,7 @@ export const STEP_COUNT = STEP_FIELDS.length;
  *
  * Four fields, one of them optional. A visitor who has just landed will not
  * fill in timeline and budget, and asking anyway is how a hero form becomes
- * decoration — so the short form collects only what is needed to reply, and
+ * decoration, so the short form collects only what is needed to reply, and
  * the reply asks for the rest. It submits through the SAME repository and the
  * same success path as the dialog; there is one implementation of "send an
  * inquiry", not two.

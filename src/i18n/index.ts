@@ -7,7 +7,7 @@ import type { Locale } from "./locales";
 import type { MessageKey, MessageVars } from "./types";
 
 /**
- * Minimal, fully-typed i18n. No runtime dependency — the catalogs are plain
+ * Minimal, fully-typed i18n. No runtime dependency, the catalogs are plain
  * objects and `MessageKey` is derived from the source catalog, so an unknown
  * key or a missing translation is a TYPE error, not a runtime surprise.
  *
@@ -36,7 +36,7 @@ export function useSetLocale(): (locale: Locale) => void {
 }
 
 /**
- * Resolve a string that MAY be a message key — used by form error rendering,
+ * Resolve a string that MAY be a message key, used by form error rendering,
  * where Zod messages are authored as i18n keys but a server may also return a
  * ready-made sentence. A non-key string passes through unchanged.
  */

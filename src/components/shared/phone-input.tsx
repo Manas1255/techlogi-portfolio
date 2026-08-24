@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  * remember to recombine, and they drift apart the first time someone pastes a
  * full international number.
  *
- * Extend `DIAL_CODES` for the markets you serve — a full country list is a
+ * Extend `DIAL_CODES` for the markets you serve, a full country list is a
  * dependency, and most products need a handful.
  */
 const DIAL_CODES = [

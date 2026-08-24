@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { siteConfig } from "@/config/site";
 
 /**
- * The social preview card, generated rather than shipped as a PNG — so it can
+ * The social preview card, generated rather than shipped as a PNG, so it can
  * never drift from the site's own name and positioning.
  *
  * Deliberately typographic and on the ink ground: a preview card is read at
@@ -11,7 +11,7 @@ import { siteConfig } from "@/config/site";
  */
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt = `${siteConfig.name} — product engineering studio`;
+export const alt = `${siteConfig.name} · product engineering studio`;
 
 export default function OpengraphImage() {
   return new ImageResponse(

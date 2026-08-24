@@ -2,7 +2,7 @@ import { z } from "zod";
 import { FIELD_LIMITS } from "@/constants";
 
 /**
- * Reusable Zod field primitives — the `FieldValidators` equivalent.
+ * Reusable Zod field primitives, the `FieldValidators` equivalent.
  *
  * Every schema in the app composes these instead of re-writing regexes, so
  * validation rules and their messages stay identical everywhere.

@@ -16,7 +16,7 @@ import { MobileNav } from "./mobile-nav";
  * At the top of the page it is an ordinary full-bleed bar sitting on the warm
  * wash. Past the fold it DETACHES: the outer padding opens, the bar contracts
  * to a centred capsule of warm glass, and the row loses height. One continuous
- * morph rather than a bar that swaps itself for a different bar — every
+ * morph rather than a bar that swaps itself for a different bar, every
  * property that changes lives on the same element, so the browser interpolates
  * instead of cutting.
  *
@@ -28,7 +28,7 @@ import { MobileNav } from "./mobile-nav";
  * moment, which is the entire point of a persistent control.
  *
  * The morph is CSS transitions, so `motion-reduce:transition-none` is what
- * turns it off — the state still changes, it just cuts instead of animating.
+ * turns it off, the state still changes, it just cuts instead of animating.
  *
  * The inquiry dialog is mounted here, once, for the whole site.
  */

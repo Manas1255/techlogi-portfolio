@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  * icon-only button with no label is invisible to a screen reader), destructive
  * items visually separated and styled as destructive.
  *
- * `stopPropagation` matters — without it, opening the menu on a clickable row
+ * `stopPropagation` matters, without it, opening the menu on a clickable row
  * also navigates to the detail page.
  */
 export interface RowAction {

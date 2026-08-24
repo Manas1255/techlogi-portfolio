@@ -21,7 +21,7 @@ import { useFieldError } from "./use-field-error";
  * Searchable entity picker as a form field.
  *
  * For server-side search, pass `search`/`onSearchChange` from a debounced query
- * in the parent — the field itself stays presentational.
+ * in the parent, the field itself stays presentational.
  */
 export interface ComboboxFieldProps<
   TFieldValues extends FieldValues,
@@ -60,7 +60,7 @@ export function ComboboxField<
     A DOM id must be unique in the document, and a field id derived from the
     field NAME is not: the moment two forms on one page both have a
     "description", the browser binds every `label[for="description"]` to
-    whichever input it met first — so a label in one form starts operating a
+    whichever input it met first, so a label in one form starts operating a
     control in the other. `useId` scopes the id to this instance; the field
     name stays the form's identifier, which is what it is actually for.
   */

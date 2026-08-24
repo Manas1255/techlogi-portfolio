@@ -1,12 +1,12 @@
 /**
  * Every route string in the site. Never hardcode a path in `<Link href>`,
- * `router.push`, or `redirect()` — import from here so a route rename is one
+ * `router.push`, or `redirect()`, import from here so a route rename is one
  * edit and `jinn-web doctor` can verify pages ↔ constants stay in sync.
  */
 
 /**
  * The home route is separate from `APP_ROUTES` because that object is keyed by
- * PAGE SEGMENT — `jinn-web doctor` verifies each key against a directory under
+ * PAGE SEGMENT, `jinn-web doctor` verifies each key against a directory under
  * `src/app/(app)`, and the home page has no segment of its own.
  */
 export const HOME_ROUTE = "/";
@@ -29,7 +29,7 @@ export function caseStudyPath(slug: string): string {
 
 /**
  * Nav model for the header and footer. Labels are i18n keys, resolved at the
- * render site — a route table must not depend on the locale store.
+ * render site, a route table must not depend on the locale store.
  */
 export const NAV_ITEMS = [
   { href: APP_ROUTES.work, labelKey: "nav.work" },

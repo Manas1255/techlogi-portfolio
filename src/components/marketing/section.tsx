@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * `slab` and `paper` re-declare every colour token for the subtree, so a
  * section flips ground without any child knowing which one it landed on.
- * `inherit` leaves the surrounding ground alone — which, since the site is
+ * `inherit` leaves the surrounding ground alone, which, since the site is
  * light by default, is what most sections want.
  */
 export type Surface = "paper" | "slab" | "inherit";
@@ -28,7 +28,7 @@ export interface SectionProps extends React.ComponentProps<"section"> {
   rhythm?: Rhythm;
   /** Draw a hairline along the top edge, to close the section above. */
   divided?: boolean;
-  /** Add the grain layer — ink grounds only, and sparingly. */
+  /** Add the grain layer, ink grounds only, and sparingly. */
   grain?: boolean;
   /** Escape hatch for sections that manage their own container. */
   bare?: boolean;

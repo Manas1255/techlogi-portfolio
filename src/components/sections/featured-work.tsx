@@ -8,7 +8,7 @@ import { ProjectPanel } from "./project-panel";
  *
  * Composition alternates deliberately: side-by-side, mirrored, then a full-bleed
  * panel every third entry. Three consecutive identical layouts is the failure
- * mode this rhythm exists to prevent — and the variation does real work, giving
+ * mode this rhythm exists to prevent, and the variation does real work, giving
  * the strongest project the widest frame.
  */
 export function FeaturedWork() {
@@ -20,7 +20,7 @@ export function FeaturedWork() {
         index={2}
         eyebrow="Selected work"
         title="Products in production, not pitches."
-        lead="Every engagement below shipped, went live, and is still running. Each case study covers the problem, the approach and the trade-offs — including the ones that didn't go to plan."
+        lead="Every engagement below shipped, went live, and is still running. Each case study covers the problem, the approach and the trade-offs, including the ones that didn't go to plan."
         align="split"
         aside={<ArrowLink href={APP_ROUTES.work}>View all work</ArrowLink>}
       />

@@ -8,7 +8,7 @@ export interface InquiryTriggerProps extends Omit<
   React.ComponentProps<typeof Button>,
   "onClick"
 > {
-  /** Where this trigger lives, e.g. "header" — recorded with the inquiry. */
+  /** Where this trigger lives, e.g. "header", recorded with the inquiry. */
   origin: string;
   children?: React.ReactNode;
 }

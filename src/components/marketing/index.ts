@@ -2,7 +2,7 @@
  * Marketing presentation primitives.
  *
  * These are pure: they take content and render it. They never reach into
- * `features/` — the lint boundary enforces that — so a section can be composed
+ * `features/`, the lint boundary enforces that, so a section can be composed
  * on the server and stay there.
  */
 export {

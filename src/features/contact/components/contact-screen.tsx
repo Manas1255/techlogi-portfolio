@@ -8,7 +8,7 @@ import { publishedLocations, siteConfig } from "@/config/site";
 import { InquiryLauncher } from "@/features/inquiry";
 
 /**
- * `/contact` — the inquiry, given a page of its own.
+ * `/contact`, the inquiry, given a page of its own.
  *
  * It is the same interaction as everywhere else: the first question inline,
  * then the dialog. A duplicate contact form would mean two implementations of
@@ -36,7 +36,7 @@ export function ContactScreen() {
               </Reveal>
               <Reveal delay={120}>
                 <p className="text-lead text-muted-foreground">
-                  Start with one question. Four short steps in total — and you
+                  Start with one question. Three short steps in total, and you
                   can close it and come back without losing anything.
                 </p>
               </Reveal>
@@ -52,14 +52,14 @@ export function ContactScreen() {
                 </h2>
                 <a
                   href={`mailto:${siteConfig.contact.email}`}
-                  className="text-display-3 hover:text-primary focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
+                  className="tap-target text-display-3 hover:text-primary focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
                 >
                   {siteConfig.contact.email}
                 </a>
                 {siteConfig.contact.phone !== null && (
                   <a
                     href={`tel:${siteConfig.contact.phone}`}
-                    className="text-muted-foreground hover:text-foreground w-fit text-sm transition-colors"
+                    className="tap-target text-muted-foreground hover:text-foreground w-fit text-sm transition-colors"
                   >
                     {siteConfig.contact.phone}
                   </a>
@@ -76,7 +76,7 @@ export function ContactScreen() {
                 <HairlineList
                   items={[
                     "The problem, before the feature list",
-                    "What exists today — a system, a spreadsheet, or nothing yet",
+                    "What exists today: a system, a spreadsheet, or nothing yet",
                     "Who uses it, and where they are when they do",
                     "Any date that actually matters, and why",
                   ]}
@@ -90,7 +90,7 @@ export function ContactScreen() {
                 <HairlineList
                   numbered
                   items={[
-                    "A person reads it — no auto-responder, no sequence",
+                    "A person reads it. No auto-responder, no sequence",
                     "We reply within one business day, usually with questions",
                     "A 30-minute call if it looks like a fit, no deck",
                     "A written scope and estimate, with the assumptions attached",

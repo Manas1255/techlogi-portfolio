@@ -3,7 +3,7 @@ import { isAbortError, isApiError, isNetworkError } from "@/lib/http";
 /**
  * Observability seam.
  *
- * Everything that wants to record an error or a diagnostic goes through here —
+ * Everything that wants to record an error or a diagnostic goes through here,
  * `error.tsx`, the HTTP transport, the React Query cache, mutation helpers. In
  * development it prints; in production it's a no-op until you wire a real
  * service, which is then a ONE-FILE change instead of a hunt through the app.
@@ -21,7 +21,7 @@ export interface ReportContext {
 }
 
 export function reportError(error: unknown, context?: ReportContext): void {
-  // Aborts are normal (a superseded request) — never noise the logs with them.
+  // Aborts are normal (a superseded request), never noise the logs with them.
   if (isAbortError(error)) return;
 
   if (isDev) {

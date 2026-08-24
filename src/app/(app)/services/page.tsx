@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Product strategy, design systems, web and SaaS engineering, mobile apps, AI integration and product modernization — with what you receive at each stage.",
+    "Product strategy, design systems, web and SaaS engineering, mobile apps, AI integration and product modernization, with what you receive at each stage.",
   alternates: { canonical: "/services" },
   openGraph: {
     title: `Services · ${siteConfig.name}`,

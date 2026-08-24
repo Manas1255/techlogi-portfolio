@@ -24,7 +24,7 @@ export interface ServerRequestOptions<T = unknown> {
   acceptLanguage?: string;
   signal?: AbortSignal;
   /**
-   * Validate the response — see `RequestOptions.parse` on the browser client.
+   * Validate the response, see `RequestOptions.parse` on the browser client.
    * Kept in step deliberately: a Route Handler that skipped validation would be
    * an unchecked way into the same data the browser client guards.
    */

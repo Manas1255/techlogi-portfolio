@@ -11,7 +11,7 @@ import { findProject, testimonials } from "@/content";
 /**
  * CLIENT PROOF.
  *
- * Every quote here is currently a marked placeholder — no person, company or
+ * Every quote here is currently a marked placeholder, no person, company or
  * endorsement is invented. The structure is real, so replacing them is a
  * content edit: set `isPlaceholder: false` in `src/content/testimonials.ts` and
  * the placeholder treatment disappears on its own.
@@ -29,7 +29,7 @@ export function TestimonialsSection() {
         index={6}
         eyebrow="Client proof"
         title="What clients say, once they've said it."
-        lead="We publish quotes only with written approval, attributed to a real person at a real company. Until then, these are placeholders — and labelled as such."
+        lead="We publish quotes only with written approval, attributed to a real person at a real company. Until then, these are placeholders, and labelled as such."
       />
 
       <div className="mt-14 grid gap-8 lg:grid-cols-2 lg:gap-12">
@@ -69,7 +69,7 @@ export function TestimonialsSection() {
                 {project !== undefined && (
                   <Link
                     href={caseStudyPath(project.slug)}
-                    className="text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
+                    className="tap-target text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
                   >
                     On {project.name} →
                   </Link>
@@ -77,7 +77,7 @@ export function TestimonialsSection() {
 
                 {testimonial.isPlaceholder && (
                   <PlaceholderNote>
-                    Placeholder — awaiting an approved client quote.
+                    Placeholder, awaiting an approved client quote.
                   </PlaceholderNote>
                 )}
               </figcaption>

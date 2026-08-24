@@ -15,11 +15,11 @@ import { siteConfig } from "@/config/site";
 const PRINCIPLES = [
   {
     title: "We write the plan down",
-    body: "Discovery ends in a document you could hand to a different team and get the same product. If we can't write it, we don't understand it yet — and neither would you.",
+    body: "Discovery ends in a document you could hand to a different team and get the same product. If we can't write it, we don't understand it yet, and neither would you.",
   },
   {
     title: "The boundary is where things break",
-    body: "Every external edge — a backend response, a form, a file upload, a third-party API — is validated in both directions. A renamed field should fail loudly at the seam, not silently three screens later.",
+    body: "Every external edge, a backend response, a form, a file upload, a third-party API, is validated in both directions. A renamed field should fail loudly at the seam, not silently three screens later.",
   },
   {
     title: "Every state, not the happy path",
@@ -40,7 +40,7 @@ const PRINCIPLES = [
 ];
 
 /**
- * `/about` — how the studio works, in the studio's own terms.
+ * `/about`, how the studio works, in the studio's own terms.
  *
  * Deliberately not a team grid: no real people can be listed without their
  * consent and photographs, and a page of invented headshots would be exactly
@@ -68,7 +68,7 @@ export function AboutScreen() {
               <Reveal delay={120}>
                 <p className="text-lead text-muted-foreground">
                   {siteConfig.tagline} We work the way a good internal team
-                  works — with the difference that we have done it across a lot
+                  works, with the difference that we have done it across a lot
                   of domains, and we leave you the codebase, the documentation
                   and the ability to carry on without us.
                 </p>
@@ -128,12 +128,12 @@ export function AboutScreen() {
               {
                 name: "Discovery engagement",
                 detail:
-                  "Two to four weeks, fixed scope. You get a written plan, an architecture recommendation, an estimate with its assumptions, and a prototype of whatever carries the risk. It stands on its own — you can take it to another team.",
+                  "Two to four weeks, fixed scope. You get a written plan, an architecture recommendation, an estimate with its assumptions, and a prototype of whatever carries the risk. It stands on its own, you can take it to another team.",
               },
               {
                 name: "Product build",
                 detail:
-                  "A full team — product, design, engineering — through to launch and past it. Two-week iterations against a deployed environment, with access to the repository from day one.",
+                  "A full team of product, design and engineering, through to launch and past it. Two-week iterations against a deployed environment, with access to the repository from day one.",
               },
               {
                 name: "Embedded team",
@@ -174,7 +174,7 @@ export function AboutScreen() {
                 "The team that pitches is the team that builds",
                 "Direct access to engineers and designers, not a delivery manager relaying",
                 "One named lead accountable for the engagement end to end",
-                "Your repository, your infrastructure, your accounts — from the first commit",
+                "Your repository, your infrastructure, your accounts, from the first commit",
               ]}
             />
             <PlaceholderNote tone="panel">
@@ -183,7 +183,7 @@ export function AboutScreen() {
               <code className="font-mono text-[0.8125rem]">
                 src/config/site.ts
               </code>{" "}
-              and this section once they are real — inventing them would be the
+              and this section once they are real, inventing them would be the
               one thing that makes everything else on this site less credible.
             </PlaceholderNote>
           </Reveal>

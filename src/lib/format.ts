@@ -5,7 +5,7 @@ import { getLocale } from "@/i18n/locale-store";
  * call site uses these helpers so formatting stays locale-aware and identical
  * across screens. Add new formats here rather than inline.
  *
- * Plurals belong in the i18n catalog (`t(key, { count })`), NOT here — string
+ * Plurals belong in the i18n catalog (`t(key, { count })`), NOT here, string
  * concatenation can't express plural rules in most languages.
  */
 
@@ -25,7 +25,7 @@ export function formatCurrency(value: number, currency = "EUR"): string {
   }).format(value);
 }
 
-/** `1.2K`, `3.4M` — for KPI tiles and counts where space is tight. */
+/** `1.2K`, `3.4M`, for KPI tiles and counts where space is tight. */
 export function formatCompact(value: number): string {
   return new Intl.NumberFormat(getLocale(), {
     notation: "compact",
@@ -33,7 +33,7 @@ export function formatCompact(value: number): string {
   }).format(value);
 }
 
-/** `12.5%` — pass the ratio (0.125), not the percentage. */
+/** `12.5%`, pass the ratio (0.125), not the percentage. */
 export function formatPercent(ratio: number, fractionDigits = 1): string {
   return new Intl.NumberFormat(getLocale(), {
     style: "percent",
@@ -64,7 +64,7 @@ export function initials(name: string, max = 2): string {
     .join("");
 }
 
-/** `in_progress` / `in-progress` → `In progress`. For fallback labels only —
+/** `in_progress` / `in-progress` → `In progress`. For fallback labels only,
  *  user-facing status text should come from an i18n key. */
 export function humanize(value: string): string {
   const spaced = value.replace(/[_-]+/g, " ").trim();

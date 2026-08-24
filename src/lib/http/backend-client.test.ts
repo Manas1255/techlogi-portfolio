@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 
 /**
- * The transport is the most load-bearing module in the app — every request
+ * The transport is the most load-bearing module in the app, every request
  * passes through it, and its refresh logic is the kind that fails silently and
  * intermittently. These tests pin the behavior that's expensive to debug in
  * production: envelope unwrapping, error typing, and single-flight refresh.
@@ -107,7 +107,7 @@ describe("backendClient", () => {
       vi.fn().mockResolvedValue(ENVELOPE_ERROR(409, "Email already in use")),
     );
 
-    // The UI branches on statusCode and shows message — so both must survive.
+    // The UI branches on statusCode and shows message, so both must survive.
     await expect(backendClient.post("/users", {})).rejects.toMatchObject({
       name: "ApiError",
       statusCode: 409,
@@ -145,7 +145,7 @@ describe("backendClient", () => {
   });
 
   it("shares ONE refresh across concurrent 401s", async () => {
-    // Three parallel requests hitting 401 must not fire three refreshes — that
+    // Three parallel requests hitting 401 must not fire three refreshes, that
     // races the backend's token rotation and logs the user out at random.
     vi.stubGlobal(
       "fetch",
@@ -187,7 +187,7 @@ describe("backendClient", () => {
   });
 
   it("does not retry a 401 forever", async () => {
-    // Refresh 'succeeds' but the replay still 401s — must stop after one retry.
+    // Refresh 'succeeds' but the replay still 401s, must stop after one retry.
     const fetchMock = vi
       .fn()
       .mockResolvedValue(ENVELOPE_ERROR(401, "Token expired"));
@@ -206,7 +206,7 @@ describe("backendClient", () => {
 /**
  * Response validation.
  *
- * `backendClient.get<Order>(…)` without a `parse` is a CLAIM, not a check —
+ * `backendClient.get<Order>(…)` without a `parse` is a CLAIM, not a check,
  * TypeScript erases it, so a backend that renames a field hands the app
  * `undefined` and the failure surfaces somewhere unrelated. These pin the
  * behaviour that makes the type true at runtime.
@@ -234,7 +234,7 @@ describe("response parsing", () => {
   });
 
   it("throws a ParseError naming the endpoint and the field", async () => {
-    // `total` arrives as a string — the exact drift that silently produces NaN
+    // `total` arrives as a string, the exact drift that silently produces NaN
     // in a currency formatter several layers away.
     vi.stubGlobal(
       "fetch",
@@ -283,7 +283,7 @@ describe("response parsing", () => {
   });
 
   it("ignores fields the schema doesn't declare", async () => {
-    // The backend ADDING a field must never break a client — this is why
+    // The backend ADDING a field must never break a client, this is why
     // schema-per-response doesn't force the backend into lockstep releases.
     vi.stubGlobal(
       "fetch",

@@ -21,11 +21,11 @@ function toDate(value: DateInput): Date | null {
 
 function format(value: DateInput, options: Intl.DateTimeFormatOptions): string {
   const date = toDate(value);
-  if (!date) return "—";
+  if (!date) return ", ";
   return new Intl.DateTimeFormat(getLocale(), options).format(date);
 }
 
-/** `12 Mar 2026` — the default for dates shown in tables and detail rows. */
+/** `12 Mar 2026`, the default for dates shown in tables and detail rows. */
 export function formatDate(value: DateInput): string {
   return format(value, { day: "2-digit", month: "short", year: "numeric" });
 }
@@ -46,17 +46,17 @@ export function formatTime(value: DateInput): string {
   return format(value, { hour: "2-digit", minute: "2-digit" });
 }
 
-/** `12 March 2026` — for headings and confirmations where clarity beats density. */
+/** `12 March 2026`, for headings and confirmations where clarity beats density. */
 export function formatDateLong(value: DateInput): string {
   return format(value, { day: "numeric", month: "long", year: "numeric" });
 }
 
-/** `Thu, 12 Mar` — compact day context, e.g. schedule rows. */
+/** `Thu, 12 Mar`, compact day context, e.g. schedule rows. */
 export function formatWeekday(value: DateInput): string {
   return format(value, { weekday: "short", day: "2-digit", month: "short" });
 }
 
-/** `2026-03-12` — the wire format; never shown to users. */
+/** `2026-03-12`, the wire format; never shown to users. */
 export function formatApiDate(value: DateInput): string {
   const date = toDate(value);
   if (!date) return "";
@@ -67,10 +67,10 @@ export function formatApiDate(value: DateInput): string {
   ].join("-");
 }
 
-/** `3 days ago` / `in 2 hours` — for activity feeds and "last updated". */
+/** `3 days ago` / `in 2 hours`, for activity feeds and "last updated". */
 export function formatRelative(value: DateInput): string {
   const date = toDate(value);
-  if (!date) return "—";
+  if (!date) return ", ";
 
   const diffMs = date.getTime() - Date.now();
   const formatter = new Intl.RelativeTimeFormat(getLocale(), {
@@ -97,7 +97,7 @@ export function formatRelative(value: DateInput): string {
 export function formatDateRange(from: DateInput, to: DateInput): string {
   const start = toDate(from);
   const end = toDate(to);
-  if (!start || !end) return "—";
+  if (!start || !end) return ", ";
   return new Intl.DateTimeFormat(getLocale(), {
     day: "2-digit",
     month: "short",

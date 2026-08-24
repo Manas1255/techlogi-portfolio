@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 /**
- * CONTENT SCHEMAS — the shape of everything authored for this site.
+ * CONTENT SCHEMAS, the shape of everything authored for this site.
  *
  * The scaffold's convention is that `features/*​/models` holds *wire* shapes
  * (what a backend returns) and Zod is the source of truth for their types.
- * Portfolio and services copy isn't wire data — it's authored content — so it
+ * Portfolio and services copy isn't wire data, it's authored content, so it
  * gets its own cross-cutting layer, but keeps the same rule: the schema is
  * declared once and every type is `z.infer`, never a hand-written interface
  * beside it.
@@ -24,7 +24,7 @@ import { z } from "zod";
 export const mediaFrameSchema = z.enum(["browser", "device", "bare"]);
 
 /**
- * Synthetic interface compositions — real DOM, token-coloured, rendered by
+ * Synthetic interface compositions, real DOM, token-coloured, rendered by
  * `src/components/media/compositions`. They exist so the site can show software
  * behaving like software before a single client asset is cleared for publication,
  * and they adapt to the ink/bone surface they land on, which a screenshot cannot.
@@ -60,7 +60,7 @@ export const aspectSchema = z.enum([
 const mediaBase = z.object({
   /** Frame treatment. */
   frame: mediaFrameSchema.default("bare"),
-  /** Shown in browser chrome. Cosmetic — never a link. */
+  /** Shown in browser chrome. Cosmetic, never a link. */
   chromeUrl: z.string().nullable().default(null),
   /**
    * Empty string marks the media decorative, which is correct when the caption
@@ -122,7 +122,7 @@ export type Composition = z.infer<typeof compositionSchema>;
 
 /**
  * A quantitative claim. PLACEHOLDER ONLY until
- * `siteConfig.hasVerifiedClientResults` is true — while it is false the UI
+ * `siteConfig.hasVerifiedClientResults` is true, while it is false the UI
  * prints an honest footnote next to these instead of implying measurement.
  */
 export const metricSchema = z.object({
@@ -134,7 +134,7 @@ export const metricSchema = z.object({
 export const caseStudySectionSchema = z.object({
   kind: z.enum(["problem", "approach", "design", "build", "result"]),
   title: z.string().min(1),
-  /** Paragraphs, not a blob — the renderer sets its own measure and rhythm. */
+  /** Paragraphs, not a blob, the renderer sets its own measure and rhythm. */
   body: z.array(z.string().min(1)).min(1),
   /** Optional supporting points, rendered as a hairline list. */
   points: z.array(z.string().min(1)).default([]),
@@ -179,7 +179,7 @@ export const projectSchema = z.object({
   productType: z.string().min(1),
   /** What Techlogi actually did, in one sentence. */
   whatWeDid: z.string().min(1),
-  /** Qualitative and placeholder-safe — no numbers here. */
+  /** Qualitative and placeholder-safe, no numbers here. */
   outcome: z.string().min(1),
   metrics: z.array(metricSchema).default([]),
   services: z.array(z.string().min(1)).min(1),
@@ -197,7 +197,7 @@ export const projectSchema = z.object({
   /** Controls selection on the home page. */
   featured: z.boolean(),
   /**
-   * True while the written case study is a DRAFT — the product and the screens
+   * True while the written case study is a DRAFT, the product and the screens
    * are real, but the narrative has not been checked by the people who did the
    * work or cleared with the client. The case-study page says so plainly rather
    * than presenting an unverified account as fact.
@@ -241,7 +241,7 @@ export const processStageSchema = z.object({
   name: z.string().min(1),
   /** What actually happens. */
   what: z.string().min(1),
-  /** What the client receives — the part buyers care about. */
+  /** What the client receives, the part buyers care about. */
   receives: z.array(z.string().min(1)).min(1),
   /** Typical duration, hedged honestly. */
   duration: z.string().min(1),
@@ -254,7 +254,7 @@ export type ProcessStage = z.infer<typeof processStageSchema>;
 export const techGroupSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
-  /** Why these, in one sentence — technology stays secondary to outcomes. */
+  /** Why these, in one sentence, technology stays secondary to outcomes. */
   rationale: z.string().min(1),
   items: z.array(z.string().min(1)).min(1),
 });
@@ -264,7 +264,7 @@ export type TechGroup = z.infer<typeof techGroupSchema>;
 /* ─── What we build (inquiry step one, and the hero's proof rail) ─────────── */
 
 export const buildTypeSchema = z.object({
-  /** Stable id — it is submitted with the inquiry, so don't rename casually. */
+  /** Stable id, it is submitted with the inquiry, so don't rename casually. */
   id: z.enum([
     "web-app",
     "mobile-app",

@@ -9,7 +9,7 @@ import {
 import { useDebouncedValue } from "./use-debounced-value";
 
 /**
- * List-screen state (page, search, sort) lives in the URL — not in `useState`.
+ * List-screen state (page, search, sort) lives in the URL, not in `useState`.
  *
  * That single decision buys: shareable links to a filtered view, a working back
  * button, state that survives a refresh, and a query key that is trivially
@@ -17,7 +17,7 @@ import { useDebouncedValue } from "./use-debounced-value";
  * starts here.
  *
  * `q` is debounced before it reaches the query key, so typing doesn't fire a
- * request per keystroke — but the URL updates immediately, so the address bar
+ * request per keystroke, but the URL updates immediately, so the address bar
  * always reflects what the user typed.
  */
 
@@ -34,9 +34,9 @@ export interface TableParams {
 }
 
 export interface UseTableParamsResult {
-  /** Live values — bind these to inputs so typing feels instant. */
+  /** Live values, bind these to inputs so typing feels instant. */
   params: TableParams;
-  /** Debounced `q`, plus page/sort — feed THIS into the query key. */
+  /** Debounced `q`, plus page/sort, feed THIS into the query key. */
   queryParams: TableParams;
   setPage: (page: number) => void;
   /** Changing the search resets to page 1; staying on page 7 of old results is a bug. */

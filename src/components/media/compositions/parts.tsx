@@ -155,7 +155,7 @@ export function Panel({
 /**
  * An area chart drawn as a single path, with the stroke drawn on once.
  *
- * The animation is `stroke-dashoffset` only — it never touches layout — and it
+ * The animation is `stroke-dashoffset` only, it never touches layout, and it
  * is disabled wholesale by the reduced-motion rule in `globals.css`.
  */
 export function AreaChart({

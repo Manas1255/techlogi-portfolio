@@ -1,5 +1,5 @@
 /**
- * Supported locales. The FIRST entry is the source locale — its catalog is the
+ * Supported locales. The FIRST entry is the source locale, its catalog is the
  * single source of truth, and TypeScript forces every other catalog to match
  * its shape (see `messages/`).
  *
@@ -13,7 +13,7 @@ export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
 export const SOURCE_LOCALE: Locale = SUPPORTED_LOCALES[0];
 
-/** Native names for the language switcher — never translated. */
+/** Native names for the language switcher, never translated. */
 export const LOCALE_NAMES: Record<Locale, string> = {
   en: "English",
 };

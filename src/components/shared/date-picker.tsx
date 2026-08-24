@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * Single-date picker.
  *
  * The trigger displays through `lib/datetime` so the format follows the active
- * locale like every other date in the app — a picker that renders `3/12/2026`
+ * locale like every other date in the app, a picker that renders `3/12/2026`
  * while the table beside it says `12 Mar 2026` reads as two different products.
  */
 export interface DatePickerProps {

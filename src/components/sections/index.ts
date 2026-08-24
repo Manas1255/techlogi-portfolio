@@ -1,7 +1,7 @@
 /**
  * Page sections.
  *
- * This is composition tier, alongside `components/layout` — a section may reach
+ * This is composition tier, alongside `components/layout`, a section may reach
  * into `features/` (the closing CTA embeds the inquiry's first step), which is
  * why it is deliberately outside the shared-layer import boundary.
  */

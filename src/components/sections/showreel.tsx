@@ -8,7 +8,7 @@ import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * The reel frame is wide, so a clip has to be LANDSCAPE — a portrait phone
+ * The reel frame is wide, so a clip has to be LANDSCAPE, a portrait phone
  * capture letterboxed into a wide band is a worse advertisement for the work
  * than leaving it out.
  *
@@ -55,7 +55,7 @@ const CLIPS = ORDERED.map(({ project, media }) => ({
 const INTERVAL_MS = 4200;
 
 /**
- * THE SHOWREEL — a sequence of real product surfaces, not a corporate video.
+ * THE SHOWREEL, a sequence of real product surfaces, not a corporate video.
  *
  * It advances on its own, but every clip is also directly reachable: the labels
  * beneath are real buttons with a roving selection, so this works on a keyboard
@@ -63,7 +63,7 @@ const INTERVAL_MS = 4200;
  * alternative the brief asks for, not a disabled desktop interaction.
  *
  * Under `prefers-reduced-motion` the rotation stops entirely and the reel
- * becomes a static composition the visitor drives — still complete, not broken.
+ * becomes a static composition the visitor drives, still complete, not broken.
  * Interaction also stops the timer for good: once someone has chosen, taking
  * the choice away four seconds later is hostile.
  */

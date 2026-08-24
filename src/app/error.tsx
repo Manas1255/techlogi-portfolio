@@ -6,7 +6,7 @@ import { reportError } from "@/lib/reporting";
 
 /**
  * Route-level error boundary. Must be a Client Component, and must offer a way
- * out — `reset()` re-renders the segment without a full page reload.
+ * out, `reset()` re-renders the segment without a full page reload.
  */
 export default function RouteError({
   error,

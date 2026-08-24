@@ -8,13 +8,13 @@ import { cn } from "@/lib/utils";
 export interface ProjectPanelProps {
   project: Project;
   index: number;
-  /** Alternating composition — the caller decides, so a page can vary rhythm. */
+  /** Alternating composition, the caller decides, so a page can vary rhythm. */
   reversed?: boolean;
   /** Media spans the full measure with metadata beneath, for emphasis. */
   fullBleed?: boolean;
   /**
    * Show a different frame than the project's hero. Used where the hero media
-   * already appears earlier on the same page — repeating one composition three
+   * already appears earlier on the same page, repeating one composition three
    * times reads as a template, however good the composition is.
    */
   media?: Media;
@@ -29,7 +29,7 @@ export interface ProjectPanelProps {
 /**
  * One project, as an editorial panel.
  *
- * The whole panel is a link — but the accessible name comes from a single
+ * The whole panel is a link, but the accessible name comes from a single
  * anchor around the title, with the media marked decorative, so a screen reader
  * hears "Nova, AI-assisted operations platform" once rather than the same
  * destination announced three times.
@@ -82,7 +82,7 @@ export function ProjectPanel({
             className="focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
           >
             {project.name}
-            <span className="sr-only"> — {project.tagline}</span>
+            <span className="sr-only">, {project.tagline}</span>
           </Link>
         </Heading>
         <p className="text-muted-foreground text-lg leading-snug">
@@ -118,7 +118,7 @@ export function ProjectPanel({
 
       <ArrowLink href={caseStudyPath(project.slug)}>
         View case study
-        <span className="sr-only"> — {project.name}</span>
+        <span className="sr-only">, {project.name}</span>
       </ArrowLink>
     </div>
   );
@@ -145,7 +145,7 @@ export function ProjectPanel({
                 className="focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
               >
                 {project.name}
-                <span className="sr-only"> — {project.tagline}</span>
+                <span className="sr-only">, {project.tagline}</span>
               </Link>
             </Heading>
             <p className="text-muted-foreground text-lg leading-snug">
@@ -168,7 +168,7 @@ export function ProjectPanel({
             </ul>
             <ArrowLink href={caseStudyPath(project.slug)}>
               View case study
-              <span className="sr-only"> — {project.name}</span>
+              <span className="sr-only">, {project.name}</span>
             </ArrowLink>
           </div>
         </div>

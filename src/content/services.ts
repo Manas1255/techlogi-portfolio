@@ -4,7 +4,7 @@ import type { BuildType, ServiceGroup } from "./schemas";
  * SERVICES CONTENT.
  *
  * Six capability groups. The order is the order a client experiences them, not
- * an org chart — strategy through evolution. `relatedProjectSlug` is what
+ * an org chart, strategy through evolution. `relatedProjectSlug` is what
  * connects a capability to real work, which is the only thing that makes a
  * service list credible.
  */
@@ -34,7 +34,7 @@ export const serviceGroups: ServiceGroup[] = [
       {
         name: "Product Strategy",
         description:
-          "What to build first, what to defer, and the argument for both — written down.",
+          "What to build first, what to defer, and the argument for both, written down.",
       },
       {
         name: "UX Research",
@@ -53,11 +53,11 @@ export const serviceGroups: ServiceGroup[] = [
     id: "design",
     name: "Design",
     summary:
-      "Interfaces that a domain expert can move through quickly, built on a system rather than a set of screens — so the tenth feature looks like it belongs with the first.",
+      "Interfaces that a domain expert can move through quickly, built on a system rather than a set of screens, so the tenth feature looks like it belongs with the first.",
     deliverables: [
       "A design system: tokens, components, states, and the rules for extending it",
       "High-fidelity designs for every state, not only the happy path",
-      "Accessibility built in — contrast, focus order, keyboard paths",
+      "Accessibility built in, contrast, focus order, keyboard paths",
       "Design files that map one-to-one onto the components in the codebase",
     ],
     capabilities: [
@@ -109,7 +109,7 @@ export const serviceGroups: ServiceGroup[] = [
       {
         name: "SaaS Development",
         description:
-          "Multi-tenancy, billing, roles and audit trails — the parts that are tedious and load-bearing.",
+          "Multi-tenancy, billing, roles and audit trails, the parts that are tedious and load-bearing.",
       },
       {
         name: "Custom Software",
@@ -171,7 +171,7 @@ export const serviceGroups: ServiceGroup[] = [
       "Language models put behind real constraints: your data, your authorization rules, an audit trail, and a human on the commitments that matter.",
     deliverables: [
       "An evaluation set before a prompt reaches production",
-      "Tool-calling against your existing authorized APIs — no privileged shortcut",
+      "Tool-calling against your existing authorized APIs, no privileged shortcut",
       "Full traces: prompt, tools, cost and outcome, per run",
       "A cost model, and a fallback for when the provider is down",
     ],
@@ -208,12 +208,12 @@ export const serviceGroups: ServiceGroup[] = [
     id: "evolution",
     name: "Product Evolution",
     summary:
-      "Most software that matters already exists. We make it faster, safer to change, and better to use — without the rewrite that gets pitched and then abandoned halfway.",
+      "Most software that matters already exists. We make it faster, safer to change, and better to use, without the rewrite that gets pitched and then abandoned halfway.",
     deliverables: [
       "A measured baseline before any change, so improvement is provable",
       "A phased plan with a working system at every step",
       "Performance work tied to real user metrics, not a synthetic score",
-      "Handover, or an ongoing team — your choice, stated up front",
+      "Handover, or an ongoing team, your choice, stated up front",
     ],
     capabilities: [
       {
@@ -248,13 +248,13 @@ export const serviceGroups: ServiceGroup[] = [
 ];
 
 /**
- * Step one of the project inquiry — a single low-effort choice.
+ * Step one of the project inquiry, a single low-effort choice.
  *
  * `id` is submitted with the inquiry payload, so treat these as a stable
  * contract with whatever receives it.
  */
 /**
- * Step one of the project inquiry — a single low-effort choice.
+ * Step one of the project inquiry, a single low-effort choice.
  *
  * ⚠️ Written for someone who is NOT technical. The person filling this in is
  * usually a founder or an operations lead, not an engineer: they know what they
@@ -269,13 +269,13 @@ export const serviceGroups: ServiceGroup[] = [
  * gets abandoned is that none of the choices felt safe to pick.
  *
  * `id` is submitted with the inquiry payload and is a stable contract with
- * whatever receives it — the LABELS can be rewritten freely, the ids cannot.
+ * whatever receives it, the LABELS can be rewritten freely, the ids cannot.
  */
 export const buildTypes: BuildType[] = [
   {
     id: "web-app",
     label: "A web app",
-    hint: "Something your team or customers use in a browser — a portal, a dashboard, an internal tool",
+    hint: "Something your team or customers use in a browser, a portal, a dashboard, an internal tool",
   },
   {
     id: "mobile-app",
@@ -285,7 +285,7 @@ export const buildTypes: BuildType[] = [
   {
     id: "saas-platform",
     label: "A product I sell to customers",
-    hint: "Accounts, subscriptions and billing — software that is the business",
+    hint: "Accounts, subscriptions and billing, software that is the business",
   },
   {
     id: "ai-product",

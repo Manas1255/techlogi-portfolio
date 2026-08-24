@@ -16,7 +16,7 @@ export interface ArrowLinkProps extends Omit<
  * whose arrow steps forward on hover.
  *
  * The underline is a pseudo-element scaled on the X axis rather than a
- * `border-bottom` — animating a layout property here would reflow the line.
+ * `border-bottom`, animating a layout property here would reflow the line.
  */
 export function ArrowLink({
   children,
@@ -27,7 +27,7 @@ export function ArrowLink({
   return (
     <Link
       className={cn(
-        "group/link text-foreground inline-flex items-center gap-2 font-medium",
+        "tap-target group/link text-foreground inline-flex items-center gap-2 font-medium",
         "focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4",
         size === "sm" ? "text-sm" : "text-base",
         className,

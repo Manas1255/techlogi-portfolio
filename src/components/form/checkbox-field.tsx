@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useFieldError } from "./use-field-error";
 
 /**
- * A checkbox with its label to the right — the one field where the label
+ * A checkbox with its label to the right, the one field where the label
  * follows the control rather than preceding it.
  *
  * The whole label is clickable (`htmlFor`), which matters: a 16px checkbox is
@@ -46,7 +46,7 @@ export function CheckboxField<
     A DOM id must be unique in the document, and a field id derived from the
     field NAME is not: the moment two forms on one page both have a
     "description", the browser binds every `label[for="description"]` to
-    whichever input it met first — so a label in one form starts operating a
+    whichever input it met first, so a label in one form starts operating a
     control in the other. `useId` scopes the id to this instance; the field
     name stays the form's identifier, which is what it is actually for.
   */

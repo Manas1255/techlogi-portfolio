@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
  * Layout-matching skeletons, one per surface shape.
  *
  * The rule everywhere in this app: a screen or section that's loading shows a
- * skeleton shaped like its final content — never a centered spinner. That keeps
+ * skeleton shaped like its final content, never a centered spinner. That keeps
  * the layout stable (no shift when data lands) and tells the user what's coming.
  * Spinners are only for inline, tiny actions like a pending button.
  */

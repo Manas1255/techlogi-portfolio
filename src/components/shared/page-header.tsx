@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 /**
- * The header every screen starts with — the web analog of a native app bar.
+ * The header every screen starts with, the web analog of a native app bar.
  *
  * Keep to ONE primary action per screen. Two equal-weight buttons side by side
  * make the user choose before they've read anything; secondary actions belong
@@ -12,7 +12,7 @@ export interface PageHeaderProps {
   description?: string;
   /** The single primary action (a `<Button>`). */
   action?: React.ReactNode;
-  /** Lower-weight actions — export, filters, settings. */
+  /** Lower-weight actions, export, filters, settings. */
   secondaryAction?: React.ReactNode;
   /** Breadcrumbs or a back link, rendered above the title. */
   breadcrumb?: React.ReactNode;

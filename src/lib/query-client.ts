@@ -24,7 +24,7 @@ function makeQueryClient(): QueryClient {
         retry: (failureCount, error) => {
           if (isAbortError(error)) return false;
           if (isApiError(error) && error.statusCode < 500) return false;
-          // A response that failed its schema will fail identically on retry —
+          // A response that failed its schema will fail identically on retry,
           // the shape is wrong, not the connection.
           if (isParseError(error)) return false;
           return failureCount < 1;
@@ -42,7 +42,7 @@ function makeQueryClient(): QueryClient {
 let browserQueryClient: QueryClient | undefined;
 
 /**
- * Server: a FRESH client per request — a module-level singleton would leak one
+ * Server: a FRESH client per request, a module-level singleton would leak one
  * user's cache into another's request.
  * Browser: one singleton, so navigations reuse the cache.
  */
@@ -65,7 +65,7 @@ const reportingAttached = new WeakSet<QueryClient>();
  *
  * Idempotent on purpose. The browser client is a singleton while the call site
  * is a `useState` initializer, which React Strict Mode deliberately invokes
- * twice in development — so without this guard the same client collects two
+ * twice in development, so without this guard the same client collects two
  * subscribers and every failure is reported twice. That reads as a retry bug
  * in the logs, and it only reproduces in dev.
  */

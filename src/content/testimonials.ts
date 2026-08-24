@@ -14,15 +14,15 @@ import { projects } from "./projects";
  *   2. Replace the entry and set `isPlaceholder: false`. The placeholder
  *      treatment disappears on its own.
  *   3. Optionally add a portrait at `public/media/people/<slug>.jpg` and an
- *      `outcome` — but only one that was actually measured.
+ *      `outcome`, but only one that was actually measured.
  */
 const standalone: Testimonial[] = [
   {
     quote:
-      "PLACEHOLDER — a client quote goes here. The useful ones are specific: what was hard before, what changed, and what it let the team do next. Approved in writing before it ships.",
-    person: "PLACEHOLDER — Name",
-    role: "PLACEHOLDER — Role",
-    company: "PLACEHOLDER — Company",
+      "PLACEHOLDER, a client quote goes here. The useful ones are specific: what was hard before, what changed, and what it let the team do next. Approved in writing before it ships.",
+    person: "PLACEHOLDER, Name",
+    role: "PLACEHOLDER, Role",
+    company: "PLACEHOLDER, Company",
     projectSlug: "zyuela",
     portrait: null,
     outcome: null,
@@ -30,10 +30,10 @@ const standalone: Testimonial[] = [
   },
   {
     quote:
-      "PLACEHOLDER — a second quote, ideally from a different kind of buyer: an engineering leader rather than a product sponsor, so the two are not making the same point twice.",
-    person: "PLACEHOLDER — Name",
-    role: "PLACEHOLDER — Role",
-    company: "PLACEHOLDER — Company",
+      "PLACEHOLDER, a second quote, ideally from a different kind of buyer: an engineering leader rather than a product sponsor, so the two are not making the same point twice.",
+    person: "PLACEHOLDER, Name",
+    role: "PLACEHOLDER, Role",
+    company: "PLACEHOLDER, Company",
     projectSlug: "our-ummah",
     portrait: null,
     outcome: null,

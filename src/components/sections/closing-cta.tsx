@@ -3,7 +3,7 @@ import { siteConfig } from "@/config/site";
 import { InquiryLauncher } from "@/features/inquiry";
 
 export interface ClosingCtaProps {
-  /** Where on the site this instance sits — carried into the inquiry payload. */
+  /** Where on the site this instance sits, carried into the inquiry payload. */
   origin: string;
   title?: string;
   lead?: string;
@@ -12,7 +12,7 @@ export interface ClosingCtaProps {
 /**
  * THE CLOSE.
  *
- * Not "Ready to get started?" and not a link to a contact page — the close IS
+ * Not "Ready to get started?" and not a link to a contact page, the close IS
  * the first question of the inquiry, inline. Choosing here opens the dialog
  * already on step two, so the visitor never answers the same question twice.
  *
@@ -46,7 +46,7 @@ export function ClosingCta({
               {siteConfig.contact.responseTime} Or email us directly at{" "}
               <a
                 href={`mailto:${siteConfig.contact.email}`}
-                className="text-foreground hover:text-primary underline underline-offset-4 transition-colors"
+                className="tap-target text-foreground hover:text-primary underline underline-offset-4 transition-colors"
               >
                 {siteConfig.contact.email}
               </a>

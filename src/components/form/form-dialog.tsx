@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
  * Note `[&>*]:min-w-0` on the content: a dialog's width is fixed by design, so
  * its children must always be free to shrink. Without it, one long unbroken
  * string (an address, a company name) sizes the flex/grid track past the
- * dialog's max-width and the layout shears instead of truncating — a bug that
+ * dialog's max-width and the layout shears instead of truncating, a bug that
  * is invisible to TypeScript and to code review, and only shows up with real
  * customer data.
  */

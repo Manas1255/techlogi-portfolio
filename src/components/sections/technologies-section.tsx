@@ -2,11 +2,11 @@ import { Section, SectionIntro } from "@/components/marketing";
 import { techGroups } from "@/content";
 
 /**
- * TECHNOLOGY — grouped and argued, never a logo wall.
+ * TECHNOLOGY, grouped and argued, never a logo wall.
  *
  * Each group leads with WHY those choices; the names follow in a monospace
  * list. Technology is secondary to outcomes, so this is the one section on the
- * page that is deliberately a card grid — a grid is genuinely the right form
+ * page that is deliberately a card grid, a grid is genuinely the right form
  * for six parallel, equal-weight groups, and using it exactly once is what
  * keeps it from being the site's default answer.
  */

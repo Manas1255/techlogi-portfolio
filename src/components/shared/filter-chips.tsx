@@ -4,7 +4,7 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * A row of selectable chips — the quick filter above a list.
+ * A row of selectable chips, the quick filter above a list.
  *
  * Uses real `<button>`s with `aria-pressed` so the selected state is announced;
  * a styled `<div>` here would be invisible to assistive tech and unreachable by

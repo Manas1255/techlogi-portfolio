@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  * the mechanism.
  *
  * Size and type are checked HERE for immediate feedback, but that is a
- * courtesy, not a control — the server must validate them too.
+ * courtesy, not a control, the server must validate them too.
  */
 export interface FileDropzoneProps {
   value: File | null;

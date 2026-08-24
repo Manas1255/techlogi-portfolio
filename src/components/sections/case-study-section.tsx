@@ -18,8 +18,8 @@ export interface CaseStudySectionProps {
 /**
  * ONE case-study block, rendered from data.
  *
- * Every case study is the same five-block arc — problem, approach, design,
- * build, result — so adding a new one is a data edit plus media, never a
+ * Every case study is the same five-block arc, problem, approach, design,
+ * build, result, so adding a new one is a data edit plus media, never a
  * bespoke page. The block decides its own composition from what it was given:
  * with media it goes two-column, without it stays a reading column, which is
  * what keeps a text-heavy section from looking like a broken one.

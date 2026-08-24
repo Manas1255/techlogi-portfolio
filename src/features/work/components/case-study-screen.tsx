@@ -33,7 +33,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
   return (
     <>
       <CaseStudySchema
-        name={`${project.name} — ${project.tagline}`}
+        name={`${project.name}, ${project.tagline}`}
         description={project.summary}
         url={`${siteConfig.url}${caseStudyPath(project.slug)}`}
       />
@@ -94,7 +94,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
               </span>
               {project.testimonial.isPlaceholder && (
                 <PlaceholderNote className="pt-2">
-                  Placeholder — awaiting an approved client quote.
+                  Placeholder, awaiting an approved client quote.
                 </PlaceholderNote>
               )}
             </figcaption>

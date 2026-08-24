@@ -10,7 +10,7 @@ import { parseSort, toggleSort } from "./sorting";
  * A sortable column header.
  *
  * Sorting is SERVER-DRIVEN and lives in the URL (`?sort=-createdAt`), so a
- * sorted view is shareable and survives a reload — and the table never sorts a
+ * sorted view is shareable and survives a reload, and the table never sorts a
  * single page of results while pretending it sorted the whole set.
  */
 export interface DataTableColumnHeaderProps {

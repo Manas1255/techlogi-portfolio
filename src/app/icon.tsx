@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 /**
- * The browser-tab mark, generated rather than shipped as a file — so it can
+ * The browser-tab mark, generated rather than shipped as a file, so it can
  * never drift from the wordmark, and there is no binary in the repo to
  * re-export when the brand colour changes.
  *

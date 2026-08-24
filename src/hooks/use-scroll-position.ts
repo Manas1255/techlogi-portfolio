@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export interface ScrollState {
-  /** Past the threshold — the header condenses on this. */
+  /** Past the threshold, the header condenses on this. */
   isScrolled: boolean;
   /** Scrolling up reveals the header again after it has hidden. */
   isScrollingUp: boolean;
@@ -14,7 +14,7 @@ export interface ScrollState {
  * scroll can't queue a re-render per event.
  *
  * A passive listener, one rAF in flight at a time, and state that only changes
- * on a threshold crossing — so this re-renders a handful of times per page,
+ * on a threshold crossing, so this re-renders a handful of times per page,
  * not once per pixel.
  */
 export function useScrollPosition(threshold = 24): ScrollState {

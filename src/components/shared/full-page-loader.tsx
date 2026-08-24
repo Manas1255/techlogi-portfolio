@@ -2,7 +2,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
- * Full-viewport spinner — for the SESSION-RESOLVING moment only (before the app
+ * Full-viewport spinner, for the SESSION-RESOLVING moment only (before the app
  * shell can be drawn at all).
  *
  * Do NOT reach for this as a screen's loading state: a section backed by a

@@ -21,7 +21,7 @@ import {
  *
  * A landing visitor is at their most willing in the first few seconds and
  * least willing to be routed somewhere else, so the primary conversion path is
- * ON the hero rather than behind a button. Four fields, one optional — enough
+ * ON the hero rather than behind a button. Four fields, one optional, enough
  * to reply properly, short enough to finish.
  *
  * It is not a second implementation of the inquiry: it validates with the same

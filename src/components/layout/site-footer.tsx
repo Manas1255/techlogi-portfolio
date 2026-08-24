@@ -19,12 +19,12 @@ import { Logo } from "./logo";
  *
  * It closes the page with the same offer the header opens it with, then gives
  * every route a second, calmer entry point. Locations and social links render
- * only when they're real — an empty "Follow us" row or a placeholder office
+ * only when they're real, an empty "Follow us" row or a placeholder office
  * address is worse than their absence.
  *
  * A Server Component: nothing here needs the client except the inquiry trigger.
  * Labels resolve through `translate(SOURCE_LOCALE, …)` rather than the client
- * `useTranslations` hook — a server component renders the source locale, and
+ * `useTranslations` hook, a server component renders the source locale, and
  * the catalog is the single source of truth for the string either way.
  */
 export function SiteFooter() {
@@ -48,14 +48,14 @@ export function SiteFooter() {
                 <InquiryTrigger origin="footer" className="self-start" />
                 <a
                   href={`mailto:${siteConfig.contact.email}`}
-                  className="text-mono-label text-muted-foreground hover:text-foreground w-fit transition-colors"
+                  className="tap-target text-mono-label text-muted-foreground hover:text-foreground w-fit transition-colors"
                 >
                   {siteConfig.contact.email}
                 </a>
                 {siteConfig.contact.phone !== null && (
                   <a
                     href={`tel:${siteConfig.contact.phone}`}
-                    className="text-mono-label text-muted-foreground hover:text-foreground w-fit transition-colors"
+                    className="tap-target text-mono-label text-muted-foreground hover:text-foreground w-fit transition-colors"
                   >
                     {siteConfig.contact.phone}
                   </a>
@@ -123,7 +123,7 @@ export function SiteFooter() {
                         href={social.href}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="text-mono-label text-muted-foreground hover:text-foreground transition-colors"
+                        className="tap-target text-mono-label text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {social.label}
                       </a>
@@ -143,7 +143,7 @@ export function SiteFooter() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-mono-label text-muted-foreground hover:text-foreground transition-colors"
+                    className="tap-target text-mono-label text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -183,7 +183,7 @@ function FooterLink({
     <li>
       <Link
         href={href}
-        className="text-muted-foreground hover:text-foreground focus-visible:outline-ring rounded-sm text-[0.9375rem] transition-colors duration-[var(--dur-fast)] focus-visible:outline-2 focus-visible:outline-offset-4"
+        className="tap-target text-muted-foreground hover:text-foreground focus-visible:outline-ring rounded-sm text-[0.9375rem] transition-colors duration-[var(--dur-fast)] focus-visible:outline-2 focus-visible:outline-offset-4"
       >
         {children}
       </Link>

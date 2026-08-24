@@ -15,7 +15,7 @@ import { findProject, serviceGroups } from "@/content";
 import { cn } from "@/lib/utils";
 
 /**
- * SERVICES — an interactive capability index, not a bulleted list.
+ * SERVICES, an interactive capability index, not a bulleted list.
  *
  * A sticky rail of group labels drives a single detail panel. On desktop the
  * rail sits beside the panel; below `lg` the same state renders as an accordion
@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * The whole control is a tab set: real buttons, arrow-key navigable through the
  * browser's default focus order, `aria-selected` on the active one, and the
  * panel labelled by it. Each group ends in the project where the capability was
- * actually used — a service list without evidence is a price sheet.
+ * actually used, a service list without evidence is a price sheet.
  */
 export function ServicesSection() {
   const [activeId, setActiveId] = useState(serviceGroups[0].id);
@@ -53,7 +53,7 @@ export function ServicesSection() {
           aria-orientation="vertical"
           // Below `lg` the rail becomes a horizontal snap row rather than a
           // six-item vertical list, so the panel it controls is on screen at
-          // the moment you tap — same DOM, same semantics, different form.
+          // the moment you tap, same DOM, same semantics, different form.
           className="rail-snap border-hairline -mx-5 flex overflow-x-auto border-t px-5 sm:-mx-8 sm:px-8 lg:sticky lg:top-28 lg:mx-0 lg:flex-col lg:self-start lg:overflow-visible lg:px-0"
         >
           {serviceGroups.map((group, index) => {
@@ -147,7 +147,7 @@ export function ServicesSection() {
                 </p>
                 <ArrowLink href={caseStudyPath(related.slug)} size="sm">
                   View case study
-                  <span className="sr-only"> — {related.name}</span>
+                  <span className="sr-only">, {related.name}</span>
                 </ArrowLink>
               </div>
             </Reveal>

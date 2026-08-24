@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
  *
  * A SERVER component, and the filter is a set of links rather than client
  * state. The previous version used `useQueryState`, which put a
- * `useSearchParams` consumer inside the page's Suspense boundary — and that
+ * `useSearchParams` consumer inside the page's Suspense boundary, and that
  * makes Next drop the ENTIRE boundary from the prerendered HTML. The
  * consequences were not subtle: `/work` shipped no `<h1>` and not one project
  * to a crawler, and refilling the page on hydration measured 0.56 CLS against
@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
  * hydration shift because nothing is added after paint, the filter still lives
  * in the URL so a filtered view can be shared and the back button works, and
  * the whole thing keeps working with JavaScript disabled. It costs a server
- * render per filter — which for five projects of static content is a few
+ * render per filter, which for five projects of static content is a few
  * milliseconds, and is the correct trade.
  *
  * `scroll={false}` keeps the viewport where it is: the reader is looking at

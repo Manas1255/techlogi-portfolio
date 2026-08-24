@@ -18,7 +18,7 @@ import { useTranslations, type MessageKey } from "@/i18n";
 import { Logo } from "./logo";
 
 /**
- * Mobile navigation — designed as its own experience, not a stacked desktop bar.
+ * Mobile navigation, designed as its own experience, not a stacked desktop bar.
  *
  * Full-height, oversized type, one item per line, with the primary action
  * anchored at the bottom where a thumb is. Radix's Dialog underneath handles
@@ -104,7 +104,7 @@ export function MobileNav() {
           />
           <a
             href={`mailto:${siteConfig.contact.email}`}
-            className="text-mono-label text-muted-foreground hover:text-foreground transition-colors"
+            className="tap-target text-mono-label text-muted-foreground hover:text-foreground transition-colors"
           >
             {siteConfig.contact.email}
           </a>

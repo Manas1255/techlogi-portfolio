@@ -10,7 +10,7 @@ export interface Choice {
   /** A short clarifier under the label. */
   hint?: string;
   /**
-   * An icon makes a grid of eight scannable without reading every label —
+   * An icon makes a grid of eight scannable without reading every label,
    * which is most of what a non-technical visitor is doing on the first step.
    */
   Icon?: React.ComponentType<{ className?: string }>;
@@ -18,12 +18,12 @@ export interface Choice {
 
 interface BaseProps {
   options: readonly Choice[];
-  /** Accessible name for the group — required, never a visual label alone. */
+  /** Accessible name for the group, required, never a visual label alone. */
   label: string;
   columns?: 1 | 2 | 3 | 4;
   className?: string;
   disabled?: boolean;
-  /** Single-line options — no hint, no icon, tighter box. */
+  /** Single-line options, no hint, no icon, tighter box. */
   compact?: boolean;
 }
 
@@ -59,11 +59,11 @@ const SELECTED = "border-primary bg-primary/10 hover:border-primary";
  * Single-select is a real Radix radio group, so arrow keys move between
  * options and a screen reader announces "3 of 8" without any ARIA written by
  * hand. Multi-select uses toggle buttons with `aria-pressed`, which is the
- * honest semantic for "this one is on" — a checkbox group implies a form field
+ * honest semantic for "this one is on", a checkbox group implies a form field
  * per option, which these are not.
  *
  * Used by the inquiry's first step, its timeline and budget steps, and the
- * inline launcher in the closing section — one control, so the interaction is
+ * inline launcher in the closing section, one control, so the interaction is
  * learned once.
  */
 export function ChoiceCards(props: ChoiceCardsProps) {

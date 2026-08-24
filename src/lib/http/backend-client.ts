@@ -20,7 +20,7 @@ import type { ApiEnvelope } from "./types";
  * Refreshing is decoupled: `lib/auth/session.ts` registers HOW to refresh via
  * `setTokenRefresher`, so this module owns no endpoint strings and no auth policy.
  *
- * NEVER bypass this with a raw `fetch` — doing so loses all of the above.
+ * NEVER bypass this with a raw `fetch`, doing so loses all of the above.
  */
 
 const BASE_URL = clientEnv.NEXT_PUBLIC_API_URL;
@@ -47,7 +47,7 @@ export interface RequestOptions<T = unknown> {
   /** Forward React Query's signal so a superseded request is aborted. */
   signal?: AbortSignal;
   /**
-   * Validate the response before it reaches the caller — pass a schema's
+   * Validate the response before it reaches the caller, pass a schema's
    * `.parse`, e.g. `{ parse: orderSchema.parse }`.
    *
    * Without it the generic parameter is only a claim, and a backend that
@@ -93,7 +93,7 @@ function buildHeaders(auth: boolean, isFormData: boolean): HeadersInit {
  * Feed one call into the DEV-ONLY network inspector (see `lib/http/net-log`).
  *
  * A no-op in production (and on the server), so it stays out of the hot path
- * and the prod bundle. FormData is summarised rather than stored — we want the
+ * and the prod bundle. FormData is summarised rather than stored, we want the
  * field names in the panel, not a retained multipart blob.
  */
 function logCall(args: {
@@ -159,7 +159,7 @@ async function request<T>(
       signal,
     });
   } catch (error) {
-    // Aborts are React Query cancelling a superseded request — not a failure.
+    // Aborts are React Query cancelling a superseded request, not a failure.
     if (isAbortError(error)) throw error;
     logCall({
       method,
@@ -214,7 +214,7 @@ async function request<T>(
     throw new ApiError(statusCode, message, envelope?.error?.timestamp);
   }
 
-  // Validate the payload HERE, where the endpoint is still known — that's what
+  // Validate the payload HERE, where the endpoint is still known, that's what
   // lets the failure say `GET /orders → items.3.createdAt: expected string`
   // instead of a bare schema dump with no indication of which call produced it.
   if (parse) {
@@ -282,11 +282,11 @@ function filenameFrom(disposition: string | null): string | null {
  * Fetch a binary payload (PDF/CSV export).
  *
  * A separate path from `request` because these endpoints answer with the file
- * itself, NOT the envelope — feeding that through `request` would call
+ * itself, NOT the envelope, feeding that through `request` would call
  * `res.json()` on a PDF, get `null`, see a 200, and silently resolve to
  * `undefined`. Errors still arrive as envelopes, so content type decides how to
  * read the response. Token injection and single-flight refresh behave
- * identically — which is exactly why this belongs in the transport rather than
+ * identically, which is exactly why this belongs in the transport rather than
  * as a raw `fetch` in a repository.
  */
 async function requestBlob(
@@ -325,7 +325,7 @@ async function requestBlob(
     "application/json",
   );
 
-  // Either an explicit failure, or JSON where a file was expected — which is
+  // Either an explicit failure, or JSON where a file was expected, which is
   // how a business error on a download endpoint arrives.
   if (!res.ok || isJson) {
     const envelope = (await res
@@ -385,7 +385,7 @@ export const backendClient = {
     request<T>(path, { ...opts, method: "PATCH", body }),
   delete: <T>(path: string, body?: unknown, opts?: RequestOptions<T>) =>
     request<T>(path, { ...opts, method: "DELETE", body }),
-  /** GET a file rather than an envelope — see `requestBlob`. */
+  /** GET a file rather than an envelope, see `requestBlob`. */
   getBlob: (path: string, opts?: RequestOptions) =>
     requestBlob(path, { ...opts, method: "GET" }),
 };

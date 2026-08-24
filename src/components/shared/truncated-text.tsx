@@ -9,24 +9,24 @@ import {
 import { cn } from "@/lib/utils";
 
 /**
- * Text that truncates — and stays READABLE, because a cut-off value the user
+ * Text that truncates, and stays READABLE, because a cut-off value the user
  * can't reveal is just missing data.
  *
  * Three things are baked in, all of them easy to get wrong by hand:
  *
  *  1. `min-w-0` + `overflow-hidden` on the box. A flex/grid item's automatic
  *     minimum size is its MIN-CONTENT, so one 80-character company name will
- *     silently push its track past the container's `max-w` — and an
+ *     silently push its track past the container's `max-w`, and an
  *     `overflow-hidden` ancestor then shears the whole layout instead of
  *     truncating this string. `truncate` alone does NOT prevent that.
  *  2. A tooltip carrying the full value, shown only when the text is ACTUALLY
- *     clipped — an always-on tooltip over every cell is noise.
+ *     clipped, an always-on tooltip over every cell is noise.
  *  3. A re-measure after webfonts load. On first paint the fallback font is
  *     usually narrower, so a string that will overflow still measures as
  *     fitting. A ResizeObserver won't catch it either: swapping the font
  *     changes the TEXT width, not the element's own box, so it never fires.
  *
- * ⚠️ The tree below is deliberately CONSTANT — the trigger always renders, and
+ * ⚠️ The tree below is deliberately CONSTANT, the trigger always renders, and
  * only the tooltip content is conditional. An earlier version returned a bare
  * span when unclipped and a wrapped one when clipped; flipping that boolean
  * re-parented the span, which detached the node the ResizeObserver was watching,

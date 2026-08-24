@@ -2,10 +2,10 @@ import { Reveal, Section, SectionIntro } from "@/components/marketing";
 import { processStages } from "@/content";
 
 /**
- * PROCESS — what happens, and what the client receives.
+ * PROCESS, what happens, and what the client receives.
  *
  * Not a numbered train track. Each stage is a row in a hairline table: the
- * stage, what actually happens, and the deliverables — because "what do I get
+ * stage, what actually happens, and the deliverables, because "what do I get
  * at the end of this phase" is the question a buyer is really asking, and a
  * stage with no answer to it is a meeting.
  *
@@ -20,7 +20,7 @@ export function ProcessSection() {
         index={4}
         eyebrow="How we work"
         title="From a conversation to something running in production."
-        lead="Seven stages. Each one ends in something you can hold — a document, a prototype, a deployment — rather than a status update."
+        lead="Seven stages. Each one ends in something you can hold: a document, a prototype, a deployment, rather than a status update."
       />
 
       <ol className="border-hairline mt-14 flex flex-col border-t">

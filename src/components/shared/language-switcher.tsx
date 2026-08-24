@@ -20,7 +20,7 @@ import {
  * Language switcher. Hidden entirely when the app ships a single locale, so a
  * one-language deployment doesn't show a pointless control.
  *
- * Language names are shown in their OWN language (Deutsch, not German) — that's
+ * Language names are shown in their OWN language (Deutsch, not German), that's
  * the one string a user who can't read the current UI language must recognize.
  */
 export function LanguageSwitcher() {

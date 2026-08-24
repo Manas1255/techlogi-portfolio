@@ -24,7 +24,7 @@ import type { ComboboxOption } from "./combobox";
 /**
  * Multi-select with chips in the trigger.
  *
- * Chips cap at `maxVisible` with a `+N` overflow — without that cap, selecting
+ * Chips cap at `maxVisible` with a `+N` overflow, without that cap, selecting
  * eight options grows the trigger and reflows the whole form.
  */
 export interface MultiSelectProps {
@@ -93,7 +93,7 @@ export function MultiSelect({
                   >
                     <span className="truncate">{option.label}</span>
                     {/* A nested <button> inside the trigger button would be
-                        invalid HTML — this is a span with a click handler and
+                        invalid HTML, this is a span with a click handler and
                         the parent button still opens the popover on keyboard. */}
                     <span
                       role="button"

@@ -10,8 +10,8 @@ export interface PlaceholderNoteProps extends React.ComponentProps<"p"> {
 /**
  * The honesty marker.
  *
- * Unverified claims — illustrative metrics, unapproved quotes, sample case
- * studies — say so here rather than being implied as fact. It is deliberately
+ * Unverified claims, illustrative metrics, unapproved quotes, sample case
+ * studies, say so here rather than being implied as fact. It is deliberately
  * quiet but never hidden: a site that labels which figures are placeholders
  * reads more credible than one asserting "300% growth" with no source.
  *

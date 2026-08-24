@@ -1,5 +1,5 @@
 /**
- * SITE CONFIG — company-level facts, in one file.
+ * SITE CONFIG. Company-level facts, in one file.
  *
  * Everything a human must replace before launch is marked `PLACEHOLDER` or
  * `TODO:`. Both markers are grep-able:
@@ -39,9 +39,9 @@ export const siteConfig = {
 
   /** One line. Used in metadata, the footer and Open Graph. */
   tagline:
-    "Product engineering studio. Web applications, SaaS platforms, mobile apps and AI systems — discovery to production.",
+    "Product engineering studio. Web applications, SaaS platforms, mobile apps and AI systems, from discovery to production.",
 
-  /** ~155 characters — this is the default meta description. */
+  /** ~155 characters. This is the default meta description. */
   description:
     "Techlogi is a product engineering studio. We build web applications, SaaS platforms, mobile apps and AI systems, and stay on after launch to keep them fast and worth using.",
 
@@ -56,7 +56,7 @@ export const siteConfig = {
 
   locations: [
     {
-      label: "PLACEHOLDER — Primary studio",
+      label: "PLACEHOLDER: Primary studio",
       address: null,
       timezone: "UTC",
       isReal: false, // → not rendered until a real address is supplied.
@@ -73,7 +73,7 @@ export const siteConfig = {
 
   /**
    * Legal pages. `published: false` keeps the link OUT of the footer rather
-   * than pointing every page on the site at a 404 — and shipping a
+   * than pointing every page on the site at a 404. Shipping a
    * placeholder privacy policy would be worse than shipping none.
    *
    * ⚠️ A privacy policy is not optional here. The inquiry form collects a name,
@@ -91,7 +91,7 @@ export const siteConfig = {
    *
    * `endpoint` is a path appended to `NEXT_PUBLIC_API_URL` and called through
    * `backendClient` (which unwraps the `{ statusCode, data, error }` envelope
-   * and throws typed errors). Set it to null — the shipped default — and the
+   * and throws typed errors). Set it to null, the shipped default, and the
    * form takes a logged mock-success path instead, so the experience is
    * complete before a backend exists.
    *
@@ -113,7 +113,7 @@ export const siteConfig = {
   /**
    * Every metric, testimonial and client name on this site is illustrative
    * until a human replaces it. While this is true the site prints an honest
-   * footnote next to figures instead of implying they were measured — which is
+   * footnote next to figures instead of implying they were measured, which is
    * more credible than an unsourced "300% growth", and keeps the page from
    * shipping a claim nobody can stand behind.
    */

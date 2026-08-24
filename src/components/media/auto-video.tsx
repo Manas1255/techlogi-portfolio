@@ -16,13 +16,13 @@ export interface AutoVideoProps {
 /**
  * Interface video, behaving the way video on a marketing site should.
  *
- *  - always `muted` and `playsinline` — audio that starts by itself is hostile
+ *  - always `muted` and `playsinline`, audio that starts by itself is hostile
  *  - lazy: `preload="none"` until it approaches the viewport
  *  - paused when substantially out of view, so a long page isn't decoding six
  *    videos it can't see
  *  - a `poster` is required by the schema, so the frame is painted before the
  *    first byte of video arrives and nothing shifts
- *  - under `prefers-reduced-motion`, the poster is ALL that renders — a still
+ *  - under `prefers-reduced-motion`, the poster is ALL that renders, a still
  *    frame of the same composition, not a broken-looking gap
  *  - if the sources fail, it falls back to the poster rather than a black box
  */

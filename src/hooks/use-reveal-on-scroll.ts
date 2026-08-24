@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef } from "react";
  *
  * An element registers a ref, gets `data-reveal` (which the CSS in
  * `globals.css` uses to hide it), and gets `data-revealed` the first time it
- * intersects — then it is unobserved. Reveals happen once; re-animating on the
+ * intersects, then it is unobserved. Reveals happen once; re-animating on the
  * way back up is the kind of motion that draws attention to itself.
  *
  * The observer is created lazily on first use and lives for the session, which
@@ -42,7 +42,7 @@ function getObserver(): IntersectionObserver | null {
 /**
  * Returns a ref callback. Attach it to the element that should reveal.
  *
- * `delay` staggers siblings — keep it under ~60ms per step, past which a
+ * `delay` staggers siblings, keep it under ~60ms per step, past which a
  * stagger stops reading as rhythm and starts reading as lag.
  */
 export function useRevealOnScroll<T extends HTMLElement>(

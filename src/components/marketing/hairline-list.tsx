@@ -7,7 +7,7 @@ export interface HairlineListProps extends React.ComponentProps<"ul"> {
 }
 
 /**
- * A list separated by hairlines rather than bullets — the site's default for
+ * A list separated by hairlines rather than bullets, the site's default for
  * supporting points. Structure comes from rules, not from dots.
  */
 export function HairlineList({
@@ -27,7 +27,7 @@ export function HairlineList({
             className="text-mono-label text-primary mt-1 shrink-0"
             aria-hidden="true"
           >
-            {numbered ? String(index + 1).padStart(2, "0") : "—"}
+            {numbered ? String(index + 1).padStart(2, "0") : ", "}
           </span>
           <span className="text-muted-foreground">{item}</span>
         </li>

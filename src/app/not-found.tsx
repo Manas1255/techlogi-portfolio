@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { APP_ROUTES, HOME_ROUTE } from "@/constants";
 
 /**
- * 404. A Server Component, so the copy can't come from the client-only `t()` —
+ * 404. A Server Component, so the copy can't come from the client-only `t()`,
  * this is one of the few places English lives in a page file. When you add a
  * second locale, move these strings behind a server-side translator.
  */

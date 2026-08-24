@@ -408,6 +408,20 @@
   html {
     @apply font-sans;
     -webkit-text-size-adjust: 100%;
+    /*
+      `clip`, never `hidden`. `overflow-x: hidden` computes `overflow-y` to
+      `auto`, which turns the root into a scroll container and silently breaks
+      `position: sticky`, smooth anchor scrolling and scroll-driven animation.
+      `clip` creates no scroll container, so it is a pure seatbelt.
+    */
+    overflow-x: clip;
+    /* Anchor targets clear the fixed header without per-link offset maths. */
+    scroll-padding-top: 6rem;
+    scrollbar-gutter: stable;
+  }
+  body {
+    overflow-x: clip;
+    overflow-wrap: break-word;
   }
   body {
     @apply bg-background text-foreground;
@@ -461,30 +475,30 @@
   */
   .text-hero {
     @apply font-display font-semibold;
-    font-size: clamp(2.5rem, 4.6vw, 4.25rem);
+    font-size: clamp(2.5rem, 2rem + 2.5vw, 4.25rem);
     line-height: 1;
     letter-spacing: -0.024em;
   }
   .text-display-1 {
     @apply font-display font-semibold;
-    font-size: clamp(2.125rem, 3.8vw, 3.375rem);
+    font-size: clamp(2.125rem, 1.77rem + 1.79vw, 3.375rem);
     line-height: 1.04;
     letter-spacing: -0.022em;
   }
   .text-display-2 {
     @apply font-display font-semibold;
-    font-size: clamp(1.75rem, 2.7vw, 2.5rem);
+    font-size: clamp(1.75rem, 1.54rem + 1.07vw, 2.5rem);
     line-height: 1.1;
     letter-spacing: -0.018em;
   }
   .text-display-3 {
     @apply font-display font-semibold;
-    font-size: clamp(1.1875rem, 1.5vw, 1.4375rem);
+    font-size: clamp(1.1875rem, 1.12rem + 0.36vw, 1.4375rem);
     line-height: 1.24;
     letter-spacing: -0.011em;
   }
   .text-lead {
-    font-size: clamp(1.0625rem, 1.15vw, 1.1875rem);
+    font-size: clamp(1.0625rem, 1.03rem + 0.18vw, 1.1875rem);
     line-height: 1.5;
     letter-spacing: -0.008em;
     max-width: 62ch;
@@ -505,7 +519,7 @@
   }
   .text-quote {
     @apply font-display font-medium;
-    font-size: clamp(1.25rem, 1.9vw, 1.75rem);
+    font-size: clamp(1.25rem, 1.11rem + 0.71vw, 1.75rem);
     line-height: 1.3;
     letter-spacing: -0.018em;
     text-wrap: balance;
@@ -753,6 +767,34 @@
     box-shadow:
       0 16px 38px -20px color-mix(in oklab, var(--foreground) 34%, transparent),
       inset 0 1px 0 color-mix(in oklab, #ffffff 70%, transparent);
+  }
+
+  /*
+    TOUCH TARGET EXPANSION.
+
+    An inline text link is as tall as its line box, which is 16 to 27px. Both
+    Apple and Material put the minimum comfortable target at 44 to 48px, and an
+    audit across six routes at thirteen widths found every text link on the site
+    under it.
+
+    Padding the links would open up the layout everywhere, so instead a
+    transparent pseudo-element extends the hit area vertically. It changes no
+    box and no line, and it only applies on a coarse pointer, so a mouse user
+    never gets an invisible 44px band swallowing clicks meant for the text
+    beside it.
+  */
+  @media (pointer: coarse) {
+    .tap-target {
+      position: relative;
+    }
+    .tap-target::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      top: 50%;
+      translate: 0 -50%;
+      block-size: max(100%, 44px);
+    }
   }
 
   .press {

@@ -19,7 +19,7 @@ export interface SubmitInquiryVariables extends InquiryValues {
 /**
  * Submits an inquiry.
  *
- * `showErrorToast: false` — the dialog renders a designed error state inline,
+ * `showErrorToast: false`, the dialog renders a designed error state inline,
  * next to the submit button where the visitor is looking, rather than a toast
  * that can be missed at the other end of the viewport.
  */
@@ -41,7 +41,7 @@ function toPayload(values: SubmitInquiryVariables): InquiryPayload {
     name: values.name,
     company: values.company,
     email: values.email,
-    // An empty optional field is omitted rather than sent as "" — the receiving
+    // An empty optional field is omitted rather than sent as "", the receiving
     // end shouldn't have to distinguish "not given" from "given as blank".
     phone: values.phone === "" ? undefined : values.phone,
     attachment: values.attachment,
@@ -53,7 +53,7 @@ function toPayload(values: SubmitInquiryVariables): InquiryPayload {
 /**
  * Submits the hero's short form.
  *
- * Same repository, same error handling, same success semantics — only the
+ * Same repository, same error handling, same success semantics, only the
  * shape of what was collected differs, so there is one place that knows how to
  * send an inquiry rather than two that drift.
  */

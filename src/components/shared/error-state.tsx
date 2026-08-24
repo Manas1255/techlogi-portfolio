@@ -7,7 +7,7 @@ import { isApiError, isNetworkError } from "@/lib/http";
 import { cn } from "@/lib/utils";
 
 /**
- * The error branch of an async surface — always with a way OUT.
+ * The error branch of an async surface, always with a way OUT.
  *
  * Two rules this encodes:
  *  - Show the real cause when the server gave one (`ApiError.message` arrives

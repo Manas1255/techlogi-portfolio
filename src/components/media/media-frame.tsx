@@ -12,13 +12,13 @@ export interface MediaFrameProps {
    * a 2400px image for a 400px slot.
    */
   sizes?: string;
-  /** Hero media only — everything else stays lazy. */
+  /** Hero media only, everything else stays lazy. */
   priority?: boolean;
   /** Hairline caption under the frame. */
   caption?: string;
   /**
    * Impose a ratio on the frame regardless of the media's own, letting the
-   * picture cover it. For bands that hold DIFFERENT media in the same box —
+   * picture cover it. For bands that hold DIFFERENT media in the same box,
    * the showreel, where a jumping block height between clips reads as a bug.
    * Everywhere else, leave it alone: the media's own ratio is the honest one.
    */
@@ -37,7 +37,7 @@ const ASPECT: Record<string, string> = {
 
 /**
  * ONE component for every piece of media on the site: images, `.mp4`/`.webm`,
- * and the synthetic interface compositions — behind one API, so a section never
+ * and the synthetic interface compositions, behind one API, so a section never
  * branches on what kind of media it was given.
  *
  * What it guarantees regardless of kind:
@@ -113,7 +113,7 @@ export function MediaFrame({
           {/*
             No drawn notch. Every device-framed image on this site is a real
             device capture that already contains its own Dynamic Island, so a
-            second one was always redundant — and once the palette went
+            second one was always redundant, and once the palette went
             light-first, `bg-sunken` resolved to near-white and it rendered as
             a white bar across the top of the phone. The shell is a bezel; the
             screen supplies its own hardware.
@@ -181,7 +181,7 @@ function MediaContent({
 
   // A desktop interface scaled down to a 350px phone frame is a smear: its
   // labels land at three or four pixels. So below ~900px the composition keeps
-  // rendering at its design width and the frame CROPS it — the visitor sees a
+  // rendering at its design width and the frame CROPS it, the visitor sees a
   // legible detail of real software instead of an illegible whole, which is
   // also how a real desktop app looks on a phone. Portrait compositions are
   // designed for narrow frames already and are left alone.

@@ -7,20 +7,20 @@ import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 /**
- * Root layout — a Server Component.
+ * Root layout, a Server Component.
  *
  * Fonts load through `next/font` (self-hosted, no layout shift, no runtime
  * request to a font CDN). `AppProviders` is the site's ONE client boundary;
  * everything above it stays server-rendered.
  *
  * Three faces, each with a job the other two can't do:
- *   display — Familjen Grotesk: tight apertures and a precise, Scandinavian
+ *   display, Familjen Grotesk: tight apertures and a precise, Scandinavian
  *             skeleton. It reads engineered rather than friendly, which is the
  *             claim this studio is making, and it is uncommon enough not to
  *             carry another product's associations.
- *   sans    — Figtree: warm humanist, quiet at reading sizes, so the display
+ *   sans   , Figtree: warm humanist, quiet at reading sizes, so the display
  *             face is the only one with an opinion.
- *   mono    — JetBrains Mono: the metadata, and the engineering signal that
+ *   mono   , JetBrains Mono: the metadata, and the engineering signal that
  *             saves the page from needing a code screenshot.
  */
 
@@ -51,7 +51,7 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} — Product engineering studio`,
+    default: `${siteConfig.name} · Product engineering studio`,
     template: `%s · ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -69,14 +69,14 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: siteConfig.name,
-    title: `${siteConfig.name} — Product engineering studio`,
+    title: `${siteConfig.name} · Product engineering studio`,
     description: siteConfig.description,
     url: siteConfig.url,
     images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${siteConfig.name} — Product engineering studio`,
+    title: `${siteConfig.name} · Product engineering studio`,
     description: siteConfig.description,
   },
   robots: { index: true, follow: true },
@@ -99,7 +99,7 @@ export default function RootLayout({
         {/*
           Enables the scroll-reveal system before first paint. The CSS that
           hides a `[data-reveal]` element is gated on this attribute, so if this
-          script never runs — JS disabled, or it failed — nothing is ever
+          script never runs, JS disabled, or it failed, nothing is ever
           hidden and the page reads normally. Inline and synchronous on purpose:
           a deferred script would let the un-revealed state paint first.
         */}

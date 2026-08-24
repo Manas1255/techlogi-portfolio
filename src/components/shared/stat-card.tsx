@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  *
  * Two details that make these readable at a glance: the number uses
  * `text-metric` (tabular figures, so a row of tiles aligns), and the delta
- * pairs its color with an arrow — a red number alone isn't distinguishable for
+ * pairs its color with an arrow, a red number alone isn't distinguishable for
  * everyone, and "down" isn't always bad.
  *
  * `invertDelta` handles metrics where a decrease is the good outcome (costs,

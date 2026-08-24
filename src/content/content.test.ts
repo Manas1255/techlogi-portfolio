@@ -23,7 +23,7 @@ import {
 } from "./schemas";
 
 /**
- * Content is parsed HERE, not at render time — a constant shouldn't pay a
+ * Content is parsed HERE, not at render time, a constant shouldn't pay a
  * validation cost on every request. The consequence is that a malformed entry
  * fails `npm run verify` instead of a page, which is where you want to find it.
  */

@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { BuildTypeId } from "@/content/schemas";
 
 /**
- * THE INQUIRY PAYLOAD — the contract with whatever receives a project inquiry.
+ * THE INQUIRY PAYLOAD, the contract with whatever receives a project inquiry.
  *
  * `POST <NEXT_PUBLIC_API_URL><siteConfig.inquiry.endpoint>`
  * `Content-Type: multipart/form-data` when an attachment is present,
@@ -25,7 +25,7 @@ import type { BuildTypeId } from "@/content/schemas";
  * }
  * ```
  *
- * The response is parsed with `inquiryReceiptSchema` below — a backend that
+ * The response is parsed with `inquiryReceiptSchema` below, a backend that
  * returns something else fails at the boundary with the field path, rather than
  * handing a component `undefined`.
  */

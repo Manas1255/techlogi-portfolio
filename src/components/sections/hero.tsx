@@ -11,14 +11,14 @@ import { HeroInquiryForm } from "@/features/inquiry";
  * Four questions in the first seconds: who Techlogi is, what it builds, why to
  * trust it, and what to do next. The headline answers the first two, the
  * capability rail answers the third by naming artifacts rather than adjectives,
- * and the fourth is not a button that routes somewhere — it is a form, right
+ * and the fourth is not a button that routes somewhere, it is a form, right
  * there, above the fold.
  *
  * That is the whole shape of this section. A visitor is at their most willing
  * in the first few seconds and least willing to be sent somewhere else; a hero
  * whose primary action is "go to a contact page" spends that willingness on
  * navigation. The four-step dialog still exists for anyone who wants to brief
- * properly — the header's "Start a Project" opens it — but the default path is
+ * properly, the header's "Start a Project" opens it, but the default path is
  * four fields and done.
  *
  * Beneath the fold the section keeps going into a proof band: one real product
@@ -40,7 +40,7 @@ export function Hero() {
           the form most of a screen further down, and the form is the point of
           this section. On `lg` the rail returns to the left column under the
           copy and the form spans both rows on the right, which is the
-          composition the desktop layout wants — no duplicated markup, and
+          composition the desktop layout wants, no duplicated markup, and
           nothing hidden at either size.
         */}
         <div className="grid items-start gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-16 lg:gap-y-10">
@@ -68,7 +68,7 @@ export function Hero() {
 
             <Reveal delay={120}>
               <p className="text-lead text-muted-foreground">
-                Web applications, SaaS platforms, mobile apps and AI systems —
+                Web applications, SaaS platforms, mobile apps and AI systems,
                 taken from discovery to production, then kept fast, secure and
                 worth using long after launch.
               </p>
@@ -83,7 +83,7 @@ export function Hero() {
             <HeroInquiryForm />
           </Reveal>
 
-          {/* Capability rail — concrete nouns instead of a trust badge. */}
+          {/* Capability rail, concrete nouns instead of a trust badge. */}
           <Reveal
             delay={180}
             variant="fade"
@@ -119,7 +119,7 @@ export function Hero() {
               </p>
               <Link
                 href={caseStudyPath(lead.slug)}
-                className="text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
+                className="tap-target text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
               >
                 View case study →
               </Link>
@@ -135,14 +135,14 @@ export function Hero() {
                 sizes="(min-width: 1280px) 1200px, 94vw"
               />
               <span className="sr-only">
-                {lead.name} — {lead.tagline}. View case study.
+                {lead.name}, {lead.tagline}. View case study.
               </span>
             </Link>
 
             <p className="text-mono-label text-muted-foreground">
               <Link
                 href={APP_ROUTES.work}
-                className="hover:text-foreground transition-colors"
+                className="tap-target hover:text-foreground transition-colors"
               >
                 Explore all work →
               </Link>

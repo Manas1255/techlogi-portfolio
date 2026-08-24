@@ -1,14 +1,14 @@
 /**
- * DEV-ONLY in-app network log — the web analog of Chucker's OkHttp interceptor.
+ * DEV-ONLY in-app network log, the web analog of Chucker's OkHttp interceptor.
  *
  * Every call that flows through `backendClient` records one entry here, so the
  * floating Network Inspector overlay can show what was sent, what came back, and
- * what failed — without opening the browser's Network tab.
+ * what failed, without opening the browser's Network tab.
  *
  * It is a bounded ring buffer with a tiny pub/sub (consumed via
  * `useSyncExternalStore`). Every writer is guarded by {@link isNetLogEnabled},
  * a compile-time constant that folds to `false` in production so the whole
- * mechanism — and the request/response bodies it would hold in memory — drops
+ * mechanism, and the request/response bodies it would hold in memory, drops
  * out of prod builds. NEVER read this in product code; it exists only for the
  * inspector.
  */
@@ -68,7 +68,7 @@ export function clearNetLog(): void {
   emit();
 }
 
-/** Stable snapshot for `useSyncExternalStore` — reference changes only on write. */
+/** Stable snapshot for `useSyncExternalStore`, reference changes only on write. */
 export function getNetLog(): NetLogEntry[] {
   return entries;
 }

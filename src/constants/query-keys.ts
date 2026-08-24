@@ -1,7 +1,7 @@
 /**
  * Centralized React Query cache keys.
  *
- * Always import from here — an inline `queryKey: ["inquiry"]` typo silently
+ * Always import from here, an inline `queryKey: ["inquiry"]` typo silently
  * breaks cache sharing and invalidation, and nothing fails loudly.
  *
  * Shape convention per resource:

@@ -7,7 +7,7 @@ export const SEARCH_DEBOUNCE_MS = 300;
 /** Default page size for paginated lists. */
 export const DEFAULT_PAGE_SIZE = 20;
 
-/** Shared field length limits — mirrored by the Zod field primitives. */
+/** Shared field length limits, mirrored by the Zod field primitives. */
 export const FIELD_LIMITS = {
   name: 100,
   email: 254,

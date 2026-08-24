@@ -5,7 +5,7 @@
  *
  * Success is implied by `error === null` (there is no top-level `success`
  * flag). The backend client unwraps this and returns `data` directly, or throws
- * an `ApiError` — so app code NEVER touches the envelope.
+ * an `ApiError`, so app code NEVER touches the envelope.
  *
  * If your backend uses a different envelope, this file and `backend-client.ts`
  * are the only two places that need to change.
@@ -54,7 +54,7 @@ export interface Paginated<T> {
  * Runtime shape of the pagination block.
  *
  * Every field is optional because `normalizePagination` already defaults a
- * missing one — the schema's job is to reject a field that is *present but the
+ * missing one, the schema's job is to reject a field that is *present but the
  * wrong type* (`total_pages: "3"`), which is what silently produces NaN.
  */
 export const rawPaginationSchema = z

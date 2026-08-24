@@ -16,9 +16,9 @@ import { reportError } from "@/lib/reporting";
 /**
  * Every mutation in this app goes through here.
  *
- * Written by hand, each mutation repeats the same four things — invalidate the
+ * Written by hand, each mutation repeats the same four things, invalidate the
  * right keys, toast success, turn an error into a message a human can act on,
- * report it — and each one gets a slightly different subset wrong. This wraps
+ * report it, and each one gets a slightly different subset wrong. This wraps
  * them once:
  *
  *  - `invalidate`: keys refetched on success, so no screen shows stale rows
@@ -27,7 +27,7 @@ import { reportError } from "@/lib/reporting";
  *    instead of a generic "Something went wrong", and reported to the seam
  *
  * Anything unusual (optimistic updates, custom rollback) still passes through
- * via `options` — this adds behavior, it doesn't take any away.
+ * via `options`, this adds behavior, it doesn't take any away.
  */
 
 export interface ApiMutationOptions<TData, TVariables, TContext> extends Omit<

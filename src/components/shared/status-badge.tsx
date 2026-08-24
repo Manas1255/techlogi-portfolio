@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 /**
  * The ONE way to render a status in this app.
  *
- * Never hand-build a status pill — a bespoke `rounded-full bg-green-100` in one
+ * Never hand-build a status pill, a bespoke `rounded-full bg-green-100` in one
  * screen and a slightly different one in the next is how an app starts looking
  * unfinished. Map your domain's status union to a tone in a `Record` (see
  * `lib/badges.ts`) and pass it here.
  *
- * Tone meanings — pick by what the state MEANS, not by the color you want:
+ * Tone meanings, pick by what the state MEANS, not by the color you want:
  *   success  → healthy / approved / done well
  *   warning  → needs attention, awaiting someone
  *   danger   → failed / rejected / blocked
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  *   neutral  → inert: draft, archived, cancelled
  *
  * The dot is not decoration: it keeps the badge readable when color alone
- * can't be perceived (WCAG — color is never the sole signal).
+ * can't be perceived (WCAG, color is never the sole signal).
  */
 const badgeVariants = cva(
   "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-caption font-medium whitespace-nowrap",

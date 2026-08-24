@@ -1,5 +1,5 @@
 /**
- * SOURCE CATALOG — the single source of truth for every user-facing string.
+ * SOURCE CATALOG. The single source of truth for every user-facing string.
  *
  * Add new keys HERE first; TypeScript then forces every other locale catalog to
  * add them too (each is declared `satisfies Messages`), so a translation can
@@ -8,7 +8,7 @@
  * Interpolate with `{name}` placeholders: `t("dashboard.welcome", { name })`.
  *
  * ⚠️ Deliberately NOT `as const`. The key PATHS are what `MessageKey` is built
- * from, and those stay literal either way — but `as const` would also make each
+ * from, and those stay literal either way. But `as const` would also make each
  * VALUE a literal type (`"Save"` rather than `string`), and then no translation
  * could ever satisfy `Messages`: German "Speichern" isn't assignable to `"Save"`.
  */
@@ -77,7 +77,7 @@ const en = {
     trigger: "Start a Project",
     title: "Start a project",
     subtitle:
-      "Three short steps. Close it any time — we'll keep what you typed.",
+      "Three short steps. Close it any time; we'll keep what you typed.",
     privacy:
       "We use your details to reply, and for nothing else. No mailing list, no follow-up sequence, and we never pass them on.",
     /* The short form, for the steps before any personal detail is asked for.
@@ -114,7 +114,7 @@ const en = {
       timeline: { label: "When would you like to start? (optional)" },
       budget: {
         label: "Rough budget (optional)",
-        hint: "A range is fine, and it isn't a quote or a commitment — it just tells us what size of team fits. If you'd rather not say, that's genuinely fine.",
+        hint: "A range is fine, and it isn't a quote or a commitment. It just tells us what size of team fits. If you'd rather not say, that's genuinely fine.",
       },
       name: { label: "Your name" },
       company: { label: "Company (optional)" },
@@ -124,7 +124,7 @@ const en = {
     attachment: {
       label: "Attach a file (optional)",
       choose: "Choose a file",
-      hint: "Anything that helps — a document, a sketch, a screenshot. Up to {max}.",
+      hint: "Anything that helps: a document, a sketch, a screenshot. Up to {max}.",
       remove: "Remove {name}",
       tooLarge:
         "That file is bigger than {max}. Try a smaller one, or send it when we reply.",
@@ -138,7 +138,7 @@ const en = {
     },
     success: {
       title: "Message sent",
-      heading: "Thanks — that's with us.",
+      heading: "Thanks, that's with us.",
       body: "A person reads every message and replies within one business day. You can also reach us directly at {email}.",
       close: "Close",
       another: "Send another",
@@ -156,7 +156,7 @@ const en = {
         "What you want it to do matters more than what it's called.",
       submit: "Send inquiry",
       submitting: "Sending…",
-      successTitle: "Thanks — that's with us.",
+      successTitle: "Thanks, that's with us.",
       successBody:
         "You'll hear back at the address you gave us. You can always reach us directly at {email}.",
       privacy:
@@ -189,7 +189,7 @@ const en = {
       "Illustrative case study. The engagement, the figures and the quotes are placeholders until real, cleared client work replaces them.",
     placeholderMetrics:
       "Figures shown are illustrative placeholders, not measured results.",
-    placeholderTestimonial: "Placeholder — awaiting an approved client quote.",
+    placeholderTestimonial: "Placeholder, awaiting an approved client quote.",
     categories: {
       saas: "SaaS",
       "web-app": "Web apps",

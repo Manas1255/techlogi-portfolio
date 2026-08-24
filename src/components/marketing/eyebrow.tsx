@@ -7,7 +7,7 @@ export interface EyebrowProps extends React.ComponentProps<"p"> {
 
 /**
  * The monospace section label. Small, tracked, and the site's main engineering
- * signal — which is why there are no code screenshots anywhere.
+ * signal, which is why there are no code screenshots anywhere.
  */
 export function Eyebrow({
   index,

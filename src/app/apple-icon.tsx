@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 /**
  * The home-screen icon. iOS does not round the corners of a supplied mask
  * itself for `apple-touch-icon`, so this draws a full-bleed tile and lets the
- * OS apply its own shape — a pre-rounded icon ends up double-rounded.
+ * OS apply its own shape, a pre-rounded icon ends up double-rounded.
  */
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export interface SectionIntroProps {
   eyebrow: string;
   index?: number;
-  /** The section's headline. Kept short — the lead does the explaining. */
+  /** The section's headline. Kept short, the lead does the explaining. */
   title: React.ReactNode;
   lead?: React.ReactNode;
   /** A CTA or filter row, aligned to the intro's baseline on wide screens. */

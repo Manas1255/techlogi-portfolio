@@ -10,7 +10,7 @@ export interface RevealProps extends React.HTMLAttributes<HTMLElement> {
   delay?: number;
   /**
    * The rendered element. A reveal wrapper must never break the structure it
-   * sits in — a `<div>` inside an `<ol>` is invalid, and screen readers stop
+   * sits in, a `<div>` inside an `<ol>` is invalid, and screen readers stop
    * announcing the list.
    */
   as?: "div" | "li" | "article" | "section" | "figure";
@@ -24,8 +24,8 @@ export interface RevealProps extends React.HTMLAttributes<HTMLElement> {
  * whole section in one of these costs nothing on the client beyond a ref.
  *
  * The element is chosen by an explicit switch rather than a polymorphic
- * `ElementType`. That keeps the props honestly typed as `HTMLAttributes` —
- * which every one of these tags accepts — instead of collapsing to the
+ * `ElementType`. That keeps the props honestly typed as `HTMLAttributes`,
+ * which every one of these tags accepts, instead of collapsing to the
  * intersection of five element interfaces, which is uninhabited.
  */
 export function Reveal({

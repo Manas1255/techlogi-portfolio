@@ -5,7 +5,7 @@ import type { MessageKey, MessageVars, Messages } from "./types";
 /**
  * The pure translator, deliberately WITHOUT `"use client"`.
  *
- * `@/i18n` is a client module — it owns the hooks and the locale store — so a
+ * `@/i18n` is a client module, it owns the hooks and the locale store, so a
  * Server Component importing from it would be dragged across the boundary for
  * the sake of one string. Server Components render the source locale (there is
  * no locale routing), so they call `translate(SOURCE_LOCALE, key)` from here
@@ -14,7 +14,7 @@ import type { MessageKey, MessageVars, Messages } from "./types";
 
 const CATALOGS: Record<Locale, Messages> = {
   en: en,
-  // jinn-web:locales — `add-locale` registers new catalogs here.
+  // jinn-web:locales, `add-locale` registers new catalogs here.
 };
 
 export function lookup(catalog: Messages, key: string): string | undefined {

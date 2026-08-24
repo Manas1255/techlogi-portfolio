@@ -59,15 +59,15 @@ const SEMANTIC_TOKENS = [
 const TONES: StatusTone[] = ["success", "warning", "danger", "info", "neutral"];
 
 const MARKETING_TYPE_STEPS = [
-  ["text-hero", "Hero — the home page headline, and nowhere else"],
-  ["text-display-1", "Display 1 — page titles"],
-  ["text-display-2", "Display 2 — section headlines"],
-  ["text-display-3", "Display 3 — sub-headings, project names in a rail"],
-  ["text-quote", "Quote — pull quotes and testimonials"],
-  ["text-lead", "Lead — the paragraph under a headline"],
-  ["text-marketing-body", "Marketing body — reading copy at 16/1.65"],
-  ["text-eyebrow", "Eyebrow — section labels"],
-  ["text-mono-label", "Mono label — indices, stacks, footnotes"],
+  ["text-hero", "Hero, the home page headline, and nowhere else"],
+  ["text-display-1", "Display 1, page titles"],
+  ["text-display-2", "Display 2, section headlines"],
+  ["text-display-3", "Display 3, sub-headings, project names in a rail"],
+  ["text-quote", "Quote, pull quotes and testimonials"],
+  ["text-lead", "Lead, the paragraph under a headline"],
+  ["text-marketing-body", "Marketing body, reading copy at 16/1.65"],
+  ["text-eyebrow", "Eyebrow, section labels"],
+  ["text-mono-label", "Mono label, indices, stacks, footnotes"],
 ] as const;
 
 const MOTION_TOKENS = [
@@ -90,17 +90,17 @@ const DEMO_MEDIA: Media = {
 };
 
 const TYPE_STEPS = [
-  ["text-display", "Display — page hero"],
-  ["text-h1", "Heading 1 — page title"],
-  ["text-h2", "Heading 2 — section"],
-  ["text-h3", "Heading 3 — card title"],
-  ["text-h4", "Heading 4 — subsection"],
-  ["text-body-lg", "Body large — reading contexts"],
-  ["text-body", "Body — default copy"],
-  ["text-label", "Label — form labels, cells"],
-  ["text-caption", "Caption — meta, secondary"],
-  ["text-overline", "Overline — table headers"],
-  ["text-data", "Data — 1,234.56 tabular"],
+  ["text-display", "Display, page hero"],
+  ["text-h1", "Heading 1, page title"],
+  ["text-h2", "Heading 2, section"],
+  ["text-h3", "Heading 3, card title"],
+  ["text-h4", "Heading 4, subsection"],
+  ["text-body-lg", "Body large, reading contexts"],
+  ["text-body", "Body, default copy"],
+  ["text-label", "Label, form labels, cells"],
+  ["text-caption", "Caption, meta, secondary"],
+  ["text-overline", "Overline, table headers"],
+  ["text-data", "Data, 1,234.56 tabular"],
   ["text-metric", "1,284"],
 ] as const;
 
@@ -166,7 +166,7 @@ export function DesignSystemView() {
 
         <Section
           title="Semantic slots"
-          description="What components actually consume — never a raw ramp step for a surface."
+          description="What components actually consume, never a raw ramp step for a surface."
         >
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {SEMANTIC_TOKENS.map((token) => (
@@ -183,7 +183,7 @@ export function DesignSystemView() {
 
         <Section
           title="Status tones"
-          description="Always via StatusBadge — the dot keeps it readable without color perception."
+          description="Always via StatusBadge. The dot keeps it readable without color perception."
         >
           <div className="flex flex-wrap gap-2">
             {TONES.map((tone) => (
@@ -243,7 +243,7 @@ export function DesignSystemView() {
 
         <Section title="Inputs">
           <div className="grid gap-4 sm:grid-cols-2">
-            {/* aria-label because this showcase has no visible labels — in a
+            {/* aria-label because this showcase has no visible labels, in a
                 real form these are always wrapped by a `components/form` field,
                 which associates a proper <label>. */}
             <Input placeholder="Plain input" aria-label="Plain input" />
@@ -422,7 +422,7 @@ export function DesignSystemView() {
 
         <Section
           title="Marketing type scale"
-          description="Fluid, editorial, and separate from the dense product scale above — which the shared component catalog still depends on."
+          description="Fluid, editorial, and separate from the dense product scale above, which the shared component catalog still depends on."
         >
           <div className="flex flex-col gap-4">
             {MARKETING_TYPE_STEPS.map(([className, label]) => (
@@ -443,7 +443,7 @@ export function DesignSystemView() {
           <DescriptionList
             items={MOTION_TOKENS.map(([token, value, use]) => ({
               label: token,
-              value: `${value} — ${use}`,
+              value: `${value}, ${use}`,
             }))}
           />
         </Section>
