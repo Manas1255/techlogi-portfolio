@@ -8,6 +8,7 @@
 export { Hero } from "./hero";
 export { Showreel } from "./showreel";
 export { ProjectPanel, type ProjectPanelProps } from "./project-panel";
+export { ProjectCard, type ProjectCardProps } from "./project-card";
 export { FeaturedWork } from "./featured-work";
 export { ServicesSection } from "./services-section";
 export { ProcessSection } from "./process-section";

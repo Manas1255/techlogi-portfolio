@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Aspect, Media } from "@/content/schemas";
+import type { Aspect, Media, MediaFrameKind } from "@/content/schemas";
 import { cn } from "@/lib/utils";
 import { AutoVideo } from "./auto-video";
 import { SyntheticComposition } from "./compositions";
@@ -23,6 +23,15 @@ export interface MediaFrameProps {
    * Everywhere else, leave it alone: the media's own ratio is the honest one.
    */
   aspectOverride?: Aspect;
+  /**
+   * Impose a frame treatment, ignoring the media's own.
+   *
+   * For contexts where the frame is the container's decision rather than the
+   * media's: a compact card wants a uniform banner, and a phone shell inside a
+   * 16:10 letterbox is both wrong and capped at the shell's own max width, so
+   * a device-framed project renders at half the card's width.
+   */
+  frameOverride?: MediaFrameKind;
 }
 
 const ASPECT: Record<string, string> = {
@@ -56,9 +65,37 @@ export function MediaFrame({
   priority = false,
   caption,
   aspectOverride,
+  frameOverride,
 }: MediaFrameProps) {
+  const frame = frameOverride ?? media.frame;
+
+  /*
+    Where to anchor the crop when the box is a different shape from the media.
+
+    `object-fit: cover` centres by default, which for a tall phone capture in a
+    wide banner picks whatever happened to be halfway down the screen: a
+    progress row, a random card, the middle of a list. An app's identity lives
+    at the TOP of its screen, in the header and the first block of content, so
+    anchor there whenever a portrait image is being shown in a landscape box.
+  */
+  const isPortraitMedia =
+    media.kind === "image"
+      ? media.height > media.width
+      : media.aspect === "9/16" || media.aspect === "4/5";
+  const isLandscapeBox =
+    aspectOverride !== undefined &&
+    aspectOverride !== "9/16" &&
+    aspectOverride !== "4/5" &&
+    aspectOverride !== "1/1";
+  const objectPosition = isPortraitMedia && isLandscapeBox ? "top" : undefined;
+
   const content = (
-    <MediaContent media={media} sizes={sizes} priority={priority} />
+    <MediaContent
+      media={media}
+      sizes={sizes}
+      priority={priority}
+      objectPosition={objectPosition}
+    />
   );
   // An image knows its own proportions; only synthetic and video media have to
   // declare one. Reserving the box from the intrinsic size means a picture can
@@ -70,7 +107,7 @@ export function MediaFrame({
         ? `${media.width} / ${media.height}`
         : ASPECT[media.aspect];
 
-  if (media.frame === "browser") {
+  if (frame === "browser") {
     return (
       <figure className={cn("flex min-w-0 flex-col gap-3", className)}>
         <div className="border-hairline bg-raised media-lift rounded-frame overflow-hidden border">
@@ -101,7 +138,7 @@ export function MediaFrame({
     );
   }
 
-  if (media.frame === "device") {
+  if (frame === "device") {
     return (
       <figure
         className={cn("flex min-w-0 flex-col items-center gap-3", className)}
@@ -155,10 +192,12 @@ function MediaContent({
   media,
   sizes,
   priority,
+  objectPosition,
 }: {
   media: Media;
   sizes?: string;
   priority: boolean;
+  objectPosition?: "top";
 }) {
   if (media.kind === "image") {
     return (
@@ -170,7 +209,10 @@ function MediaContent({
         sizes={sizes ?? media.sizes}
         priority={priority || media.priority}
         loading={priority || media.priority ? undefined : "lazy"}
-        className="size-full object-cover"
+        className={cn(
+          "size-full object-cover",
+          objectPosition === "top" && "object-top",
+        )}
       />
     );
   }

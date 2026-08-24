@@ -1,7 +1,12 @@
-import { ArrowLink, Section, SectionIntro } from "@/components/marketing";
+import {
+  ArrowLink,
+  Reveal,
+  Section,
+  SectionIntro,
+} from "@/components/marketing";
 import { APP_ROUTES } from "@/constants";
 import { featuredProjects } from "@/content";
-import { ProjectPanel } from "./project-panel";
+import { ProjectCard } from "./project-card";
 
 /**
  * The portfolio, as the page's centre of gravity.
@@ -25,18 +30,11 @@ export function FeaturedWork() {
         aside={<ArrowLink href={APP_ROUTES.work}>View all work</ArrowLink>}
       />
 
-      <div className="mt-16 flex flex-col gap-24 md:mt-20 md:gap-32">
+      <div className="mt-12 grid gap-6 sm:grid-cols-2 md:mt-14">
         {projects.map((project, index) => (
-          <ProjectPanel
-            key={project.slug}
-            project={project}
-            index={index}
-            reversed={index % 2 === 1}
-            fullBleed={index === 2}
-            // The hero opens the page with the first project's hero frame;
-            // showing it again 1,500px later is repetition, not emphasis.
-            media={index === 0 ? project.galleryMedia[0] : undefined}
-          />
+          <Reveal key={project.slug} delay={Math.min(index * 60, 180)}>
+            <ProjectCard project={project} className="h-full" />
+          </Reveal>
         ))}
       </div>
     </Section>

@@ -333,6 +333,62 @@ test.describe("section rhythm", () => {
   });
 });
 
+test.describe("home page work cards", () => {
+  /*
+    Portfolio media ranges from 4:3 composites to 9:16 phone captures. Two
+    things went wrong when the home page moved to a card grid, and neither is
+    visible to a type check: cards sized themselves from their own media so the
+    grid came out ragged, and a device-framed project kept the phone shell's
+    own max width and rendered at HALF the card's, leaving rows 191px apart.
+  */
+  test("cards sharing a row are the same height", async ({ page }) => {
+    await page.goto("/");
+    await page.evaluate(() =>
+      document.querySelector("#work")?.scrollIntoView(),
+    );
+    await page.waitForTimeout(500);
+
+    // Group by row before comparing. In a single column, cards stack and
+    // differing heights are correct: raggedness only exists side by side.
+    const rows = await page.evaluate(() => {
+      const byTop = new Map<number, number[]>();
+      for (const card of document.querySelectorAll("#work article")) {
+        const box = card.getBoundingClientRect();
+        const top = Math.round(box.top);
+        const key = [...byTop.keys()].find((k) => Math.abs(k - top) < 4) ?? top;
+        byTop.set(key, [...(byTop.get(key) ?? []), Math.round(box.height)]);
+      }
+      return [...byTop.values()];
+    });
+
+    expect(rows.length).toBeGreaterThan(0);
+    for (const heights of rows) {
+      if (heights.length < 2) continue;
+      const spread = Math.max(...heights) - Math.min(...heights);
+      expect(
+        spread,
+        `cards in one row differ by ${spread}px: ${heights.join(", ")}`,
+      ).toBeLessThanOrEqual(2);
+    }
+  });
+
+  test("the home page teases the work rather than reprinting it", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    // The editorial panels belong on /work. If they come back here the section
+    // returns to four full screens, which is what readers called endless.
+    const summaries = await page.evaluate(
+      () =>
+        document.querySelectorAll("#work .text-marketing-body").length,
+    );
+    expect(
+      summaries,
+      "full project summaries are back on the home page",
+    ).toBe(0);
+  });
+});
+
 test.describe("capability diagrams", () => {
   /*
     Regression guard. The looping drift, ring rotation and dash march are gated
