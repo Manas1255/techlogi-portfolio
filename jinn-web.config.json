@@ -1,0 +1,10 @@
+{
+  "cliVersion": "2.2.0",
+  "roles": [],
+  "locales": [
+    "en"
+  ],
+  "brand": "#e24a1e",
+  "authMode": "client",
+  "packageManager": "npm"
+}
