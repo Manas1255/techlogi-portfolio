@@ -1,33 +1,93 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import {
+  Bricolage_Grotesque,
+  Inter_Tight,
+  JetBrains_Mono,
+} from "next/font/google";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
-import { clientEnv } from "@/config/env";
+import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 /**
  * Root layout — a Server Component.
  *
  * Fonts load through `next/font` (self-hosted, no layout shift, no runtime
- * request to a font CDN). `AppProviders` is the app's ONE client boundary;
+ * request to a font CDN). `AppProviders` is the site's ONE client boundary;
  * everything above it stays server-rendered.
+ *
+ * Three faces, each with a job the other two can't do:
+ *   display — Bricolage Grotesque, the art direction
+ *   sans    — Inter Tight, the reading voice
+ *   mono    — JetBrains Mono, the metadata and the engineering signal
  */
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  display: "swap",
+  weight: "variable",
+  // The optical-size axis is what keeps it from looking like a blown-up
+  // small-text face at 100px; `wdth` stays at its default.
+  axes: ["opsz"],
+  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sans = Inter_Tight({
+  variable: "--font-inter-tight",
   subsets: ["latin"],
+  display: "swap",
+  weight: "variable",
+  fallback: ["system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+  display: "swap",
+  weight: "variable",
+  fallback: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: clientEnv.NEXT_PUBLIC_APP_NAME,
-    template: `%s · ${clientEnv.NEXT_PUBLIC_APP_NAME}`,
+    default: `${siteConfig.name} — Product engineering studio`,
+    template: `%s · ${siteConfig.name}`,
   },
-  description: "Built with the Codeable web architecture.",
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  keywords: [
+    "software development",
+    "product design",
+    "SaaS development",
+    "web application development",
+    "mobile app development",
+    "AI development",
+    "product engineering studio",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} — Product engineering studio`,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    images: [{ url: "/opengraph-image", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — Product engineering studio`,
+    description: siteConfig.description,
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  // Matches the ink canvas, so mobile browser chrome doesn't flash white.
+  themeColor: "#0b0a09",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -37,8 +97,34 @@ export default function RootLayout({
     // TODO(i18n): when a second locale ships, drive `lang` from the active
     // locale so screen readers announce content in the right language.
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AppProviders>{children}</AppProviders>
+      <head>
+        {/*
+          Enables the scroll-reveal system before first paint. The CSS that
+          hides a `[data-reveal]` element is gated on this attribute, so if this
+          script never runs — JS disabled, or it failed — nothing is ever
+          hidden and the page reads normally. Inline and synchronous on purpose:
+          a deferred script would let the un-revealed state paint first.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.dataset.motion="on"`,
+          }}
+        />
+      </head>
+      <body
+        className={`${sans.variable} ${display.variable} ${mono.variable} antialiased`}
+      >
+        <AppProviders>
+          <a
+            href="#main"
+            className="bg-primary text-primary-foreground text-label focus:ring-ring sr-only rounded-md px-4 py-2 focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:ring-2"
+          >
+            Skip to content
+          </a>
+          <SiteHeader />
+          <main id="main">{children}</main>
+          <SiteFooter />
+        </AppProviders>
       </body>
     </html>
   );

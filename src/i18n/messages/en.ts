@@ -63,52 +63,134 @@ const en = {
   },
 
   nav: {
-    dashboard: "Dashboard",
-    settings: "Settings",
+    work: "Work",
+    services: "Services",
+    about: "About",
+    contact: "Contact",
     openMenu: "Open navigation",
     closeMenu: "Close navigation",
-    commandMenu: "Search commands",
-    account: "Account",
-    signOut: "Sign out",
+    primary: "Primary",
+    skipToContent: "Skip to content",
   },
 
-  auth: {
-    login: {
-      title: "Sign in",
-      subtitle: "Enter your details to continue.",
-      submit: "Sign in",
-      forgotPassword: "Forgot password?",
-      noAccount: "Don't have an account?",
-      signUp: "Create one",
-      success: "Welcome back",
+  inquiry: {
+    trigger: "Start a Project",
+    title: "Start a project",
+    subtitle: "Four short steps. You can close this and pick it up later.",
+    privacy:
+      "We use these details to reply to your inquiry, and nothing else. No list, no sequence, no sharing.",
+    steps: {
+      build: "What you're building",
+      brief: "The brief",
+      scope: "Scope",
+      contact: "Your details",
     },
-    register: {
-      title: "Create your account",
-      subtitle: "It only takes a minute.",
-      submit: "Create account",
-      hasAccount: "Already have an account?",
-      signIn: "Sign in",
+    step1: {
+      title: "What would you like to build?",
+      lead: "Pick the closest one. You can explain the specifics next.",
     },
-    forgotPassword: {
-      title: "Reset your password",
-      subtitle: "We'll email you a link to set a new one.",
-      submit: "Send reset link",
-      sent: "Check your inbox for the reset link.",
+    step2: {
+      title: "Tell us about it",
+      lead: "The problem you're solving matters more than the feature list.",
     },
-    resetPassword: {
-      title: "Choose a new password",
-      submit: "Update password",
-      success: "Password updated. You can sign in now.",
+    step3: {
+      title: "Timing and scope",
+      lead: "Rough is fine. It helps us tell you quickly whether we're a fit.",
+    },
+    step4: {
+      title: "Where do we reply?",
+      lead: "One person, one reply — no sequence, no sales team.",
     },
     fields: {
-      email: "Email",
-      password: "Password",
-      confirmPassword: "Confirm password",
-      name: "Full name",
-      phone: "Phone",
+      description: {
+        label: "What are you building?",
+        hint: "A few sentences is plenty. What exists today, and what should change?",
+        placeholder:
+          "We run scheduling across eleven clinics in three spreadsheets. We need one system our coordinators can actually use…",
+      },
+      services: {
+        label: "Where do you need help?",
+        hint: "Optional. Choose as many as apply, or none.",
+      },
+      timeline: { label: "When would you want to start?" },
+      budget: {
+        label: "Approximate budget",
+        hint: "A range, not a commitment. It tells us what shape of team fits.",
+      },
+      name: { label: "Your name" },
+      company: { label: "Company (optional)" },
+      email: { label: "Email" },
+      phone: { label: "Phone (optional)" },
     },
-    sessionExpired: "Your session expired. Please sign in again.",
-    signedOut: "You've been signed out.",
+    attachment: {
+      label: "Attachment (optional)",
+      choose: "Attach a brief or spec",
+      hint: "PDF, image or Word document, up to {max}.",
+      remove: "Remove {name}",
+      tooLarge:
+        "That file is larger than {max}. Try a smaller one, or send it in your reply.",
+    },
+    actions: {
+      back: "Back",
+      next: "Continue",
+      submit: "Send inquiry",
+      submitting: "Sending…",
+    },
+    success: {
+      title: "Inquiry sent",
+      heading: "Thanks — that's with us.",
+      body: "A person reads every inquiry. You'll hear back at the address you gave us, and you can always reach us directly at {email}.",
+      close: "Close",
+      another: "Send another",
+    },
+    error: {
+      title: "That didn't send.",
+    },
+    validation: {
+      descriptionShort: "A sentence or two more, so we can reply usefully",
+    },
+  },
+
+  site: {
+    startProject: "Start a Project",
+    exploreWork: "Explore Our Work",
+    viewCaseStudy: "View Case Study",
+    viewAllWork: "View all work",
+    nextProject: "Next project",
+    backToWork: "All work",
+    industry: "Industry",
+    productType: "Product type",
+    services: "Services",
+    platforms: "Platforms",
+    technology: "Technology",
+    outcome: "Outcome",
+    whatWeDid: "What we did",
+    period: "Period",
+    allWork: "All work",
+    filterBy: "Filter by capability",
+    placeholderCaseStudy:
+      "Illustrative case study. The engagement, the figures and the quotes are placeholders until real, cleared client work replaces them.",
+    placeholderMetrics:
+      "Figures shown are illustrative placeholders, not measured results.",
+    placeholderTestimonial: "Placeholder — awaiting an approved client quote.",
+    categories: {
+      saas: "SaaS",
+      "web-app": "Web apps",
+      mobile: "Mobile",
+      ai: "AI",
+      commerce: "Commerce",
+      data: "Data",
+    },
+    footer: {
+      tagline: "Product engineering studio.",
+      navigation: "Navigation",
+      capabilities: "Capabilities",
+      selectedWork: "Selected work",
+      connect: "Connect",
+      legal: "Legal",
+      rights: "All rights reserved.",
+      builtWith: "Built with Next.js. Designed and engineered in-house.",
+    },
   },
 
   validation: {
@@ -129,25 +211,6 @@ const en = {
     unauthorized: "You don't have access to this.",
     notFound: "We couldn't find what you were looking for.",
     validation: "Please check the highlighted fields.",
-  },
-
-  dashboard: {
-    title: "Dashboard",
-    welcome: "Welcome back, {name}",
-    subtitle: "Your work at a glance.",
-    empty: "Nothing here yet",
-    emptyHint: "Once there's activity, it'll show up here.",
-  },
-
-  settings: {
-    title: "Settings",
-    subtitle: "Manage your account and preferences.",
-    profile: "Profile",
-    profileHint: "Your name and contact details.",
-    preferences: "Preferences",
-    preferencesHint: "Language and display options.",
-    danger: "Danger zone",
-    signOutHint: "Sign out of this device.",
   },
 };
 

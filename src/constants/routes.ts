@@ -1,31 +1,33 @@
 /**
- * Every route string in the app. Never hardcode a path in `<Link href>`,
+ * Every route string in the site. Never hardcode a path in `<Link href>`,
  * `router.push`, or `redirect()` — import from here so a route rename is one
  * edit and `jinn-web doctor` can verify pages ↔ constants stay in sync.
  */
 
-export const AUTH_ROUTES = {
-  login: "/login",
-  register: "/register",
-  forgotPassword: "/forgot-password",
-  resetPassword: "/reset-password",
-} as const;
-
-/** `jinn-web domain` appends new routes to this object. */
 export const APP_ROUTES = {
-  dashboard: "/dashboard",
-  settings: "/settings",
+  home: "/",
+  work: "/work",
+  services: "/services",
+  about: "/about",
+  contact: "/contact",
 } as const;
 
-export const ROUTES = { ...AUTH_ROUTES, ...APP_ROUTES } as const;
+export const ROUTES = { ...APP_ROUTES } as const;
 
 export type Route = (typeof ROUTES)[keyof typeof ROUTES];
 
-/** Where a signed-in user lands by default. */
-export const DEFAULT_AUTHED_ROUTE = APP_ROUTES.dashboard;
+/** Case studies are a dynamic route; build the path, never concatenate inline. */
+export function caseStudyPath(slug: string): string {
+  return `${APP_ROUTES.work}/${slug}`;
+}
 
-/** Where an unauthenticated visitor is sent. */
-export const DEFAULT_GUEST_ROUTE = AUTH_ROUTES.login;
-
-/** Routes reachable without a session (checked by `proxy.ts`). */
-export const PUBLIC_ROUTES: readonly string[] = Object.values(AUTH_ROUTES);
+/**
+ * Nav model for the header and footer. Labels are i18n keys, resolved at the
+ * render site — a route table must not depend on the locale store.
+ */
+export const NAV_ITEMS = [
+  { href: APP_ROUTES.work, labelKey: "nav.work" },
+  { href: APP_ROUTES.services, labelKey: "nav.services" },
+  { href: APP_ROUTES.about, labelKey: "nav.about" },
+  { href: APP_ROUTES.contact, labelKey: "nav.contact" },
+] as const;

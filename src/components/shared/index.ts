@@ -20,16 +20,11 @@ export { SearchInput, type SearchInputProps } from "./search-input";
 export { RowActions, type RowAction } from "./row-actions";
 export { FullPageLoader } from "./full-page-loader";
 export { LanguageSwitcher } from "./language-switcher";
-export { UserAvatar, type UserAvatarProps } from "./user-avatar";
-export { AvatarStack, type AvatarStackProps } from "./avatar-stack";
 export { StatCard, type StatCardProps } from "./stat-card";
 export { DescriptionList, type DescriptionItem } from "./description-list";
 export { CopyButton, type CopyButtonProps } from "./copy-button";
-export { PasswordInput, type PasswordInputProps } from "./password-input";
-export { OtpInput, type OtpInputProps } from "./otp-input";
 export { PhoneInput, type PhoneInputProps } from "./phone-input";
 export { FileDropzone, type FileDropzoneProps } from "./file-dropzone";
-export { CommandMenu } from "./command-menu";
 export { DatePicker, type DatePickerProps } from "./date-picker";
 export { Combobox, type ComboboxOption, type ComboboxProps } from "./combobox";
 export { MultiSelect, type MultiSelectProps } from "./multi-select";
@@ -44,7 +39,6 @@ export {
   type SegmentedTabsProps,
 } from "./segmented-tabs";
 export { Stepper, type Step, type StepperProps } from "./stepper";
-export { SettingsSection, SettingsRow } from "./settings-section";
 export { TableSkeletonRows } from "./table-skeleton-rows";
 export {
   CardSkeleton,

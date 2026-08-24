@@ -1,37 +1,22 @@
 "use client";
 
 import { QueryClientProvider } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { isDevelopment } from "@/config/env";
-import { bootstrapSession, initAuthTransport } from "@/lib/auth";
 import { attachQueryErrorReporting, getQueryClient } from "@/lib/query-client";
 
 /**
- * Dev tooling (the Chucker-style Network Inspector), loaded only outside
- * production. In prod `isDevelopment` is false, so the dynamic import is never
- * invoked and its chunk is never fetched.
- */
-const DevTools = isDevelopment
-  ? dynamic(
-      () => import("@/components/dev/dev-tools").then((m) => m.DevTools),
-      {
-        ssr: false,
-      },
-    )
-  : function NoDevTools() {
-      return null;
-    };
-
-/**
- * THE single client boundary of the app, mounted once by the root layout.
+ * THE single client boundary of the site, mounted once by the root layout.
  *
  * Everything that needs browser context lives here so the rest of the tree can
  * stay Server Components. Adding `"use client"` further down is almost always a
  * mistake — check whether the component really needs state or effects first.
+ *
+ * A marketing site has no session to bootstrap. React Query is still here
+ * because the project inquiry is a real mutation with real pending/error states,
+ * and `nuqs` because `/work`'s category filter belongs in the URL.
  */
 export function AppProviders({ children }: { children: React.ReactNode }) {
   // useState (not a module singleton) so React owns the instance across
@@ -42,21 +27,12 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     return client;
   });
 
-  useEffect(() => {
-    // Teach the transport how to refresh, THEN restore any existing session
-    // from the httpOnly cookie. Order matters: a 401 during bootstrap must
-    // already have a refresher registered.
-    initAuthTransport();
-    void bootstrapSession();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <NuqsAdapter>
         <TooltipProvider delayDuration={200}>
           {children}
-          <Toaster position="top-right" richColors closeButton />
-          <DevTools />
+          <Toaster position="bottom-right" richColors closeButton />
         </TooltipProvider>
       </NuqsAdapter>
     </QueryClientProvider>

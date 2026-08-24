@@ -1,24 +1,19 @@
 /**
  * Centralized React Query cache keys.
  *
- * Always import from here — an inline `queryKey: ["orders"]` typo silently
+ * Always import from here — an inline `queryKey: ["inquiry"]` typo silently
  * breaks cache sharing and invalidation, and nothing fails loudly.
- *
- * Keys for data that DIFFERS BY ROLE take the role group as their first
- * segment, so an admin's rows can never be served from a member's cache (and
- * vice versa) after a role switch.
  *
  * Shape convention per resource:
  *   all              → invalidate everything for the resource
- *   list(group, p)   → a filtered/paginated list
- *   detail(group, id)→ one entity
+ *   list(params)     → a filtered/paginated list
+ *   detail(id)       → one entity
  */
 
-/** `jinn-web domain` appends new key factories to this object. */
 export const QUERY_KEYS = {
-  session: {
-    all: ["session"] as const,
-    currentUser: () => [...QUERY_KEYS.session.all, "current-user"] as const,
+  inquiry: {
+    all: ["inquiry"] as const,
+    submit: () => [...QUERY_KEYS.inquiry.all, "submit"] as const,
   },
 } as const;
 
@@ -26,9 +21,8 @@ export const QUERY_KEYS = {
  * Params any paginated list accepts.
  *
  * No index signature on purpose: a domain that needs extra filters declares its
- * own `interface OrderListParams extends ListParams { status?: string }` and
- * passes it as a variable, which is assignable without weakening this type for
- * everyone else.
+ * own `interface XListParams extends ListParams { status?: string }` and passes
+ * it as a variable, which is assignable without weakening this type for everyone.
  */
 export interface ListParams {
   page?: number;
@@ -37,8 +31,8 @@ export interface ListParams {
 }
 
 /**
- * Helper the `domain` generator uses so every resource gets an identical,
- * role-scoped key shape without repeating the boilerplate.
+ * Helper the `domain` generator uses so every resource gets an identical key
+ * shape without repeating the boilerplate.
  */
 export function resourceKeys<const T extends string>(resource: T) {
   const all = [resource] as const;

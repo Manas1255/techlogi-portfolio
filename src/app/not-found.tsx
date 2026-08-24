@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { DEFAULT_AUTHED_ROUTE } from "@/constants";
+import { APP_ROUTES } from "@/constants";
 
 /**
  * 404. A Server Component, so the copy can't come from the client-only `t()` —
@@ -9,15 +9,23 @@ import { DEFAULT_AUTHED_ROUTE } from "@/constants";
  */
 export default function NotFound() {
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-4 p-6 text-center">
-      <p className="text-overline">404</p>
-      <h1 className="text-h1">Page not found</h1>
-      <p className="text-body text-muted-foreground max-w-sm">
-        The page you&apos;re looking for doesn&apos;t exist or has moved.
+    <main className="flex min-h-svh flex-col items-center justify-center gap-5 px-6 text-center">
+      <p className="text-eyebrow text-brand-500">404</p>
+      <h1 className="text-display-2 max-w-xl text-balance">
+        That page isn&apos;t here.
+      </h1>
+      <p className="text-marketing-body text-muted-foreground max-w-md">
+        The link may be out of date, or the page may have moved. The work is a
+        good place to pick up again.
       </p>
-      <Button asChild className="mt-2">
-        <Link href={DEFAULT_AUTHED_ROUTE}>Go to dashboard</Link>
-      </Button>
-    </div>
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
+        <Button asChild size="lg">
+          <Link href={APP_ROUTES.work}>Explore our work</Link>
+        </Button>
+        <Button asChild size="lg" variant="ghost">
+          <Link href={APP_ROUTES.home}>Back to home</Link>
+        </Button>
+      </div>
+    </main>
   );
 }

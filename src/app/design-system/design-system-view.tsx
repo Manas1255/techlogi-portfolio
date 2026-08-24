@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
-  AvatarStack,
   Combobox,
   CopyButton,
   DatePicker,
@@ -17,7 +16,6 @@ import {
   FilterChips,
   MultiSelect,
   PageHeader,
-  PasswordInput,
   SearchInput,
   SectionHeader,
   SegmentedTabs,
@@ -25,7 +23,6 @@ import {
   StatusBadge,
   Stepper,
   TruncatedText,
-  UserAvatar,
   CardSkeleton,
   DetailSkeleton,
   FormSkeleton,
@@ -66,14 +63,6 @@ const TYPE_STEPS = [
   ["text-data", "Data — 1,234.56 tabular"],
   ["text-metric", "1,284"],
 ] as const;
-
-const PEOPLE = [
-  { id: "1", name: "Ada Lovelace" },
-  { id: "2", name: "Grace Hopper" },
-  { id: "3", name: "Alan Turing" },
-  { id: "4", name: "Katherine Johnson" },
-  { id: "5", name: "Edsger Dijkstra" },
-];
 
 const OPTIONS = [
   { value: "a", label: "Hamburg warehouse", hint: "DE" },
@@ -217,7 +206,6 @@ export function DesignSystemView() {
                 real form these are always wrapped by a `components/form` field,
                 which associates a proper <label>. */}
             <Input placeholder="Plain input" aria-label="Plain input" />
-            <PasswordInput placeholder="Password" aria-label="Password" />
             <SearchInput value={search} onChange={setSearch} />
             <DatePicker
               value={date}
@@ -271,12 +259,7 @@ export function DesignSystemView() {
         </Section>
 
         <Section title="People">
-          <div className="flex items-center gap-6">
-            <UserAvatar name="Ada Lovelace" size="lg" />
-            <UserAvatar name="Grace Hopper" />
-            <UserAvatar name="Alan Turing" size="sm" />
-            <AvatarStack people={PEOPLE} />
-          </div>
+          <div className="flex items-center gap-6"></div>
         </Section>
 
         <Section

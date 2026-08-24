@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { DEFAULT_SESSION_COOKIE_NAME } from "@/constants/session";
 
 /**
  * Typed, validated environment variables.
@@ -16,20 +15,22 @@ const serverSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
   /**
-   * Upstream backend base URL used by the `/api/session` route handlers
-   * (server-side only). Defaults to the public URL so a single-origin setup
-   * needs one variable, not two.
+   * Upstream backend base URL for server-side calls. Defaults to the public URL
+   * so a single-origin setup needs one variable, not two.
    */
   BACKEND_API_URL: z.string().min(1).optional(),
-  /** Name of the httpOnly cookie holding the refresh token. */
-  SESSION_COOKIE_NAME: z.string().min(1).default(DEFAULT_SESSION_COOKIE_NAME),
 });
 
 const clientSchema = z.object({
   /** Where the browser sends data API calls (the external backend). */
   NEXT_PUBLIC_API_URL: z.string().min(1).default("http://localhost:4000/api"),
   /** Display name, used in metadata and the app shell. */
-  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("Codeable App"),
+  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("Techlogi"),
+  /**
+   * Canonical origin, used for canonical URLs, Open Graph and the sitemap.
+   * No trailing slash.
+   */
+  NEXT_PUBLIC_SITE_URL: z.string().min(1).default("https://techlogi.com"),
 });
 
 /**
@@ -46,6 +47,7 @@ export const clientEnv = clientSchema.parse({
   // at build time only where it sees the literal property access.
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
+  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
 });
 
 /** Upstream backend URL for server-side calls (session route handlers). */
