@@ -45,7 +45,7 @@ export interface InquiryPayload {
   description: string;
   services: string[];
   /**
-   * Optional because the hero's short form omits them. The drawer collects
+   * Optional because the hero's short form omits them. The dialog collects
    * both; the hero trades them for a form a visitor will actually finish in
    * the first ten seconds, and a reply asks for the rest.
    */

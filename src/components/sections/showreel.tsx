@@ -3,18 +3,19 @@
 import { useEffect, useState } from "react";
 import { Container, Eyebrow } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
-import { projects, type Media } from "@/content";
+import { HERO_PROJECT_SLUG, projects, type Media } from "@/content";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * The reel frame is wide, so only projects whose lead media is LANDSCAPE belong
- * in it — a portrait phone capture letterboxed into a 16:9 frame is a worse
- * advertisement for the work than leaving it out.
+ * The reel frame is wide, so a clip has to be LANDSCAPE — a portrait phone
+ * capture letterboxed into a wide band is a worse advertisement for the work
+ * than leaving it out.
  *
- * It also starts on the second eligible project: the hero directly above
- * already shows the first one, and two identical frames in a row read as a
- * template however good the media is.
+ * A project qualifies on ANY of its media, not just its lead frame: several
+ * mobile projects have a landscape composite further down their gallery, and
+ * excluding them on the strength of the hero shot alone threw away perfectly
+ * good reel material.
  */
 function isLandscape(media: Media): boolean {
   return media.kind === "image"
@@ -22,17 +23,34 @@ function isLandscape(media: Media): boolean {
     : media.aspect !== "9/16" && media.aspect !== "4/5";
 }
 
-const LANDSCAPE = projects.filter((project) => isLandscape(project.heroMedia));
+const CANDIDATES = projects.flatMap((project) => {
+  const media = [project.heroMedia, ...project.galleryMedia].find(isLandscape);
+  return media === undefined ? [] : [{ project, media }];
+});
 
-const CLIPS = [...LANDSCAPE.slice(1), ...LANDSCAPE.slice(0, 1)].map(
-  (project) => ({
-    slug: project.slug,
-    name: project.name,
-    productType: project.productType,
-    industry: project.industry,
-    media: project.heroMedia,
-  }),
+/*
+  Rotated so the reel never OPENS on the project the hero is already showing.
+  Two identical frames a screen apart read as a template however good the
+  media is.
+*/
+const heroIndex = CANDIDATES.findIndex(
+  (candidate) => candidate.project.slug === HERO_PROJECT_SLUG,
 );
+const ORDERED =
+  heroIndex === -1
+    ? CANDIDATES
+    : [
+        ...CANDIDATES.slice(heroIndex + 1),
+        ...CANDIDATES.slice(0, heroIndex + 1),
+      ];
+
+const CLIPS = ORDERED.map(({ project, media }) => ({
+  slug: project.slug,
+  name: project.name,
+  productType: project.productType,
+  industry: project.industry,
+  media,
+}));
 
 const INTERVAL_MS = 4200;
 

@@ -19,7 +19,7 @@ import {
 const ROUTES = [
   "/",
   "/work",
-  "/work/dinekaro",
+  "/work/zyuela",
   "/services",
   "/about",
   "/contact",
@@ -148,7 +148,7 @@ test.describe("navigation", () => {
   });
 
   test("a case study links onward to the next project", async ({ page }) => {
-    await page.goto("/work/dinekaro");
+    await page.goto("/work/zyuela");
     await page.getByRole("link", { name: /Next project/ }).click();
     await expect(page).toHaveURL(/\/work\/[a-z-]+$/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -188,12 +188,12 @@ test.describe("project inquiry", () => {
     await page.goto("/");
     await page.getByRole("button", { name: "Start a Project" }).first().click();
 
-    await page.getByRole("radio", { name: /SaaS Platform/ }).click();
+    await page.getByRole("radio", { name: /A product I sell to customers/ }).click();
     await expect(page.getByText("Tell us about it")).toBeVisible();
 
     await page.getByRole("button", { name: "Back" }).click();
     await expect(
-      page.getByRole("radio", { name: /SaaS Platform/ }),
+      page.getByRole("radio", { name: /A product I sell to customers/ }),
     ).toHaveAttribute("aria-checked", "true");
   });
 
@@ -202,7 +202,7 @@ test.describe("project inquiry", () => {
   }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await page.getByRole("radio", { name: /Web Application/ }).click();
+    await page.getByRole("radio", { name: /A web app/ }).click();
 
     await page.getByRole("button", { name: "Continue" }).click();
     // Still on step two: the description is required and empty.
@@ -215,7 +215,7 @@ test.describe("project inquiry", () => {
   }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await page.getByRole("radio", { name: /AI Product/ }).click();
+    await page.getByRole("radio", { name: /Something with AI in it/ }).click();
     await page
       .getByLabel("The project, in your words")
       .fill("An internal assistant over our own runbooks and incident history.");
@@ -231,19 +231,17 @@ test.describe("project inquiry", () => {
 
   test("submitting reaches a designed success state", async ({ page }) => {
     await page.goto("/contact");
-    await page.getByRole("radio", { name: /Web Application/ }).first().click();
+    await page.getByRole("radio", { name: /A web app/ }).first().click();
     await page
       .getByLabel("The project, in your words")
       .fill("A portal our field engineers can use with one hand, offline.");
-    await page.getByRole("button", { name: "Continue" }).click();
-
-    await page.getByRole("radio", { name: /next 1–3 months/ }).click();
+    await page.getByRole("radio", { name: /In the next few months/ }).click();
     await page.getByRole("radio", { name: "$50k – $150k" }).click();
     await page.getByRole("button", { name: "Continue" }).click();
 
     await page.getByLabel("Your name").fill("Ada Lovelace");
     await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByRole("button", { name: "Send inquiry" }).click();
+    await page.getByRole("button", { name: "Send it" }).click();
 
     await expect(page.getByText("Thanks — that's with us.")).toBeVisible();
   });
@@ -253,7 +251,7 @@ test.describe("project inquiry", () => {
   }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await page.getByRole("radio", { name: /Something Else/ }).click();
+    await page.getByRole("radio", { name: /I'm not sure yet/ }).first().click();
     await page
       .getByLabel("The project, in your words")
       .fill(`${PATHOLOGICAL_TEXT} ${PATHOLOGICAL_TOKEN}`);

@@ -125,8 +125,8 @@ bump, and the full gate — verify, build, sweep, doctor — was re-run green on
 
 Recorded because the fixes are the interesting part, not the pass:
 
-1. **The inquiry drawer closed instead of showing its success state.** The store's `reset()` also
-   cleared `isOpen`, so a successful submit dismissed the drawer and the visitor never saw that it
+1. **The inquiry closed instead of showing its success state.** The store's `reset()` also
+   cleared `isOpen`, so a successful submit dismissed it and the visitor never saw that it
    worked. Split into `clearDraft()` (keeps it open) and `reset()`.
 2. **Synthetic interfaces rendered ~3px text on a phone.** A dense desktop composition scaled to a
    350px frame is a smear. Frames narrower than `40rem` now render the composition at its design
@@ -173,7 +173,6 @@ work**, using real screen captures from `~/Personal/MockUps` (kaprayy deliberate
 
 | Project | What it is | Stack evidence |
 |---|---|---|
-| DineKaro | Restaurant discovery and table booking, Lahore | Flutter, Node.js, MongoDB — stated on the client's own mockup |
 | Soulmate Society | Values-first relationship app | `soulmate_society` pubspec (Flutter); backend unconfirmed |
 | Zyuela | Reflection and wellbeing, no streaks | `zyuela` pubspec (Flutter); backend unconfirmed |
 | OrthoTrack | Two-sided orthodontic compliance | `orthotrack` pubspec (Flutter); backend unconfirmed |

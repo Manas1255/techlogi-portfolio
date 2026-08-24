@@ -16,7 +16,7 @@ export interface InquiryTriggerProps extends Omit<
 /**
  * "Start a Project", wherever it appears.
  *
- * Every instance opens the same drawer with the same preserved draft, so the
+ * Every instance opens the same dialog with the same preserved draft, so the
  * control is always available and never duplicates state. `origin` is carried
  * through to the payload, which is how you find out which placement actually
  * converts.

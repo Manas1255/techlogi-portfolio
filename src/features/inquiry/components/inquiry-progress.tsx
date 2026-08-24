@@ -17,14 +17,14 @@ export function InquiryProgress({ step, total, labels }: InquiryProgressProps) {
   return (
     <div className="flex flex-col gap-2.5">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-mono-label text-muted-foreground" aria-hidden="true">
-          <span className="text-primary">
-            {String(step + 1).padStart(2, "0")}
-          </span>
-          <span className="mx-1.5 opacity-40">/</span>
-          {String(total).padStart(2, "0")}
+        <p
+          className="text-muted-foreground text-[0.8125rem]"
+          aria-hidden="true"
+        >
+          Step <span className="text-foreground font-medium">{step + 1}</span>{" "}
+          of {total}
         </p>
-        <p className="text-mono-label text-muted-foreground truncate">
+        <p className="text-muted-foreground truncate text-[0.8125rem]">
           {labels[step]}
         </p>
       </div>

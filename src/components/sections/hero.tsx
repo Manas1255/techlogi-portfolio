@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Container, Eyebrow, Reveal } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
 import { APP_ROUTES, caseStudyPath } from "@/constants";
-import { findProject, projects } from "@/content";
+import { HERO_PROJECT_SLUG, findProject, projects } from "@/content";
 import { HeroInquiryForm } from "@/features/inquiry";
 
 /**
@@ -17,7 +17,7 @@ import { HeroInquiryForm } from "@/features/inquiry";
  * That is the whole shape of this section. A visitor is at their most willing
  * in the first few seconds and least willing to be sent somewhere else; a hero
  * whose primary action is "go to a contact page" spends that willingness on
- * navigation. The four-step drawer still exists for anyone who wants to brief
+ * navigation. The four-step dialog still exists for anyone who wants to brief
  * properly — the header's "Start a Project" opens it — but the default path is
  * four fields and done.
  *
@@ -29,7 +29,7 @@ export function Hero() {
   // The lead frame is chosen by slug rather than by position: it is an
   // art-direction decision about which product opens the site, and it should
   // not silently change because the portfolio was reordered.
-  const lead = findProject("zyuela") ?? projects[0];
+  const lead = findProject(HERO_PROJECT_SLUG) ?? projects[0];
 
   return (
     <section className="wash-warm grain relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">

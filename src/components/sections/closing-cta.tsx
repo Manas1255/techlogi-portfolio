@@ -13,7 +13,7 @@ export interface ClosingCtaProps {
  * THE CLOSE.
  *
  * Not "Ready to get started?" and not a link to a contact page — the close IS
- * the first question of the inquiry, inline. Choosing here opens the drawer
+ * the first question of the inquiry, inline. Choosing here opens the dialog
  * already on step two, so the visitor never answers the same question twice.
  *
  * That is the difference between ending a page with an interaction and ending

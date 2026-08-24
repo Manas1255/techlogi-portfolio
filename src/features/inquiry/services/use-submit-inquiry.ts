@@ -19,7 +19,7 @@ export interface SubmitInquiryVariables extends InquiryValues {
 /**
  * Submits an inquiry.
  *
- * `showErrorToast: false` — the drawer renders a designed error state inline,
+ * `showErrorToast: false` — the dialog renders a designed error state inline,
  * next to the submit button where the visitor is looking, rather than a toast
  * that can be missed at the other end of the viewport.
  */

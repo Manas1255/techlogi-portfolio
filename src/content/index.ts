@@ -17,6 +17,13 @@ import { projects } from "./projects";
 import { serviceGroups } from "./services";
 import type { Project, ProjectCategory } from "./schemas";
 
+/**
+ * The project whose media opens the site. Named here rather than picked by
+ * position so that reordering the portfolio cannot silently change which
+ * product leads — and so the showreel can avoid opening on the same one.
+ */
+export const HERO_PROJECT_SLUG = "zyuela";
+
 /** Projects selected for the home page, in authored order. */
 export function featuredProjects(): Project[] {
   return projects.filter((project) => project.featured);

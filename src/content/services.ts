@@ -255,45 +255,63 @@ export const serviceGroups: ServiceGroup[] = [
  * `id` is submitted with the inquiry payload, so treat these as a stable
  * contract with whatever receives it.
  */
+/**
+ * Step one of the project inquiry — a single low-effort choice.
+ *
+ * ⚠️ Written for someone who is NOT technical. The person filling this in is
+ * usually a founder or an operations lead, not an engineer: they know what they
+ * want the software to DO, not what category it belongs to. So the labels name
+ * the outcome ("A product I sell to customers") and the hints explain it in
+ * the words they would use themselves. "Multi-tenant", "LLM", "retrieval" and
+ * "modernization" were all in an earlier draft and all of them ask the reader
+ * to already know the answer.
+ *
+ * "I'm not sure yet" is deliberately a first-class option rather than a
+ * fallback at the bottom of a list. The most common reason a form like this
+ * gets abandoned is that none of the choices felt safe to pick.
+ *
+ * `id` is submitted with the inquiry payload and is a stable contract with
+ * whatever receives it — the LABELS can be rewritten freely, the ids cannot.
+ */
 export const buildTypes: BuildType[] = [
   {
     id: "web-app",
-    label: "Web Application",
-    hint: "An internal tool, a portal, a dashboard",
+    label: "A web app",
+    hint: "Something your team or customers use in a browser — a portal, a dashboard, an internal tool",
   },
   {
     id: "mobile-app",
-    label: "Mobile Application",
-    hint: "iOS, Android, or both",
+    label: "A mobile app",
+    hint: "For iPhone, Android, or both",
   },
   {
     id: "saas-platform",
-    label: "SaaS Platform",
-    hint: "Multi-tenant, billed, sold to others",
+    label: "A product I sell to customers",
+    hint: "Accounts, subscriptions and billing — software that is the business",
   },
   {
     id: "ai-product",
-    label: "AI Product",
-    hint: "Agents, retrieval, LLM features",
+    label: "Something with AI in it",
+    hint: "An assistant, automation, or smarter features in a product you already have",
   },
   {
     id: "website",
-    label: "Website",
-    hint: "Marketing site, ecommerce, content",
+    label: "A website or online store",
+    hint: "Marketing site, ecommerce, or somewhere to publish",
   },
   {
     id: "improve-existing",
-    label: "Improve an Existing Product",
-    hint: "Performance, UX, modernization",
+    label: "Improve what we already have",
+    hint: "Make it faster, easier to use, or easier to keep running",
   },
   {
     id: "dedicated-team",
-    label: "Dedicated Development Team",
-    hint: "Embedded engineers and designers",
+    label: "Extra people on my team",
+    hint: "Designers and engineers working alongside yours",
   },
   {
     id: "something-else",
-    label: "Something Else",
-    hint: "Tell us in your own words",
+    label: "I'm not sure yet",
+    hint: "Describe it in your own words and we'll help you work it out",
   },
 ];

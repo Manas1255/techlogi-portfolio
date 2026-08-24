@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NAV_ITEMS } from "@/constants";
-import { InquiryDrawer, InquiryTrigger } from "@/features/inquiry";
+import { InquiryDialog, InquiryTrigger } from "@/features/inquiry";
 import { useScrollPosition } from "@/hooks/use-scroll-position";
 import { useTranslations, type MessageKey } from "@/i18n";
 import { cn } from "@/lib/utils";
@@ -30,7 +30,7 @@ import { MobileNav } from "./mobile-nav";
  * The morph is CSS transitions, so `motion-reduce:transition-none` is what
  * turns it off — the state still changes, it just cuts instead of animating.
  *
- * The inquiry drawer is mounted here, once, for the whole site.
+ * The inquiry dialog is mounted here, once, for the whole site.
  */
 export function SiteHeader() {
   const t = useTranslations();
@@ -114,7 +114,7 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
-      <InquiryDrawer />
+      <InquiryDialog />
     </>
   );
 }

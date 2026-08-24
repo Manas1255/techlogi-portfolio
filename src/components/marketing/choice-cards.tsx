@@ -9,6 +9,11 @@ export interface Choice {
   label: string;
   /** A short clarifier under the label. */
   hint?: string;
+  /**
+   * An icon makes a grid of eight scannable without reading every label —
+   * which is most of what a non-technical visitor is doing on the first step.
+   */
+  Icon?: React.ComponentType<{ className?: string }>;
 }
 
 interface BaseProps {
@@ -18,6 +23,8 @@ interface BaseProps {
   columns?: 1 | 2 | 3 | 4;
   className?: string;
   disabled?: boolean;
+  /** Single-line options — no hint, no icon, tighter box. */
+  compact?: boolean;
 }
 
 export interface SingleChoiceProps extends BaseProps {
@@ -60,7 +67,14 @@ const SELECTED = "border-primary bg-primary/10 hover:border-primary";
  * learned once.
  */
 export function ChoiceCards(props: ChoiceCardsProps) {
-  const { options, label, columns = 2, className, disabled = false } = props;
+  const {
+    options,
+    label,
+    columns = 2,
+    className,
+    disabled = false,
+    compact = false,
+  } = props;
 
   if (props.multiple === true) {
     const selected = new Set(props.value);
@@ -68,7 +82,11 @@ export function ChoiceCards(props: ChoiceCardsProps) {
       <div
         role="group"
         aria-label={label}
-        className={cn("grid gap-2.5", COLUMNS[columns], className)}
+        className={cn(
+          "grid items-stretch gap-2.5",
+          COLUMNS[columns],
+          className,
+        )}
       >
         {options.map((option) => {
           const isSelected = selected.has(option.id);
@@ -86,7 +104,11 @@ export function ChoiceCards(props: ChoiceCardsProps) {
               }}
               className={cn(CARD, isSelected && SELECTED)}
             >
-              <ChoiceBody option={option} isSelected={isSelected} />
+              <ChoiceBody
+                option={option}
+                isSelected={isSelected}
+                compact={compact}
+              />
             </button>
           );
         })}
@@ -100,7 +122,7 @@ export function ChoiceCards(props: ChoiceCardsProps) {
       value={props.value ?? ""}
       onValueChange={props.onChange}
       disabled={disabled}
-      className={cn("grid gap-2.5", COLUMNS[columns], className)}
+      className={cn("grid items-stretch gap-2.5", COLUMNS[columns], className)}
     >
       {options.map((option) => (
         <RadioGroupPrimitive.Item
@@ -108,7 +130,11 @@ export function ChoiceCards(props: ChoiceCardsProps) {
           value={option.id}
           className={cn(CARD, props.value === option.id && SELECTED)}
         >
-          <ChoiceBody option={option} isSelected={props.value === option.id} />
+          <ChoiceBody
+            option={option}
+            isSelected={props.value === option.id}
+            compact={compact}
+          />
         </RadioGroupPrimitive.Item>
       ))}
     </RadioGroupPrimitive.Root>
@@ -118,26 +144,45 @@ export function ChoiceCards(props: ChoiceCardsProps) {
 function ChoiceBody({
   option,
   isSelected,
+  compact,
 }: {
   option: Choice;
   isSelected: boolean;
+  compact: boolean;
 }) {
+  const { Icon } = option;
   return (
     <>
-      <span className="flex items-center justify-between gap-3">
-        <span className="text-[0.9375rem] leading-tight font-medium">
-          {option.label}
+      <span className="flex items-start justify-between gap-3">
+        <span className="flex min-w-0 items-start gap-2.5">
+          {Icon !== undefined && !compact && (
+            <Icon
+              aria-hidden="true"
+              className={cn(
+                "mt-px size-[18px] shrink-0 transition-colors duration-[var(--dur-base)]",
+                isSelected ? "text-primary" : "text-muted-foreground",
+              )}
+            />
+          )}
+          <span className="text-[0.9375rem] leading-snug font-medium text-balance">
+            {option.label}
+          </span>
         </span>
         <Check
           aria-hidden="true"
           className={cn(
-            "text-primary size-4 shrink-0 transition-opacity duration-[var(--dur-fast)]",
+            "text-primary mt-0.5 size-4 shrink-0 transition-opacity duration-[var(--dur-fast)]",
             isSelected ? "opacity-100" : "opacity-0",
           )}
         />
       </span>
-      {option.hint !== undefined && (
-        <span className="text-muted-foreground text-xs leading-snug">
+      {option.hint !== undefined && !compact && (
+        <span
+          className={cn(
+            "text-muted-foreground text-xs leading-snug",
+            Icon !== undefined && "pl-[1.8125rem]",
+          )}
+        >
           {option.hint}
         </span>
       )}

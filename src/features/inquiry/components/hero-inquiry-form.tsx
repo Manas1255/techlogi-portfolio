@@ -26,7 +26,7 @@ import {
  *
  * It is not a second implementation of the inquiry: it validates with the same
  * field primitives, submits through the same repository, and lands in the same
- * place. The four-step drawer still exists for a visitor who wants to brief
+ * place. The four-step dialog still exists for a visitor who wants to brief
  * properly, and "Start a Project" in the header still opens it.
  *
  * Everything a correct form needs comes from the shared field components:

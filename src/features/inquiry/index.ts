@@ -1,4 +1,4 @@
-export { InquiryDrawer } from "./components/inquiry-drawer";
+export { InquiryDialog } from "./components/inquiry-dialog";
 export {
   InquiryTrigger,
   type InquiryTriggerProps,

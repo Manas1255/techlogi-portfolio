@@ -11,7 +11,7 @@ import { InquiryLauncher } from "@/features/inquiry";
  * `/contact` — the inquiry, given a page of its own.
  *
  * It is the same interaction as everywhere else: the first question inline,
- * then the drawer. A duplicate contact form would mean two implementations of
+ * then the dialog. A duplicate contact form would mean two implementations of
  * validation, two success states, and one of them rotting.
  *
  * Everything beside it answers the questions people actually have before

@@ -16,7 +16,7 @@ export interface InquiryLauncherProps {
  * Step one, inline on the page.
  *
  * The closing section shouldn't be a link to a form — it should BE the form's
- * first question. Choosing here opens the drawer already on step two, so the
+ * first question. Choosing here opens the dialog already on step two, so the
  * visitor never answers the same question twice.
  */
 export function InquiryLauncher({

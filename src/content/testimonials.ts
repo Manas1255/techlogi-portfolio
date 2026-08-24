@@ -23,7 +23,7 @@ const standalone: Testimonial[] = [
     person: "PLACEHOLDER — Name",
     role: "PLACEHOLDER — Role",
     company: "PLACEHOLDER — Company",
-    projectSlug: "dinekaro",
+    projectSlug: "zyuela",
     portrait: null,
     outcome: null,
     isPlaceholder: true,

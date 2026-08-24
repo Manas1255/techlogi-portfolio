@@ -6,10 +6,10 @@ import type { InquiryFormValues } from "./validations/inquiry.schema";
 /**
  * Open/closed state and the visitor's in-progress answers.
  *
- * Persisted to **sessionStorage**, which is what makes "close the drawer, read
+ * Persisted to **sessionStorage**, which is what makes "close the dialog, read
  * a case study, come back" keep everything they typed — the brief's requirement
  * — without leaving a stale draft on a shared machine next week. `isOpen` is
- * deliberately NOT persisted: a drawer that reopens itself on the next page
+ * deliberately NOT persisted: a dialog that reopens itself on the next page
  * load is a popup.
  *
  * The attachment stays in component state: a `File` can't be serialized, and
@@ -19,7 +19,7 @@ interface InquiryState {
   isOpen: boolean;
   step: number;
   values: Partial<InquiryFormValues>;
-  /** Where the drawer was opened from, for reporting. */
+  /** Where the dialog was opened from, for reporting. */
   origin: string | null;
   open: (options?: { buildType?: BuildTypeId; origin?: string }) => void;
   close: () => void;
