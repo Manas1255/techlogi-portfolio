@@ -1,213 +1,233 @@
 @AGENTS.md
 
-# GA Studio — Architecture Guide
+# GA Studio
 
-Next.js **16** (App Router) app for **GA Studio**, built on the Codeable web architecture: **external-backend
-repositories, BFF cookie auth, React Query, Zustand, Zod, Tailwind v4 tokens, shadcn/ui, typed
-i18n**. Read this before adding code so the structure stays consistent.
+A marketing site for a product engineering studio. Next.js 16 App Router, React 19, TypeScript
+strict, Tailwind v4, shadcn/ui. Scaffolded with `jinn-web` and then deliberately reshaped: the
+scaffold builds an authenticated dashboard app, and this is a public, almost entirely static site.
 
-**This project** — a single-audience app, with no roles. Locales: `en` (the first is the source catalog).
+Read this before changing anything. The traps below are not hypothetical. Every one of them shipped
+at least once, cost real time, and was invisible to `tsc` and to ESLint.
 
-> ⚠️ This is Next.js 16 (Turbopack). APIs differ from older versions — notably **Middleware is now
-> Proxy** (`src/proxy.ts`). When unsure, read `node_modules/next/dist/docs/`.
+---
 
-## Stack
+## 1. Read this first: what has actually gone wrong here
 
-| Concern       | Choice                                                                   |
-| ------------- | ------------------------------------------------------------------------ |
-| Framework     | Next.js 16 App Router (`src/app`)                                        |
-| Language      | TypeScript (strict)                                                      |
-| Styling       | Tailwind CSS v4, tokens in `src/app/globals.css`                         |
-| UI components | shadcn/ui (Radix, Nova preset) — `src/components/ui`                     |
-| Icons         | lucide-react                                                             |
-| Validation    | Zod — `features/*/models` (responses) + `features/*/validations` (forms) |
-| Server state  | TanStack React Query v5                                                  |
-| Client state  | Zustand (session, locale) + URL state via nuqs                           |
-| Tables        | TanStack Table via `components/shared/data-table`                        |
-| i18n          | Typed in-house catalogs — `src/i18n`                                     |
-| Auth          | BFF: httpOnly refresh cookie + in-memory access token                    |
+### Verify in a PRODUCTION build, not `next dev`
 
-## Core principles
+`npm run dev` hides a whole class of defect: streaming boundaries that drop content from the
+prerendered HTML, routes that turn out to be client-only, CSS that does not ship. The Playwright
+sweep therefore boots `npm run build && npm run start` and costs a build per run. That is the
+correct price. Do not "optimise" it back to the dev server.
 
-1. **Server Components by default.** Add `"use client"` only for state, effects, event handlers or
-   browser APIs, and push the boundary to the leaves. `AppProviders` is the app's one client root.
-2. **Domain-first.** `src/features/<domain>/`. This app serves a single audience, so there is no
-   role segment, no `Role` type and no role machinery. Cross-cutting code lives in `lib/`,
-   `components/`, `constants/`, `validations/`, `config/`, `hooks/`, `i18n/`.
-3. **No sibling imports.** Two domains never import each other — a symbol both need moves UP to
-   `components/shared/` (UI) or `lib/` (logic). Shared layers never import `features/`.
-4. **Zod is the source of truth** for external/user data, in **both** directions. A repository parses
-   what it sends (`createOrderSchema.parse(input)`) _and_ what it receives (`{ parse: orderSchema.parse }`).
-   Types are always `z.infer` — never a hand-written interface beside a schema, which only drifts.
-   Validation messages are **i18n keys**.
-   A bare `backendClient.get<Order>(…)` is a claim TypeScript erases, so a renamed backend field
-   becomes `undefined` in a component and crashes somewhere unrelated. `jinn-web doctor` flags it.
-5. **Server data lives in React Query, never Zustand.** Zustand holds session identity and locale.
-6. **Never hardcode** a display string (`t(...)`), a color (tokens), a route (`ROUTES`), an endpoint
-   (feature `constants.ts`), or a query key (`QUERY_KEYS`).
+### `pkill -f "next start"` does not kill the server
 
-## Directory map
+Once running, the process is named **`next-server`**. Kill by name and the old one survives, the new
+one dies with `EADDRINUSE`, and you spend an hour testing a stale build believing it is current.
+This happened three times in one session, once producing a completely unstyled page that looked
+like a catastrophic CSS bug and was a zombie process.
+
+**Always use `npm run serve`** (`scripts/serve-prod.sh`). It kills by port, waits for the socket to
+be released, and confirms readiness before returning.
+
+### Font variables belong on `<html>`, never `<body>`
+
+`globals.css` applies `font-sans` to the `html` element. Custom properties inherit **downward
+only**, so variables set on `<body>` are undefined where `--font-sans` is read; it resolves to
+nothing and **every paragraph on the site falls back to Times New Roman**.
+
+The display face keeps working, because headings live inside `<body>`. That is what makes this
+survive review: headings look right in every screenshot, so serif body copy reads as a design
+choice rather than a failure.
+
+### `useSearchParams` inside a Suspense boundary deletes the boundary from the HTML
+
+`/work` read its filter with `useQueryState`. Next then dropped the **entire** Suspense boundary
+from the prerendered output: the portfolio index served no `<h1>` and not one project name to a
+crawler, and refilled on hydration for **0.56 CLS** against a 0.1 budget.
+
+Read query params on the **server** (`searchParams` in the page) and make filters **links**. A
+sweep test asserts the served HTML contains project names; do not delete it.
+
+### Every form field id must come from `useId`
+
+Field components used to derive the input `id` from the field **name**. The moment two forms shared
+a page there were two `id="description"` nodes, and every `label[for]` bound to whichever the
+browser met first, so **a label in one form operated a control in the other**. There is a
+duplicate-id sweep test.
+
+### `event.currentTarget` is null inside a state updater
+
+A state updater runs during a later render, by which point React has cleared the event. Reading
+`event.currentTarget.open` in there threw and took the whole page to the error boundary on the first
+click. **Read the element synchronously, then call `setState`.**
+
+### A centred flex parent shrink-wraps, so `w-full` children collapse to zero
+
+Device frames rendered at zero width because the figure centres its children, which shrink-wraps the
+wrapper, and the shell inside sizes itself with `w-full`. Give any such wrapper a **definite width**
+at every breakpoint. `w-auto` is not one.
+
+### `overflow-x: clip`, never `hidden`
+
+`overflow-x: hidden` computes `overflow-y` to `auto`, which turns the element into a scroll
+container and silently breaks `position: sticky`, smooth anchor scrolling, and scroll-driven
+animation. `clip` creates no scroll container.
+
+### A `clamp()` with a pure `vw` middle term freezes at zoom
+
+Browsers do not scale viewport units when the user zooms, so `clamp(2rem, 6vw, 4rem)` cannot reach
+200% and fails **WCAG 1.4.4**. Every fluid size here has a `rem` component in the middle term
+(`clamp(2.5rem, 2rem + 2.5vw, 4.25rem)`). Keep it that way, and keep max/min under about 2.5x.
+
+### Motion you cannot perceive is just battery
+
+The capability diagrams once drifted **4.93px over 7 seconds**, which reads as completely static.
+Measure real pixel travel with a browser before believing an animation works. A screenshot cannot
+show a loop, so a screenshot cannot confirm one.
+
+---
+
+## 2. Commands
+
+```bash
+npm run dev       # dev server (Turbopack)
+npm run serve     # build output on :3200, killing any zombie first. USE THIS.
+npm run build     # production build + full typecheck
+npm run verify    # typecheck + lint + unit tests. The floor, not the finish line.
+npm run sweep     # Playwright: builds, serves, then drives every route
+npm run format    # prettier
+jinn-web doctor   # routes, query keys, nav, endpoints, catalogs still wired
+npm audit --omit=dev
+```
+
+**Definition of done:** `verify` passes, `sweep` passes, and **you opened the page and looked at
+it**. A green typecheck says nothing about whether a section renders, whether motion is visible, or
+whether a long string shears the layout.
+
+---
+
+## 3. Non-negotiable: honesty rules
+
+This site's entire argument is that a careful team made it. These rules are what make that credible,
+and they have held through every change so far.
+
+- **Never invent a metric, a testimonial, a client name, a logo, an award, a headcount, or an
+  office.** Not as a placeholder that looks real, not "for now".
+- `metrics` is **empty** on every project. No number ships until someone can point at where it was
+  measured.
+- Unverified content carries a flag (`isDraft`, `isPlaceholder`) and the UI **says so on the page**.
+  When real content replaces it, flip the flag and the notice disappears on its own.
+- Nothing links to a page that does not exist. Legal entries carry `published: false` and stay out
+  of the footer until written. **A privacy policy is legally required** before launch: the inquiry
+  form collects a name, an email and an optional phone number.
+- Every capability chip names a technology **actually shipped**, traceable to a project.
+- Every placeholder is greppable: `grep -rn "PLACEHOLDER\|TODO:" src/`
+
+---
+
+## 4. House style
+
+- **No em dashes.** Anywhere: copy, comments, commit messages, chat. They read as generated text.
+  Restructure the sentence, or use a comma, a colon, or a full stop. An en dash in a numeric range
+  (`$5k - $10k`) is fine and is not the same mark.
+- **No `Co-Authored-By` trailers** and no "Generated with" footers on commits or PRs.
+- Commit messages explain **why**, and name the bug when there was one.
+
+---
+
+## 5. Architecture
 
 ```
 src/
-├── proxy.ts                  # optimistic cookie gate (Next 16's renamed Middleware)
-├── app/
-│   ├── (auth)/               # signed-out screens, wrapped in RequireGuest
-│   ├── (app)/                # authed shell: RequireAuth + AppShell (+ its own error boundary)
-│   ├── api/session/          # THE only route handlers — BFF auth lifecycle
-│   ├── layout.tsx · page.tsx · loading/error/not-found · globals.css
-├── features/<domain>/        # components · api · services · models · validations · types · constants.ts
-│                             #   models/    = wire shapes  (what the backend RETURNS)
-│                             #   validations/ = form input (what you SEND)
+├── app/(app)/            # the public routes: / /work /work/[slug] /services /about /contact
+├── content/              # AUTHORED CONTENT. Zod schemas + typed data. See below.
+├── config/site.ts        # company facts: contact, socials, booking, inquiry endpoint
 ├── components/
-│   ├── ui/                   # shadcn primitives (generated — don't hand-edit)
-│   ├── shared/               # StatusBadge, TruncatedText, EmptyState, ErrorState,
-│   │                         #   ConfirmDialog, PageHeader, SearchInput, RowActions,
-│   │                         #   data-table/, skeletons…
-│   ├── form/                 # RHF field set + FormActions + FormDialog
-│   ├── layout/               # AppShell, SidebarNav, UserMenu, nav-config.ts
-│   └── providers/            # AppProviders — the single client boundary
-├── lib/
-│   ├── http/                 # backendClient, tokenStore, ApiError, pagination, server-client
-│   ├── auth/                 # SESSION IS INFRASTRUCTURE: store, hooks, guards, cookies
-│   ├── mutations.ts · query-client.ts · reporting.ts · datetime.ts · format.ts · badges.ts · utils.ts
-├── hooks/                    # useTableParams (URL state), useDebouncedValue, …
-├── i18n/                     # locales, locale-store, messages/, typed useTranslations
-├── constants/                # routes, query-keys
-├── validations/fields.ts     # Zod field primitives
-└── config/env.ts             # the ONLY module that reads process.env
+│   ├── marketing/        # presentation primitives. May NOT import features/
+│   ├── media/            # MediaFrame, AutoVideo, synthetic compositions
+│   ├── sections/         # page sections. MAY compose features
+│   ├── layout/           # header, footer, mobile nav, structured data
+│   ├── ui/               # shadcn output. Restyle via tokens, never fork
+│   ├── shared/ form/     # the scaffold's component catalog
+├── features/inquiry/     # the one real feature: store, schema, repository, dialog
+├── hooks/                # use-reveal-on-scroll, use-onstage, use-scroll-position
+└── app/globals.css       # EVERY design token. No component hardcodes a colour or size.
 ```
 
-## Data flow
+**Deviations from the scaffold**, all deliberate: auth, roles, the app shell, `proxy.ts` and the
+session route handlers are **gone** (a login redirect on a public marketing site is a bug, not a
+convention). `src/content/` is a new cross-cutting layer, because portfolio copy is authored content
+rather than wire data. `constants/routes.ts` is hand-edited, because `jinn-web domain` emits a
+backend-coupled CRUD screen, which is the wrong artifact for `/work/[slug]`.
 
-```
-component → features/*/services (React Query hook)
-          → features/*/api/*.repository.ts (parses BOTH directions)
-          → lib/http/backendClient  (envelope unwrap · bearer · refresh-on-401 · abort · parse)
-          → external backend
-```
+### Content is data, never markup
 
-Never skip a layer, and never call `fetch` outside `lib/http` — ESLint enforces both.
+`src/content/` holds the Zod schemas **and** the data, with every type as `z.infer`. Nothing parses
+at render time; `content.test.ts` parses every entry instead, so a malformed project fails
+`npm run verify` rather than a page.
 
-### The backend contract
+Adding a project is a data edit plus media in `public/media/projects/<slug>/`. Routes, the home-page
+selection, `/work` filters, related-project links and the sitemap all derive from it.
 
-This app is a pure client of an external backend. It expects `NEXT_PUBLIC_API_URL` to answer with a
-`{ statusCode, data, error }` envelope, which `backendClient` unwraps before parsing. **If your
-backend uses a different shape, adapt `lib/http/types.ts` and `lib/http/backend-client.ts` — those
-two files, and no others — before generating domains**, so every generated repository is right the
-first time rather than needing a sweep afterwards.
+An **image declares `width`/`height`** and the frame reserves its box from the intrinsic size.
+`aspect` is only for synthetic and video media, which have no intrinsic size. Making an author
+restate a picture's ratio is only a chance to get it wrong.
 
-### Models
+---
 
-Each domain owns `models/<entity>.model.ts`: a Zod schema plus the type inferred from it. Two
-schemas, on purpose — the full model, and a narrower `…ListItemSchema` derived with `.pick()`.
+## 6. Design system
 
-**Model the response, not the entity.** If one shared shape had to satisfy every endpoint, adding a
-field to a detail screen would force the backend to enrich every list endpoint returning that
-entity. Narrow list rows so a frontend model never dictates backend responses.
+**Light-first on a true white canvas.** Not cream: warm off-white is the default an image generator
+reaches for, and it drags every screenshot toward the same sand cast, which is fatal when the
+product work has to supply its own colour.
 
-Unknown keys are stripped, so the backend **adding** fields never breaks the client — only a field
-you rely on changing shape does. When the backend is mid-rollout, reach for `.optional()`,
-`.nullable()` or `.catch(fallback)` rather than dropping the parse.
+- Surfaces flip per section with `data-surface="slab"` (dark) or `"paper"`. Every colour token is
+  re-declared for the subtree, so children including shadcn primitives adapt without knowing where
+  they landed. **Two dark interruptions on the home page, not five.**
+- `--primary` is `brand-700` on paper and `brand-500` on slab. White on `brand-600` is 4.0:1 and
+  fails AA at label sizes.
+- Type: **Familjen Grotesk** (display), **Figtree** (body), **JetBrains Mono** (metadata).
+- **Never hardcode a hex.** Add or adjust a token in `globals.css`.
 
-## Auth (BFF model) — read this before touching sessions
+### Motion
 
-The browser **never holds the refresh token**.
+Four durations, two easings, all in tokens. Only `transform`, `opacity`, `clip-path` and
+`background-color` are ever animated. `prefers-reduced-motion` resolves every duration to `1ms` **at
+the token level**, so a pattern added later inherits the behaviour for free.
 
-```
-login    → POST /api/session      → backend → refresh token into an httpOnly cookie,
-                                    access token returned to memory only
-reload   → POST /api/session/refresh (cookie rides along) → new access token + user
-401      → transport refreshes once, single-flight, then replays the request
-logout   → DELETE /api/session    → cookie cleared
-```
+Two attributes that are easy to confuse and do opposite jobs:
 
-Why it's built this way: an XSS payload can't read an httpOnly cookie, and a cookie is visible to
-the server — which is what lets `proxy.ts` redirect unauthenticated requests _before_ rendering, and
-what makes server-side prefetching possible. A localStorage bearer token forfeits all of that.
+- **`data-revealed`** fires **once** and stays. For entrances.
+- **`data-onstage`** toggles **both ways** as an element enters and leaves. For **loops**. Six
+  diagrams compositing forever while the reader is three screens away costs real battery and shows
+  up in no synthetic test. The sweep asserts the OFF direction specifically, because the ON
+  direction failing is visible and the OFF direction failing is not.
 
-- Session state and guards: `lib/auth` (**not** a feature — every domain needs identity).
-- `features/auth` holds only the login/register **screens**.
-- **Gating is UX, not security.** `proxy.ts` and `RequireAuth` decide what to _render_; the backend
-  authorizes every request.
+The reveal CSS is gated on `data-motion="on"`, set by an inline script before first paint, so with
+no JS nothing is ever hidden.
 
-## Single audience
+---
 
-This project has **no roles**, and the machinery that would serve them is genuinely absent — there
-is no `constants/roles.ts`, no `Role` union, no `RoleGroup`, no `RequireRole` and no `RoleScreens`.
-Don't reach for them, and don't reintroduce them by hand.
+## 7. Accessibility floor
 
-- Features live flat: `src/features/<domain>/`, with the auth screens at `src/features/auth`.
-- Endpoints are plain paths in each feature's `constants.ts`; query keys aren't group-scoped.
-- Sidebar entries are `NAV_ITEMS` in `components/layout/nav-config.ts`, with no visibility filter.
+Checked by the sweep at 320px through 2560px, and worth keeping:
 
-**It isn't a one-way door.** `jinn-web role <name>` migrates the project: it introduces
-`constants/roles.ts`, moves every feature under `features/<role>/`, rewrites the imports, and then
-reports each `Record<Role, …>` the compiler now finds incomplete as a todo list. Build flat until
-a second audience is real.
+- No horizontal overflow at any width; no text under 12px.
+- Text contrast 4.5:1 (large 3:1) on **both** grounds.
+- Tap targets: inline links use the `tap-target` utility, which expands the hit area with a
+  transparent pseudo-element on a coarse pointer only, so no box moves and a mouse never gets an
+  invisible band swallowing clicks.
+- One `<h1>` per page, no skipped heading levels, all three landmarks.
+- Every interactive element reachable and operable by keyboard, with a visible focus ring.
 
-## Where things go
+---
 
-| Adding…              | Goes                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------ |
-| A domain             | `jinn-web domain <name>` (emits + wires routes, keys, nav, i18n)                     |
-| A page               | `src/app/(app)/<name>/page.tsx` — thin: render the feature's screen and nothing else |
-| A backend field      | the schema in `features/*/models/*.model.ts` — the type follows via `z.infer`        |
-| A shared component   | used by a 2nd domain → `components/shared/`; until then it stays local               |
-| A shadcn primitive   | `npx shadcn@latest add <name>`                                                       |
-| An env var           | the Zod schema in `config/env.ts` (browser vars need `NEXT_PUBLIC_`)                 |
-| A display string     | `i18n/messages/en.ts` first, then `t("...")`                                         |
-| A date/number format | `lib/datetime.ts` / `lib/format.ts` — add it there, then use it                      |
-
-## Styling
-
-Everything is token-driven in `globals.css` — **never hardcode a hex in a component**.
-
-- Semantic slots (`bg-primary`, `text-foreground`, `bg-card`, `border`, `ring`), brand ramp
-  (`brand-50…950`), status tones (`success|warning|danger|info|neutral`, each with `-subtle`,
-  `-subtle-foreground`, `-border`), `chart-1..5`, sidebar tokens.
-- Typography classes instead of re-picking sizes: `text-display/h1/h2/h3/h4/body/body-lg/label/
-caption/overline/data/metric`.
-- Status pills only via `<StatusBadge tone="…">`. Merge classes with `cn()`.
-- Dark mode is **structurally complete but disabled** — tokens exist for `.dark`, nothing sets it.
-  Consume semantic slots (not raw ramp steps) for surfaces so enabling it stays a one-switch change.
-
-**Long text must never widen a container.** A flex/grid item's automatic minimum size is its
-min-content, so one 80-character name silently sizes its track past the container and an
-`overflow-hidden` ancestor shears the layout. Fixed-width containers pin children with `min-w-0`;
-`truncate` needs `overflow-hidden` on the same box; and a truncated value needs a way to see the
-rest — use `<TruncatedText>`. This is invisible to `tsc` and to review: verify with a
-pathologically long string in a browser.
-
-## UX bar
-
-Every async surface ships **loading / empty / error / loaded**. Loading is layout-matching
-**skeletons**, never a screen spinner. Errors show `ApiError.message` and offer retry. A
-`ParseError` deliberately shows the generic message instead — a field path is a developer's
-problem, and it's already in the log with the endpoint that produced it. Destructive
-actions confirm via `ConfirmDialog`. Submit buttons disable while pending. `DataTable` gives you all
-of this for lists — use it rather than hand-rolling a table.
-
-## Code quality
-
-### Definition of done
-
-A change is done when it **runs**, not when it compiles. `npm run verify` (typecheck + lint + tests)
-is the floor, not the finish line — a green typecheck says nothing about whether the screen renders,
-whether the empty state appears, or whether a long value shears the layout. Open the page in a
-browser, exercise the loading / empty / error / loaded states, and only then call it finished.
-
-Before committing:
-
-1. `npm run verify` passes.
-2. The screen was actually opened and exercised.
-3. `jinn-web doctor` passes, if you touched routes, query keys, nav or catalogs.
-4. New strings exist in **every** locale catalog (a missing key is a compile error — don't silence
-   it by copying English into the other file and calling it translated; mark it `TODO(<locale>)`).
+## 8. Code quality
 
 ### TypeScript
 
-- **No `any`** and **no non-null `!`** — both are lint errors. Narrow with a type guard, or make the
+- **No `any`** and **no non-null `!`**, both lint errors. Narrow with a type guard, or make the
   type honest. `unknown` plus a guard is almost always the right replacement.
 - **No hand-written interface beside a schema.** `z.infer<typeof schema>` only; two declarations of
   one shape drift, and the one that drifts is never the one you're reading.
@@ -225,15 +245,16 @@ Before committing:
   cancellation.
 - **Derive, don't synchronise.** If a value can be computed from props or query data, compute it
   during render. An effect that copies one piece of state into another is a bug with a delay.
-- **`useEffect` is for real subscriptions** — an event listener, a timer, an imperative browser API —
-  and each one returns a cleanup.
+- **`useEffect` is for real subscriptions**: an event listener, a timer, an imperative browser
+  API. Each one returns a cleanup.
 - **Pages are thin.** A `page.tsx` renders one screen component and nothing else: no data fetching,
   no layout logic, no conditionals.
 - **Extract a hook when there is state plus behavior**, not merely to shorten a file. A component
   under ~200 lines with one `useState` is fine as it is.
 - Keys are stable ids, never array indexes.
-- URL-worthy state (page, search, sort, filters) belongs in the URL via `useTableParams`, so a
-  filtered list survives a refresh and can be shared.
+- URL-worthy state (search, sort, filters) belongs in the URL. On this site read it on the
+  **server** from `searchParams` and make controls links. The client-side `useTableParams` in the
+  shared catalog is unused here, and reaching for it is what broke `/work` (see section 1).
 
 ### Naming
 
@@ -257,7 +278,7 @@ Say what it is, not what it's made of: `OrdersTable`, not `OrdersDataComponent`.
   `ParseError` (arrived in the wrong shape). Guards: `isApiError`, `isNetworkError`, `isParseError`.
 - **Never swallow.** `catch {}` with an empty body deletes the only evidence. If a failure is
   genuinely fine to ignore, say so in a comment explaining why.
-- **`console` is banned** outside `lib/reporting.ts` — lint enforces it. Report through
+- **`console` is banned** outside `lib/reporting.ts`, and lint enforces it. Report through
   `reportError(error, { scope })` so production has one seam to wire.
 - Mutations go through `useApiMutation`, which toasts `ApiError.message`, reports, and invalidates.
   Reach past it only for optimistic updates.
@@ -272,7 +293,7 @@ Test the things that are cheap to get wrong and expensive to notice:
 - Hooks with real branching.
 
 Don't unit-test that a component renders its props, and don't mock the whole transport to assert a
-repository calls it — that tests the mock. End-to-end coverage of a critical flow lives in `e2e/`.
+repository calls it, because that tests the mock. End-to-end coverage of a critical flow lives in `e2e/`.
 
 ### Performance
 
@@ -282,27 +303,31 @@ a render cost.
 - Reach for `useMemo`/`useCallback` when a dependency identity actually matters (a memoised child, an
   effect dependency) or the computation is genuinely expensive. Wrapping every function is noise that
   hides the two places it mattered.
-- Keep `"use client"` at the leaves — a client boundary high in the tree drags the subtree with it.
+- Keep `"use client"` at the leaves. A client boundary high in the tree drags the subtree with it.
 - Import icons individually; never re-export a barrel of them.
 - Paginate on the server. A table that loads every row works beautifully until the data is real.
 
 ### Workflow
 
-- `npm run format` then `npm run verify` before you commit.
-- **Don't hand-edit generated wiring.** `constants/routes.ts`, `constants/query-keys.ts`,
-  `components/layout/nav-config.ts` and the locale catalogs are maintained by the generators —
-  adding a domain by hand is how they drift out of sync. Use `jinn-web domain`, and
-  `jinn-web remove-domain` to undo it.
+- `npm run format` then `npm run verify` before you commit, and **look at the page**.
 - `src/components/ui/**` is shadcn output. Restyle via tokens in `globals.css`, don't fork the file.
-- Adding a dependency is a decision: check whether `lib/` already does it.
+- Adding a dependency is a decision: check whether `lib/` already does it. Nothing has been added to
+  the scaffold so far; motion is CSS plus one shared `IntersectionObserver`.
+- `jinn-web doctor` after touching routes, query keys, nav or catalogs.
 
-## Commands
+---
 
-```bash
-npm run dev         # dev server (Turbopack)
-npm run build       # production build + full typecheck
-npm run typecheck   # tsc --noEmit
-npm run lint        # eslint (architecture guardrails)
-npm run test        # vitest
-npm run verify      # typecheck + lint + test
-```
+## 9. Open items for a human
+
+- **Real client proof.** Every testimonial is a marked placeholder; no metric is published.
+- **The inquiry endpoint** (`siteConfig.inquiry.endpoint`). Until set, submission takes a logged
+  mock-success path. Payload shape: `src/features/inquiry/models/inquiry.model.ts`.
+- **The booking URL** (`siteConfig.booking.url`). Hidden until set.
+- **Privacy and terms pages**, then `published: true` in `siteConfig.legal`.
+- **The domain.** `gastudio.com` is a placeholder in `config/env.ts`.
+- **An `/admin` editor** was discussed and deferred. Decided: it lives in this project at `/admin`.
+  Still open: where the public site reads content from, media upload, roles, and scope.
+
+`docs/BUILD-PLAN.md` records what was built and why, `docs/DESIGN-DIRECTION.md` the visual
+argument, and `docs/techlogi-claude-code-prompt.md` is the original brief, kept verbatim as a
+record.
