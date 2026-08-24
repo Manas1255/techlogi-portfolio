@@ -1,58 +1,65 @@
-"use client";
-
-import { parseAsString, useQueryState } from "nuqs";
+import Link from "next/link";
 import { ProjectPanel } from "@/components/sections";
-import { activeCategories, projects, type ProjectCategory } from "@/content";
-import { useTranslations, type MessageKey } from "@/i18n";
+import { APP_ROUTES } from "@/constants";
+import {
+  activeCategories,
+  projectsByCategory,
+  type ProjectCategory,
+} from "@/content";
+import { translate } from "@/i18n/translate";
+import { SOURCE_LOCALE } from "@/i18n/locales";
+import type { MessageKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 
 /**
  * The work index, filterable by capability.
  *
- * The filter lives in the URL (`/work?category=ai`) via nuqs, so a filtered
- * view survives a refresh, can be linked, and gives the back button something
- * sensible to do. Categories are derived from the content, so a filter can
- * never lead to an empty state — a filter that yields nothing is a design bug,
- * not a feature.
+ * A SERVER component, and the filter is a set of links rather than client
+ * state. The previous version used `useQueryState`, which put a
+ * `useSearchParams` consumer inside the page's Suspense boundary — and that
+ * makes Next drop the ENTIRE boundary from the prerendered HTML. The
+ * consequences were not subtle: `/work` shipped no `<h1>` and not one project
+ * to a crawler, and refilling the page on hydration measured 0.56 CLS against
+ * a 0.1 budget.
  *
- * The results region is a live region: filtering with the keyboard otherwise
- * changes the page silently.
+ * Links fix all of it at once. Every project is in the HTML, there is no
+ * hydration shift because nothing is added after paint, the filter still lives
+ * in the URL so a filtered view can be shared and the back button works, and
+ * the whole thing keeps working with JavaScript disabled. It costs a server
+ * render per filter — which for five projects of static content is a few
+ * milliseconds, and is the correct trade.
+ *
+ * `scroll={false}` keeps the viewport where it is: the reader is looking at
+ * the filter row, and jumping them to the top of the document on every choice
+ * would be its own bug.
  */
-export function WorkFilters() {
-  const t = useTranslations();
-  const [category, setCategory] = useQueryState(
-    "category",
-    parseAsString
-      .withDefault("all")
-      .withOptions({ history: "push", shallow: true }),
-  );
-
+export function WorkFilters({
+  category,
+}: {
+  category: ProjectCategory | null;
+}) {
   const categories = activeCategories();
-  const isKnown = categories.some((entry) => entry.id === category);
-  const active = isKnown ? (category as ProjectCategory) : null;
-  const visible =
-    active === null
-      ? projects
-      : projects.filter((project) => project.categories.includes(active));
+  const visible = projectsByCategory(category);
+  const t = (key: string) => translate(SOURCE_LOCALE, key as MessageKey);
 
   return (
     <>
       <div className="border-hairline mt-12 flex flex-wrap items-center gap-2 border-t pt-6">
         <FilterChip
-          isActive={active === null}
-          onClick={() => void setCategory(null)}
-          count={projects.length}
+          href={APP_ROUTES.work}
+          isActive={category === null}
+          count={projectsByCategory(null).length}
         >
           {t("site.allWork")}
         </FilterChip>
         {categories.map((entry) => (
           <FilterChip
             key={entry.id}
-            isActive={active === entry.id}
-            onClick={() => void setCategory(entry.id)}
+            href={`${APP_ROUTES.work}?category=${entry.id}`}
+            isActive={category === entry.id}
             count={entry.count}
           >
-            {t(`site.categories.${entry.id}` as MessageKey)}
+            {t(`site.categories.${entry.id}`)}
           </FilterChip>
         ))}
       </div>
@@ -80,30 +87,30 @@ export function WorkFilters() {
 }
 
 function FilterChip({
+  href,
   isActive,
-  onClick,
   count,
   children,
 }: {
+  href: string;
   isActive: boolean;
-  onClick: () => void;
   count: number;
   children: React.ReactNode;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={isActive}
+    <Link
+      href={href}
+      scroll={false}
+      aria-current={isActive ? "true" : undefined}
       className={cn(
         "focus-visible:outline-ring inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors duration-[var(--dur-base)] focus-visible:outline-2 focus-visible:outline-offset-2",
         isActive
-          ? "border-primary bg-primary/10 text-foreground"
+          ? "border-primary bg-accent text-foreground"
           : "border-hairline text-muted-foreground hover:border-hairline-strong hover:text-foreground",
       )}
     >
       {children}
       <span className="text-mono-label text-muted-foreground">{count}</span>
-    </button>
+    </Link>
   );
 }

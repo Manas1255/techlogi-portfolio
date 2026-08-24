@@ -6,6 +6,7 @@ import {
   Reveal,
 } from "@/components/marketing";
 import { hasDraftCaseStudies, projects } from "@/content";
+import type { ProjectCategory } from "@/content";
 import { WorkFilters } from "./work-filters";
 
 /**
@@ -15,7 +16,7 @@ import { WorkFilters } from "./work-filters";
  * A grid of identical cards would be the easy answer and the wrong one: the
  * point of this page is that each project can be evaluated without opening it.
  */
-export function WorkScreen() {
+export function WorkScreen({ category }: { category: ProjectCategory | null }) {
   return (
     <>
       <section className="wash-warm grain pt-32 pb-8 md:pt-40 md:pb-12">
@@ -50,7 +51,7 @@ export function WorkScreen() {
 
       <section className="pb-24 md:pb-32">
         <Container>
-          <WorkFilters />
+          <WorkFilters category={category} />
         </Container>
       </section>
 

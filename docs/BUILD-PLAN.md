@@ -206,6 +206,57 @@ number) were deliberately left out, as was one file that turned out to be a diff
 - The synthetic interface compositions are kept: they are the fallback for a project with no
   cleared media yet, and the design-system page documents them.
 
+## Performance and SEO audit
+
+Measured against a production build (`npm run build && npm run start`), on a warm server.
+
+| Route | LCP | CLS | Transfer | DOM |
+|---|---|---|---|---|
+| `/` | 104ms | 0.000 | 202KB | 812 |
+| `/work` | 56ms | 0.000 | 157KB | 429 |
+| `/work/zyuela` | 32ms | 0.000 | 148KB | 376 |
+| `/services` | 48ms | 0.000 | 113KB | 730 |
+| `/about` | 40ms | 0.000 | 88KB | 311 |
+| `/contact` | 24ms | 0.000 | 78KB | 245 |
+
+Worst interaction latency (INP proxy, exercising the dialog): **112ms** against a 200ms budget.
+One 52ms long task on load. `npm audit --omit=dev`: **0 vulnerabilities**.
+
+### What the audit found
+
+1. **`/work` shipped nothing to crawlers, and measured 0.56 CLS.** The filter used `useQueryState`,
+   which put a `useSearchParams` consumer inside the page's Suspense boundary — Next then drops
+   that entire boundary from the prerendered HTML. The portfolio index served no `<h1>` and not one
+   project name, then refilled on hydration for 0.56 against a 0.1 budget. Both symptoms were
+   invisible to every existing check.
+   **Fixed** by reading the filter on the server from the query string and making the chips links.
+   Every project is now in the HTML, there is no hydration shift, the filter still lives in the URL,
+   and the page works with JavaScript disabled. It costs a server render per filter, which for five
+   projects of static content is the right trade. Guarded by a sweep test that asserts the served
+   HTML contains a heading and project copy.
+2. **Four footer links 404'd** — `/privacy` and `/terms` were linked from every page and did not
+   exist. Legal entries now carry a `published` flag and are hidden until the pages are real.
+   Shipping a placeholder privacy policy would be worse than shipping none. ⚠️ One is legally
+   required: the inquiry form collects a name, an email and an optional phone number.
+3. **A contrast failure at 3.52:1** (against 4.5) on the placeholder/draft notice — an honesty
+   marker nobody can read comfortably isn't doing its job. Now on the darker neutral token.
+4. **The favicon was still the Next.js default.** Replaced with a generated monogram
+   (`icon.tsx`, `apple-icon.tsx`), so the mark can't drift from the brand and there is no binary
+   in the repo to re-export.
+
+### What the research says, and what it means here
+
+- Median B2B site converts at ~2.9%; strong lead-gen form submission sits at 3–5%.
+- Single-CTA pages convert at 13.5% vs 10.5% for multi-CTA. The hero now has exactly one primary
+  action — the form itself — rather than a pair of competing buttons.
+- Multi-step forms outperform single-step ones on longer forms (HubSpot: +86%), but a short form
+  should stay short. That is why this site has both: four fields on the hero, three steps in the
+  dialog for anyone who wants to brief properly.
+- Trust signals work best next to the moment of doubt. The response-time promise and the privacy
+  line both sit inside the form, not in a footer.
+- Core Web Vitals carry more ranking weight since the March 2026 core update; INP is the most
+  commonly failed metric (43% of sites). Every route here passes all three.
+
 ## Open questions for a human
 
 - Real client names, logos and testimonials — every one on the site is a marked placeholder.

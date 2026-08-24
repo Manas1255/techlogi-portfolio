@@ -3,6 +3,7 @@ import { APP_ROUTES, NAV_ITEMS, caseStudyPath } from "@/constants";
 import { Container } from "@/components/marketing";
 import { projects, serviceGroups } from "@/content";
 import {
+  publishedLegal,
   publishedLocations,
   publishedSocials,
   siteConfig,
@@ -31,6 +32,7 @@ export function SiteFooter() {
   const socials = publishedSocials();
   const locations = publishedLocations();
   const selectedWork = projects.slice(0, 4);
+  const legal = publishedLegal();
 
   return (
     <footer data-surface="slab" className="border-hairline border-t">
@@ -137,7 +139,7 @@ export function SiteFooter() {
               © {year} {siteConfig.legalName}. All rights reserved.
             </p>
             <ul className="flex flex-wrap gap-6">
-              {siteConfig.legal.map((item) => (
+              {legal.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

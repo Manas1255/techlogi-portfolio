@@ -28,7 +28,7 @@ export function PlaceholderNote({
     return (
       <p
         className={cn(
-          "border-hairline bg-muted/60 text-muted-foreground flex items-start gap-3 rounded-md border px-4 py-3 text-sm",
+          "border-hairline bg-muted/60 text-neutral-subtle-foreground flex items-start gap-3 rounded-md border px-4 py-3 text-sm",
           className,
         )}
         {...props}
@@ -43,7 +43,7 @@ export function PlaceholderNote({
   }
   return (
     <p
-      className={cn("text-mono-label text-muted-foreground/80", className)}
+      className={cn("text-mono-label text-muted-foreground", className)}
       {...props}
     >
       {children}

@@ -71,9 +71,19 @@ export const siteConfig = {
     { label: "Dribbble", href: "#" },
   ] satisfies SiteSocial[],
 
+  /**
+   * Legal pages. `published: false` keeps the link OUT of the footer rather
+   * than pointing every page on the site at a 404 — and shipping a
+   * placeholder privacy policy would be worse than shipping none.
+   *
+   * ⚠️ A privacy policy is not optional here. The inquiry form collects a name,
+   * an email and an optional phone number, which is personal data under GDPR
+   * and most equivalent regimes. Write the real pages, add the routes, and set
+   * `published: true`.
+   */
   legal: [
-    { label: "Privacy", href: "/privacy" }, // TODO: write the page.
-    { label: "Terms", href: "/terms" }, // TODO: write the page.
+    { label: "Privacy", href: "/privacy", published: false }, // TODO: write it.
+    { label: "Terms", href: "/terms", published: false }, // TODO: write it.
   ],
 
   /**
@@ -115,6 +125,11 @@ export type SiteConfig = typeof siteConfig;
 /** Social links that actually point somewhere. */
 export function publishedSocials(): readonly SiteSocial[] {
   return siteConfig.socials.filter((social) => social.href !== "#");
+}
+
+/** Legal pages that actually exist. */
+export function publishedLegal(): readonly { label: string; href: string }[] {
+  return siteConfig.legal.filter((item) => item.published);
 }
 
 /** Locations confirmed real, for the footer. */

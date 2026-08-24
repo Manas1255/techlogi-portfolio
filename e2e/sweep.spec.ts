@@ -160,24 +160,47 @@ test.describe("work index", () => {
     page,
   }) => {
     await page.goto("/work");
-    await page.getByRole("button", { name: /^Mobile/ }).click();
+    // Scoped by href: the footer's capability list also links to "Mobile".
+    const mobileFilter = page.locator('a[href="/work?category=mobile"]');
+    await mobileFilter.click();
     await expect(page).toHaveURL(/category=mobile/);
 
     await page.reload();
-    await expect(page.getByRole("button", { name: /^Mobile/ })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+    await expect(mobileFilter).toHaveAttribute("aria-current", "true");
   });
 
   test("no filter ever produces an empty result set", async ({ page }) => {
     await page.goto("/work");
-    const filters = page.locator("button[aria-pressed]");
-    const count = await filters.count();
-    for (let index = 0; index < count; index++) {
-      await filters.nth(index).click();
-      await expect(page.getByRole("heading", { level: 2 }).first()).toBeVisible();
+    const hrefs = await page
+      .locator('a[href^="/work?category="]')
+      .evaluateAll((links) => links.map((l) => l.getAttribute("href") ?? ""));
+    expect(hrefs.length).toBeGreaterThan(0);
+    for (const href of hrefs) {
+      await page.goto(href);
+      await expect(
+        page.getByRole("heading", { level: 2 }).first(),
+        `${href} rendered no projects`,
+      ).toBeVisible();
     }
+  });
+
+  /*
+    Regression guard for the worst defect the audit found. `/work` used
+    `useQueryState` for its filter, which put a `useSearchParams` consumer
+    inside the page's Suspense boundary — and Next then drops that whole
+    boundary from the prerendered HTML. The page shipped no heading and not one
+    project to a crawler, and refilled on hydration for 0.56 CLS against a 0.1
+    budget. Both symptoms are invisible to every other check in this suite.
+  */
+  test("/work ships its content in the HTML, not on hydration", async ({
+    request,
+  }) => {
+    const html = await (await request.get("/work")).text();
+    expect(html, "no <h1> in the served HTML").toContain("<h1");
+    expect(
+      html,
+      "project copy is missing from the served HTML — the page is client-only",
+    ).toContain("Orthodontic compliance");
   });
 });
 
