@@ -18,10 +18,7 @@ import { WorkFilters } from "./work-filters";
 export function WorkScreen() {
   return (
     <>
-      <section
-        data-surface="ink"
-        className="grain pt-32 pb-8 md:pt-40 md:pb-12"
-      >
+      <section className="wash-warm grain pt-32 pb-8 md:pt-40 md:pb-12">
         <Container>
           <div className="flex flex-col gap-6">
             <Reveal variant="fade">
@@ -51,7 +48,7 @@ export function WorkScreen() {
         </Container>
       </section>
 
-      <section data-surface="ink" className="pb-24 md:pb-32">
+      <section className="pb-24 md:pb-32">
         <Container>
           <WorkFilters />
         </Container>

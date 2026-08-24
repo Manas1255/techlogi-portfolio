@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 import {
   useController,
   type FieldPath,
@@ -54,19 +56,28 @@ export function SelectField<
   const { field, fieldState } = useController(controllerProps);
   const error = useFieldError(fieldState.error?.message);
 
-  const errorId = `${field.name}-error`;
-  const descriptionId = `${field.name}-description`;
+  /*
+    A DOM id must be unique in the document, and a field id derived from the
+    field NAME is not: the moment two forms on one page both have a
+    "description", the browser binds every `label[for="description"]` to
+    whichever input it met first — so a label in one form starts operating a
+    control in the other. `useId` scopes the id to this instance; the field
+    name stays the form's identifier, which is what it is actually for.
+  */
+  const fieldId = useId();
+  const errorId = `${fieldId}-error`;
+  const descriptionId = `${fieldId}-description`;
 
   return (
     <Field data-invalid={!!error} className={className}>
-      <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
       <Select
         value={field.value ?? ""}
         onValueChange={field.onChange}
         disabled={disabled ?? field.disabled}
       >
         <SelectTrigger
-          id={field.name}
+          id={fieldId}
           aria-invalid={!!error}
           aria-describedby={
             [error ? errorId : null, description ? descriptionId : null]

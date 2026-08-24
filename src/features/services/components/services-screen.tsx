@@ -26,10 +26,7 @@ import { ArrowLink } from "@/components/marketing";
 export function ServicesScreen() {
   return (
     <>
-      <section
-        data-surface="ink"
-        className="grain pt-32 pb-16 md:pt-40 md:pb-20"
-      >
+      <section className="wash-warm grain pt-32 pb-16 md:pt-40 md:pb-20">
         <Container>
           <div className="flex flex-col gap-6">
             <Reveal variant="fade">
@@ -63,7 +60,7 @@ export function ServicesScreen() {
           <Section
             key={group.id}
             id={group.id}
-            surface={index % 2 === 1 ? "bone" : "ink"}
+            surface={index % 2 === 1 ? "slab" : "inherit"}
             rhythm="base"
             divided={index % 2 === 0}
           >

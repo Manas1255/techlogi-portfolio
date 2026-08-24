@@ -399,7 +399,7 @@ export function DesignSystemView() {
           description="A section flips the whole palette for its subtree with data-surface. Every child adapts, including shadcn primitives, because they consume semantic slots and never raw ramp steps."
         >
           <div className="grid gap-3 sm:grid-cols-2">
-            {(["ink", "bone"] as const).map((surface) => (
+            {(["paper", "slab"] as const).map((surface) => (
               <div
                 key={surface}
                 data-surface={surface}

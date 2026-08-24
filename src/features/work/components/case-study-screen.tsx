@@ -39,7 +39,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
       />
       <CaseStudyHero project={project} />
 
-      <Section surface="ink" rhythm="base" divided>
+      <Section rhythm="base" divided>
         <div className="flex flex-col gap-16 md:gap-20">
           {project.caseStudySections.map((section, index) => (
             <CaseStudySection
@@ -52,7 +52,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
       </Section>
 
       {gallery.length > 0 && (
-        <Section surface="ink" width="wide" rhythm="base" divided>
+        <Section width="wide" rhythm="base" divided>
           <Reveal variant="fade" className="flex flex-col gap-8">
             <p className="text-eyebrow text-muted-foreground">
               More from {project.name}
@@ -71,7 +71,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
       )}
 
       {project.testimonial !== null && (
-        <Section surface="bone" rhythm="base">
+        <Section rhythm="base" className="bg-sunken">
           <Reveal
             as="figure"
             className="max-w-reading mx-auto flex flex-col gap-6"
@@ -103,7 +103,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
       )}
 
       {next !== undefined && (
-        <section data-surface="ink" className="border-hairline border-t">
+        <section className="border-hairline border-t">
           <Container>
             <Link
               href={caseStudyPath(next.slug)}

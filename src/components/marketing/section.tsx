@@ -2,11 +2,12 @@ import { Container, type ContainerWidth } from "./container";
 import { cn } from "@/lib/utils";
 
 /**
- * `bone` and `ink` re-declare every colour token for the subtree, so a section
- * flips ground without any child knowing which one it landed on. `inherit`
- * leaves the surrounding ground alone.
+ * `slab` and `paper` re-declare every colour token for the subtree, so a
+ * section flips ground without any child knowing which one it landed on.
+ * `inherit` leaves the surrounding ground alone — which, since the site is
+ * light by default, is what most sections want.
  */
-export type Surface = "ink" | "bone" | "inherit";
+export type Surface = "paper" | "slab" | "inherit";
 
 /**
  * Three steps, and only three. Restricting vertical rhythm to a fixed set is

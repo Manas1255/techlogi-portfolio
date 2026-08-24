@@ -7,7 +7,10 @@ import type {
   InquiryPayload,
   InquiryReceipt,
 } from "@/features/inquiry/models/inquiry.model";
-import type { InquiryValues } from "@/features/inquiry/validations/inquiry.schema";
+import type {
+  InquiryValues,
+  QuickInquiryValues,
+} from "@/features/inquiry/validations/inquiry.schema";
 
 export interface SubmitInquiryVariables extends InquiryValues {
   attachment?: File;
@@ -45,4 +48,29 @@ function toPayload(values: SubmitInquiryVariables): InquiryPayload {
     submittedAt: new Date().toISOString(),
     source: `site:${siteConfig.url}`,
   };
+}
+
+/**
+ * Submits the hero's short form.
+ *
+ * Same repository, same error handling, same success semantics — only the
+ * shape of what was collected differs, so there is one place that knows how to
+ * send an inquiry rather than two that drift.
+ */
+export function useSubmitQuickInquiry() {
+  return useApiMutation<InquiryReceipt, QuickInquiryValues>({
+    mutationFn: (values) =>
+      inquiryRepository.submit({
+        buildType: values.buildType,
+        description: values.description,
+        services: [],
+        name: values.name,
+        company: "",
+        email: values.email,
+        submittedAt: new Date().toISOString(),
+        source: `site:${siteConfig.url}`,
+      }),
+    showErrorToast: false,
+    reportScope: "inquiry.submit.quick",
+  });
 }

@@ -39,6 +39,8 @@ and the decision.
 | **Hover- or focus-triggered interface video** | Software behaving like software is the only proof that matters, and it costs nothing until intent is shown. | `AutoVideo` inside `MediaFrame` — muted, `playsinline`, IntersectionObserver-paused, poster always present, static fallback under reduced motion. |
 | **Progressive, low-friction inquiry as step one** | A single low-effort choice converts far better than a 9-field form, and it feels like using a product. | "What would you like to build?" as eight one-tap choices in a persistent drawer, then progressive disclosure. |
 | **Monospace labels for metadata** | Signals engineering without a single code screenshot; gives small text a job and a rhythm. | Eyebrows, project indices, stack lists, step counters, footnotes. |
+| **A header that detaches into a capsule** | Past the fold the bar contracts to a centred pill of warm glass, so the page scrolls *underneath* the chrome instead of past a bar welded to the top. One continuous morph — every property that changes lives on the same element — rather than a bar swapping itself for a different bar. | `SiteHeader`: `fixed`, outer padding opens, `max-width` contracts, radius goes full, height drops, `.capsule-glass` supplies the blur. All CSS transitions, so `motion-reduce:transition-none` turns it off. |
+| **The form IS the hero** | A visitor is at their most willing in the first seconds and least willing to be routed elsewhere. A hero whose primary action is "go to a contact page" spends that willingness on navigation. | Four fields on the hero — what you're building, name, email, an optional note — submitting through the same repository as the four-step drawer. One implementation of "send an inquiry", two depths of it. |
 | **Surface inversion as section punctuation** | Alternating ink and paper gives a long page chapters, and makes the eye re-engage at each boundary. | Token-scoped `[data-surface="ink" \| "bone"]` — a section flips the palette and every child adapts. |
 | **A horizontal capability rail** | Compresses a long service list into something explorable instead of a wall of bullets. | Services: sticky group labels against expanding capability panels, keyboard- and touch-driven. |
 
@@ -84,47 +86,61 @@ relationship exists.
 
 ### Palette
 
-Dark-first. The canvas is a warm near-black rather than blue-black, so the vermilion accent sits in
-the same temperature family and the page reads as ink rather than as a "tech dark mode".
+**Light-first, on a true white canvas.** The earlier direction was dark-first; it was replaced
+because the portfolio is the point of this site and the work is overwhelmingly light, warm mobile
+product design. Dark chrome around light screenshots made every project fight its own frame.
+
+White, and specifically not cream. Warm off-white is what an image generator reaches for by
+default, and it drags every screenshot toward the same sand cast — fatal here, because the product
+work has to supply its own colour. The warmth lives in the accent, in the section washes and in the
+ink, never in the base.
 
 | Role | Value | Use |
 |---|---|---|
-| `--ink-950` canvas | `#0B0A09` | Default page ground |
-| `--ink-900` raised | `#131110` | Cards, frames, code surfaces |
-| `--bone-50` | `#F5F2ED` | Inverted section ground (paper) |
-| Foreground on ink | `#EDE9E3` | Body copy — warm off-white, never pure `#fff` |
-| Muted on ink | `#9C958C` | Metadata, ≥ 4.5:1 on the canvas |
-| `brand-600` | `#E24A1E` | The single accent: primary action, focus ring, one word per headline |
-| Hairline | `#FFFFFF14` | Borders. Structure comes from hairlines, not shadows |
+| Canvas | `#FFFFFF` | The default ground |
+| Ink | `#1A1512` | Body copy — warm near-black, never pure `#000`. 17.9:1 |
+| Muted | `#6B625B` | Metadata. 6.0:1 on white |
+| `brand-600` | `#E24A1E` | THE brand colour: display accent, focus ring, washes |
+| `--primary` | `#BE3A13` (`brand-700`) | Buttons. White on `brand-600` is 4.0:1 and fails AA at label sizes; one step down reaches 5.5:1 and is still unmistakably the same vermilion |
+| Wash | `#FFEDE4` peach · `#FDE9E6` blush · `#FDF3EA` sand | Three soft radial stops the hero and closing bloom from |
+| Slab | `#16161A` | The dark ground that punctuates the page |
+| Hairline | `#1A151214` | Structure comes from hairlines, not shadows |
 
-The accent is rationed on purpose. It appears in the primary CTA, focus states, and at most one
-emphasis per section — that scarcity is what makes it read as a signal rather than as a brand
-tattoo. Status tones (success/warning/danger/info) keep the scaffold's semantics, retuned for the
-dark ground.
+The wash is radial, never linear: a linear gradient has a visible direction and starts to look like
+a banner, where a bloom reads as light falling on paper.
 
-Contrast: body and muted text are checked against both grounds for WCAG AA; the accent is used for
-large text and non-text UI only, never for small body copy on ink.
+The slab is a near-neutral graphite with a trace of cool — deliberately NOT a warm near-black. The
+vermilion has to be the only warm colour in the palette; put it on a warm dark and the section reads
+as brown rather than as an interruption. On the slab the ramp inverts: `brand-500` is the readable
+step at 6.0:1, where `brand-700` would sink into the ground.
+
+Accent discipline is unchanged: the primary action, focus states, and at most one emphasis per
+section. Scarcity is what makes it read as a signal rather than as a brand tattoo.
 
 ### Type
 
-Three faces, each with a job that the other two cannot do:
+Three faces, each with a job the other two cannot do:
 
 | Role | Face | Why |
 |---|---|---|
-| Display | **Bricolage Grotesque** (variable) | Ink traps and a slightly condensed, engineered feel — characterful at 100px, not a default grotesk, and it has opinions without being a novelty face. |
-| Body / UI | **Inter Tight** | Tight, quiet, excellent at 15–19px reading sizes; disappears so the display face can speak. |
+| Display | **Familjen Grotesk** | Tight apertures and a precise, Scandinavian skeleton. It reads *engineered* rather than friendly — which is the claim this studio is making — and it is uncommon enough not to arrive carrying another product's associations. |
+| Body / UI | **Figtree** | Warm humanist, quiet at reading sizes, so the display face is the only one with an opinion. |
 | Metadata | **JetBrains Mono** | Eyebrows, indices, stack lists, footnotes. Carries the engineering signal that would otherwise need a code screenshot. |
 
 All three load through `next/font/google` — self-hosted, `display: swap`, latin subset, variable
 axes, so there is no CDN round trip and no layout shift. Fallback stacks are declared.
 
-Scale (fluid where it matters, so nothing needs a breakpoint override):
+Familjen Grotesk is drawn tight, so it takes **less** negative tracking than a wide grotesk would at
+the same size: past about `-0.03em` its already-small apertures start closing and a headline turns
+into a texture. The hero sits at `-0.024em`, and tracking eases further as the scale comes down.
 
-- `text-hero` — `clamp(3rem, 8.5vw, 7rem)`, weight 600, tracking `-0.03em`, leading `0.94`
-- `text-display-1` — `clamp(2.5rem, 5.5vw, 4.25rem)`
-- `text-display-2` — `clamp(1.875rem, 3.4vw, 2.75rem)`
-- `text-display-3` — `clamp(1.375rem, 2vw, 1.75rem)`
-- `text-lead` — `clamp(1.0625rem, 1.4vw, 1.3125rem)`, muted, max ~62ch
+Scale (fluid, so nothing needs a breakpoint override):
+
+- `text-hero` — `clamp(2.5rem, 4.6vw, 4.25rem)`, weight 600, leading 1
+- `text-display-1` — `clamp(2.125rem, 3.8vw, 3.375rem)`
+- `text-display-2` — `clamp(1.75rem, 2.7vw, 2.5rem)`
+- `text-display-3` — `clamp(1.1875rem, 1.5vw, 1.4375rem)`
+- `text-lead` — `clamp(1.0625rem, 1.15vw, 1.1875rem)`, muted, max ~62ch
 - `text-eyebrow` — 11px mono, `0.14em` tracking, uppercase
 - `text-marketing-body` — 16px/1.65, max ~68ch
 
@@ -173,10 +189,14 @@ ratio reserved in CSS so nothing shifts on load.
 
 The home page alternates ground deliberately, so the page has chapters:
 
-`hero (ink)` → `proof rail (ink, hairline)` → `showreel (ink, full-bleed)` →
-`portfolio (ink → bone at the third panel)` → `services (bone)` → `process (ink)` →
-`technologies (ink, hairline)` → `testimonials (bone)` → `close + inline inquiry (ink)` →
-`footer (ink-950)`
+`hero (paper + warm wash, form inline)` → `showreel (paper, hairline)` →
+`portfolio (paper, alternating composition)` → `services (SLAB + ember wash)` → `process (paper)` →
+`technologies (paper, hairline)` → `testimonials (paper, sunken)` →
+`close + inline inquiry (SLAB)` → `footer (SLAB)`
+
+Two dark interruptions, not five: services in the middle, and the close plus footer as one dark
+foot to the page. A light page that goes dark twice has chapters; one that alternates every section
+has stripes.
 
 No two adjacent sections share a composition. The card grid appears exactly once, in technologies,
 where a grid is genuinely the right form.

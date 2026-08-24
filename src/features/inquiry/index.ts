@@ -7,4 +7,5 @@ export {
   InquiryLauncher,
   type InquiryLauncherProps,
 } from "./components/inquiry-launcher";
+export { HeroInquiryForm } from "./components/hero-inquiry-form";
 export { useInquiryStore, openInquiry } from "./inquiry-store";

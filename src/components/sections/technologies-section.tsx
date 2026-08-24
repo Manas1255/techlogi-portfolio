@@ -12,7 +12,7 @@ import { techGroups } from "@/content";
  */
 export function TechnologiesSection() {
   return (
-    <Section surface="ink" rhythm="base" divided>
+    <Section rhythm="base" divided>
       <SectionIntro
         index={5}
         eyebrow="Stack"

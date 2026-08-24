@@ -44,7 +44,7 @@ export function CaseStudyHero({ project }: { project: Project }) {
   ];
 
   return (
-    <section data-surface="ink" className="grain pt-28 pb-16 md:pt-36 md:pb-24">
+    <section className="wash-warm grain pt-28 pb-16 md:pt-36 md:pb-24">
       <Container>
         <div className="flex flex-col gap-10">
           <Reveal variant="fade" className="flex flex-col gap-6">

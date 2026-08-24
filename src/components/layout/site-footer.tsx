@@ -33,7 +33,7 @@ export function SiteFooter() {
   const selectedWork = projects.slice(0, 4);
 
   return (
-    <footer data-surface="ink" className="border-hairline border-t">
+    <footer data-surface="slab" className="border-hairline border-t">
       <Container className="py-16 md:py-20">
         <div className="flex flex-col gap-14">
           <div className="grid gap-10 lg:grid-cols-[1.4fr_2.2fr]">

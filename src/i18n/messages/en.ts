@@ -103,7 +103,7 @@ const en = {
     },
     fields: {
       description: {
-        label: "What are you building?",
+        label: "The project, in your words",
         hint: "A few sentences is plenty. What exists today, and what should change?",
         placeholder:
           "We run scheduling across eleven clinics in three spreadsheets. We need one system our coordinators can actually use…",
@@ -145,6 +145,22 @@ const en = {
     },
     error: {
       title: "That didn't send.",
+    },
+    quick: {
+      title: "Start a project",
+      lead: "Four fields. A person reads every one, and replies within a business day.",
+      buildTypeLabel: "What are you building?",
+      buildTypePlaceholder: "Pick the closest one",
+      messageLabel: "Anything we should know? (optional)",
+      messagePlaceholder:
+        "The problem you're solving matters more than the feature list.",
+      submit: "Send inquiry",
+      submitting: "Sending…",
+      successTitle: "Thanks — that's with us.",
+      successBody:
+        "You'll hear back at the address you gave us. You can always reach us directly at {email}.",
+      privacy:
+        "We use these details to reply, and nothing else. No list, no sequence.",
     },
     validation: {
       descriptionShort: "A sentence or two more, so we can reply usefully",

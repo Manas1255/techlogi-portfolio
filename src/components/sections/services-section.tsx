@@ -37,7 +37,7 @@ export function ServicesSection() {
       : findProject(active.relatedProjectSlug);
 
   return (
-    <Section surface="bone" rhythm="loose" id="services">
+    <Section surface="slab" rhythm="loose" id="services" className="wash-slab">
       <SectionIntro
         index={3}
         eyebrow="Capabilities"

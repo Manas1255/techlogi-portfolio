@@ -67,3 +67,27 @@ export const STEP_FIELDS = [
 ] as const satisfies readonly (readonly (keyof InquiryFormValues)[])[];
 
 export const STEP_COUNT = STEP_FIELDS.length;
+
+/**
+ * THE SHORT FORM, as it appears in the hero.
+ *
+ * Four fields, one of them optional. A visitor who has just landed will not
+ * fill in timeline and budget, and asking anyway is how a hero form becomes
+ * decoration — so the short form collects only what is needed to reply, and
+ * the reply asks for the rest. It submits through the SAME repository and the
+ * same success path as the drawer; there is one implementation of "send an
+ * inquiry", not two.
+ */
+export const quickInquirySchema = z.object({
+  buildType: buildTypeSchema.shape.id,
+  name: nameField,
+  email: emailField,
+  description: z
+    .string()
+    .max(1000, "validation.maxLength")
+    .transform((value) => value.trim())
+    .default(""),
+});
+
+export type QuickInquiryFormValues = z.input<typeof quickInquirySchema>;
+export type QuickInquiryValues = z.output<typeof quickInquirySchema>;

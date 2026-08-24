@@ -53,10 +53,7 @@ export function AboutScreen() {
 
   return (
     <>
-      <section
-        data-surface="ink"
-        className="grain pt-32 pb-16 md:pt-40 md:pb-20"
-      >
+      <section className="wash-warm grain pt-32 pb-16 md:pt-40 md:pb-20">
         <Container>
           <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-16">
             <div className="flex flex-col gap-6">
@@ -88,7 +85,7 @@ export function AboutScreen() {
         </Container>
       </section>
 
-      <Section surface="bone" rhythm="loose">
+      <Section surface="slab" rhythm="loose" className="wash-slab">
         <SectionIntro
           index={1}
           eyebrow="How we work"
@@ -114,7 +111,7 @@ export function AboutScreen() {
         </div>
       </Section>
 
-      <Section surface="ink" rhythm="base" divided>
+      <Section rhythm="base" divided>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <Reveal className="flex flex-col gap-5">
             <Eyebrow index={2}>Engagements</Eyebrow>
@@ -158,7 +155,7 @@ export function AboutScreen() {
         </div>
       </Section>
 
-      <Section surface="bone" rhythm="base">
+      <Section rhythm="base" className="bg-sunken">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
           <Reveal className="flex flex-col gap-5">
             <Eyebrow index={5}>The studio</Eyebrow>

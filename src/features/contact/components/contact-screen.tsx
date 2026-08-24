@@ -22,10 +22,7 @@ export function ContactScreen() {
 
   return (
     <>
-      <section
-        data-surface="ink"
-        className="grain pt-32 pb-20 md:pt-40 md:pb-28"
-      >
+      <section className="wash-warm grain pt-32 pb-20 md:pt-40 md:pb-28">
         <Container>
           <div className="grid gap-14 lg:grid-cols-[1.25fr_1fr] lg:gap-20">
             <div className="flex flex-col gap-8">

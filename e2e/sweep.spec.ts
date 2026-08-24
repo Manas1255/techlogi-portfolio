@@ -74,6 +74,40 @@ test.describe("document structure", () => {
     });
   }
 
+  /*
+    Regression guard. Both the hero's short form and the drawer's long form
+    have a "description" field, and the field components used to derive the
+    input's DOM id from the field NAME — so the page carried two
+    id="description" nodes and every `label[for="description"]` bound to
+    whichever the browser met first. A label in one form silently operated a
+    control in the other, which typing into the page proves and no type check
+    ever will.
+  */
+  for (const route of ["/", "/contact"] as const) {
+    test(`${route} has no duplicate DOM ids`, async ({ page }) => {
+      await page.goto(route);
+      await page.getByRole("button", { name: "Start a Project" }).first().click();
+      await expect(page.getByRole("dialog")).toBeVisible();
+
+      const duplicates = await page.evaluate(() => {
+        const seen = new Map<string, number>();
+        for (const node of document.querySelectorAll("[id]")) {
+          const id = node.id;
+          if (id === "") continue;
+          seen.set(id, (seen.get(id) ?? 0) + 1);
+        }
+        return [...seen.entries()]
+          .filter(([, count]) => count > 1)
+          .map(([id, count]) => `${id} x${count}`);
+      });
+
+      expect(
+        duplicates,
+        `duplicate DOM ids break label/for association: ${duplicates.join(", ")}`,
+      ).toEqual([]);
+    });
+  }
+
   test("every page has the three landmarks", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("main")).toHaveCount(1);
@@ -183,14 +217,14 @@ test.describe("project inquiry", () => {
     await page.getByRole("button", { name: "Start a Project" }).first().click();
     await page.getByRole("radio", { name: /AI Product/ }).click();
     await page
-      .getByLabel("What are you building?")
+      .getByLabel("The project, in your words")
       .fill("An internal assistant over our own runbooks and incident history.");
 
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toBeHidden();
 
     await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await expect(page.getByLabel("What are you building?")).toHaveValue(
+    await expect(page.getByLabel("The project, in your words")).toHaveValue(
       /internal assistant/,
     );
   });
@@ -199,7 +233,7 @@ test.describe("project inquiry", () => {
     await page.goto("/contact");
     await page.getByRole("radio", { name: /Web Application/ }).first().click();
     await page
-      .getByLabel("What are you building?")
+      .getByLabel("The project, in your words")
       .fill("A portal our field engineers can use with one hand, offline.");
     await page.getByRole("button", { name: "Continue" }).click();
 
@@ -221,7 +255,7 @@ test.describe("project inquiry", () => {
     await page.getByRole("button", { name: "Start a Project" }).first().click();
     await page.getByRole("radio", { name: /Something Else/ }).click();
     await page
-      .getByLabel("What are you building?")
+      .getByLabel("The project, in your words")
       .fill(`${PATHOLOGICAL_TEXT} ${PATHOLOGICAL_TOKEN}`);
     await expectNoHorizontalOverflow(page);
   });

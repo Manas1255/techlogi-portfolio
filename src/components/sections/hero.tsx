@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { Container, Eyebrow, Reveal } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
-import { Button } from "@/components/ui/button";
 import { APP_ROUTES, caseStudyPath } from "@/constants";
-import { featuredProjects } from "@/content";
-import { InquiryTrigger } from "@/features/inquiry";
+import { findProject, projects } from "@/content";
+import { HeroInquiryForm } from "@/features/inquiry";
 
 /**
  * THE HERO.
@@ -12,28 +11,40 @@ import { InquiryTrigger } from "@/features/inquiry";
  * Four questions in the first seconds: who Techlogi is, what it builds, why to
  * trust it, and what to do next. The headline answers the first two, the
  * capability rail answers the third by naming artifacts rather than adjectives,
- * and both CTAs are above the fold on every viewport.
+ * and the fourth is not a button that routes somewhere — it is a form, right
+ * there, above the fold.
  *
- * The visual side is a real product interface, not artwork. It is a synthetic
- * composition (see `components/media/compositions`) rather than a video,
- * because the largest contentful element on this page must not be a
- * multi-megabyte autoplaying file — the showreel below handles motion once the
- * page has already painted.
+ * That is the whole shape of this section. A visitor is at their most willing
+ * in the first few seconds and least willing to be sent somewhere else; a hero
+ * whose primary action is "go to a contact page" spends that willingness on
+ * navigation. The four-step drawer still exists for anyone who wants to brief
+ * properly — the header's "Start a Project" opens it — but the default path is
+ * four fields and done.
  *
- * The headline is a Server Component. `mask-line` reveals it per line, and if
- * the reveal script never runs, the text is simply there.
+ * Beneath the fold the section keeps going into a proof band: one real product
+ * at full measure, captioned, so the claim above it is answered by evidence
+ * rather than by another claim.
  */
 export function Hero() {
-  const [lead] = featuredProjects();
+  // The lead frame is chosen by slug rather than by position: it is an
+  // art-direction decision about which product opens the site, and it should
+  // not silently change because the portfolio was reordered.
+  const lead = findProject("zyuela") ?? projects[0];
 
   return (
-    <section
-      data-surface="ink"
-      className="grain relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24"
-    >
+    <section className="wash-warm grain relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
       <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-          <div className="flex flex-col gap-8">
+        {/*
+          Three grid children, ordered for a PHONE: copy, then the form, then
+          the capability rail. On a narrow screen the rail would otherwise push
+          the form most of a screen further down, and the form is the point of
+          this section. On `lg` the rail returns to the left column under the
+          copy and the form spans both rows on the right, which is the
+          composition the desktop layout wants — no duplicated markup, and
+          nothing hidden at either size.
+        */}
+        <div className="grid items-start gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-16 lg:gap-y-10">
+          <div className="flex flex-col gap-8 lg:col-start-1 lg:row-start-1 lg:pt-6">
             <Reveal variant="fade">
               <Eyebrow>Product engineering studio</Eyebrow>
             </Reveal>
@@ -62,60 +73,82 @@ export function Hero() {
                 worth using long after launch.
               </p>
             </Reveal>
-
-            <Reveal delay={180} className="flex flex-wrap items-center gap-3">
-              <InquiryTrigger origin="hero" size="lg" />
-              <Button asChild size="lg" variant="outline">
-                <Link href={APP_ROUTES.work}>Explore Our Work</Link>
-              </Button>
-            </Reveal>
-
-            {/* Capability rail — concrete nouns instead of a trust badge. */}
-            <Reveal delay={240} variant="fade" className="pt-2">
-              <dl className="border-hairline grid grid-cols-2 gap-x-8 gap-y-5 border-t pt-6 sm:grid-cols-4">
-                {[
-                  { term: "Discovery", detail: "to a written plan" },
-                  { term: "Design", detail: "as a system" },
-                  { term: "Engineering", detail: "typed end to end" },
-                  { term: "After launch", detail: "we stay on" },
-                ].map((item) => (
-                  <div key={item.term} className="flex flex-col gap-1">
-                    <dt className="text-mono-label text-foreground">
-                      {item.term}
-                    </dt>
-                    <dd className="text-muted-foreground text-[0.8125rem] leading-snug">
-                      {item.detail}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </Reveal>
           </div>
 
-          {/* Composition: a lead interface, with a second offset behind it. */}
-          <Reveal variant="fade" delay={120} className="relative">
-            <div className="relative">
+          <Reveal
+            variant="lift"
+            delay={100}
+            className="lg:sticky lg:top-28 lg:col-start-2 lg:row-span-2 lg:row-start-1"
+          >
+            <HeroInquiryForm />
+          </Reveal>
+
+          {/* Capability rail — concrete nouns instead of a trust badge. */}
+          <Reveal
+            delay={180}
+            variant="fade"
+            className="lg:col-start-1 lg:row-start-2"
+          >
+            <dl className="border-hairline grid grid-cols-2 gap-x-8 gap-y-5 border-t pt-6 sm:grid-cols-4">
+              {[
+                { term: "Discovery", detail: "to a written plan" },
+                { term: "Design", detail: "as a system" },
+                { term: "Engineering", detail: "typed end to end" },
+                { term: "After launch", detail: "we stay on" },
+              ].map((item) => (
+                <div key={item.term} className="flex flex-col gap-1">
+                  <dt className="text-mono-label text-foreground">
+                    {item.term}
+                  </dt>
+                  <dd className="text-muted-foreground text-[0.8125rem] leading-snug">
+                    {item.detail}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
+
+        {/* The proof band: one real product, at full measure, captioned. */}
+        <Reveal variant="fade" delay={80} className="mt-20 md:mt-28">
+          <div className="flex flex-col gap-5">
+            <div className="border-hairline flex flex-wrap items-end justify-between gap-4 border-t pt-6">
+              <p className="text-mono-label text-muted-foreground">
+                <span className="text-foreground">{lead.name}</span> ·{" "}
+                {lead.tagline}
+              </p>
               <Link
                 href={caseStudyPath(lead.slug)}
-                className="group focus-visible:outline-ring rounded-frame block focus-visible:outline-2 focus-visible:outline-offset-4"
+                className="text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
               >
-                <MediaFrame
-                  media={lead.heroMedia}
-                  priority
-                  sizes="(min-width: 1024px) 46vw, 92vw"
-                />
-                <span className="sr-only">
-                  {lead.name} — {lead.tagline}. View case study.
-                </span>
+                View case study →
               </Link>
             </div>
 
-            <p className="text-mono-label text-muted-foreground mt-4">
-              <span className="text-foreground">{lead.name}</span> ·{" "}
-              {lead.tagline}
+            <Link
+              href={caseStudyPath(lead.slug)}
+              className="group rounded-frame focus-visible:outline-ring block focus-visible:outline-2 focus-visible:outline-offset-4"
+            >
+              <MediaFrame
+                media={lead.heroMedia}
+                priority
+                sizes="(min-width: 1280px) 1200px, 94vw"
+              />
+              <span className="sr-only">
+                {lead.name} — {lead.tagline}. View case study.
+              </span>
+            </Link>
+
+            <p className="text-mono-label text-muted-foreground">
+              <Link
+                href={APP_ROUTES.work}
+                className="hover:text-foreground transition-colors"
+              >
+                Explore all work →
+              </Link>
             </p>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
       </Container>
     </section>
   );

@@ -26,8 +26,8 @@ export function ClosingCta({
 }: ClosingCtaProps) {
   return (
     <section
-      data-surface="ink"
-      className="grain border-hairline relative overflow-hidden border-t py-24 md:py-36"
+      data-surface="slab"
+      className="wash-slab grain relative overflow-hidden py-24 md:py-36"
     >
       <Container>
         <div className="flex flex-col gap-10">

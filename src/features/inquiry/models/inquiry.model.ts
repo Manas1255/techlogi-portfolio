@@ -44,8 +44,13 @@ export interface InquiryPayload {
   buildType: BuildTypeId;
   description: string;
   services: string[];
-  timeline: string;
-  budget: string;
+  /**
+   * Optional because the hero's short form omits them. The drawer collects
+   * both; the hero trades them for a form a visitor will actually finish in
+   * the first ten seconds, and a reply asks for the rest.
+   */
+  timeline?: string;
+  budget?: string;
   name: string;
   company: string;
   email: string;

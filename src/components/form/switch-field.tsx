@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 import {
   useController,
   type FieldPath,
@@ -39,13 +41,22 @@ export function SwitchField<
 }: SwitchFieldProps<TFieldValues, TName>) {
   const { field, fieldState } = useController(controllerProps);
   const error = useFieldError(fieldState.error?.message);
-  const errorId = `${field.name}-error`;
+  /*
+    A DOM id must be unique in the document, and a field id derived from the
+    field NAME is not: the moment two forms on one page both have a
+    "description", the browser binds every `label[for="description"]` to
+    whichever input it met first — so a label in one form starts operating a
+    control in the other. `useId` scopes the id to this instance; the field
+    name stays the form's identifier, which is what it is actually for.
+  */
+  const fieldId = useId();
+  const errorId = `${fieldId}-error`;
 
   return (
     <Field data-invalid={!!error} className={className}>
       <div className="flex items-center justify-between gap-4">
         <div className="grid min-w-0 gap-1">
-          <Label htmlFor={field.name} className="font-normal">
+          <Label htmlFor={fieldId} className="font-normal">
             {label}
           </Label>
           {description ? (
@@ -53,7 +64,7 @@ export function SwitchField<
           ) : null}
         </div>
         <Switch
-          id={field.name}
+          id={fieldId}
           checked={Boolean(field.value)}
           onCheckedChange={field.onChange}
           disabled={disabled ?? field.disabled}

@@ -1,9 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import {
-  Bricolage_Grotesque,
-  Inter_Tight,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Familjen_Grotesk, Figtree, JetBrains_Mono } from "next/font/google";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
@@ -18,24 +14,26 @@ import "./globals.css";
  * everything above it stays server-rendered.
  *
  * Three faces, each with a job the other two can't do:
- *   display — Bricolage Grotesque, the art direction
- *   sans    — Inter Tight, the reading voice
- *   mono    — JetBrains Mono, the metadata and the engineering signal
+ *   display — Familjen Grotesk: tight apertures and a precise, Scandinavian
+ *             skeleton. It reads engineered rather than friendly, which is the
+ *             claim this studio is making, and it is uncommon enough not to
+ *             carry another product's associations.
+ *   sans    — Figtree: warm humanist, quiet at reading sizes, so the display
+ *             face is the only one with an opinion.
+ *   mono    — JetBrains Mono: the metadata, and the engineering signal that
+ *             saves the page from needing a code screenshot.
  */
 
-const display = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const display = Familjen_Grotesk({
+  variable: "--font-familjen",
   subsets: ["latin"],
   display: "swap",
   weight: "variable",
-  // The optical-size axis is what keeps it from looking like a blown-up
-  // small-text face at 100px; `wdth` stays at its default.
-  axes: ["opsz"],
   fallback: ["Helvetica Neue", "Arial", "sans-serif"],
 });
 
-const sans = Inter_Tight({
-  variable: "--font-inter-tight",
+const sans = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
   display: "swap",
   weight: "variable",
@@ -86,8 +84,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   // Matches the ink canvas, so mobile browser chrome doesn't flash white.
-  themeColor: "#0b0a09",
-  colorScheme: "dark",
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 export default function RootLayout({

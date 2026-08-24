@@ -15,7 +15,7 @@ export function FeaturedWork() {
   const projects = featuredProjects();
 
   return (
-    <Section surface="ink" rhythm="loose" divided id="work">
+    <Section rhythm="loose" divided id="work">
       <SectionIntro
         index={2}
         eyebrow="Selected work"
