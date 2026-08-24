@@ -18,6 +18,12 @@ export interface ProjectPanelProps {
    * times reads as a template, however good the composition is.
    */
   media?: Media;
+  /**
+   * Heading level for the project name. The panel sits under a section heading
+   * on the home page (h2 → h3) but directly under the page title on `/work`
+   * (h1 → h2); hardcoding either one skips a level on the other page.
+   */
+  headingLevel?: "h2" | "h3";
 }
 
 /**
@@ -39,6 +45,7 @@ export function ProjectPanel({
   reversed = false,
   fullBleed = false,
   media: mediaOverride,
+  headingLevel: Heading = "h3",
 }: ProjectPanelProps) {
   const frameMedia = mediaOverride ?? project.heroMedia;
   const media = (
@@ -69,7 +76,7 @@ export function ProjectPanel({
           <span className="bg-hairline-strong h-px w-8" aria-hidden="true" />
           {project.industry}
         </p>
-        <h3 className="text-display-2">
+        <Heading className="text-display-2">
           <Link
             href={caseStudyPath(project.slug)}
             className="focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
@@ -77,7 +84,7 @@ export function ProjectPanel({
             {project.name}
             <span className="sr-only"> — {project.tagline}</span>
           </Link>
-        </h3>
+        </Heading>
         <p className="text-muted-foreground text-lg leading-snug">
           {project.tagline}
         </p>
@@ -132,7 +139,7 @@ export function ProjectPanel({
               />
               {project.industry} · {project.productType}
             </p>
-            <h3 className="text-display-1">
+            <Heading className="text-display-1">
               <Link
                 href={caseStudyPath(project.slug)}
                 className="focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
@@ -140,7 +147,7 @@ export function ProjectPanel({
                 {project.name}
                 <span className="sr-only"> — {project.tagline}</span>
               </Link>
-            </h3>
+            </Heading>
             <p className="text-muted-foreground text-lg leading-snug">
               {project.tagline}
             </p>

@@ -77,10 +77,13 @@ export function SiteHeader() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 lg:ml-0">
+            {/* Never hidden: "always-reachable" has to hold on a phone, where
+                burying the primary action behind a hamburger costs a tap at the
+                exact moment intent is highest. */}
             <InquiryTrigger
               origin="header"
               size={isScrolled ? "sm" : "default"}
-              className="hidden sm:inline-flex"
+              className="max-sm:h-9 max-sm:px-3 max-sm:text-[0.8125rem]"
             />
             <MobileNav />
           </div>

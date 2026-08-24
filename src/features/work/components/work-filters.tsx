@@ -69,6 +69,9 @@ export function WorkFilters() {
             index={index}
             reversed={index % 2 === 1}
             fullBleed={index % 3 === 2}
+            // On /work the panels sit directly under the page title, so their
+            // names are the second level, not the third.
+            headingLevel="h2"
           />
         ))}
       </div>

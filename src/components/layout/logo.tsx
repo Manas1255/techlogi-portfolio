@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { APP_ROUTES } from "@/constants";
+import { HOME_ROUTE } from "@/constants";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 
@@ -35,7 +35,7 @@ export function Logo({
 
   return (
     <Link
-      href={APP_ROUTES.home}
+      href={HOME_ROUTE}
       className="focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
       aria-label={`${siteConfig.name} — home`}
     >

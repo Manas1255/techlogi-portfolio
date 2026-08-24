@@ -156,9 +156,22 @@ function MediaContent({
     return <AutoVideo media={media} />;
   }
 
+  // A desktop interface scaled down to a 350px phone frame is a smear: its
+  // labels land at three or four pixels. So below ~900px the composition keeps
+  // rendering at its design width and the frame CROPS it — the visitor sees a
+  // legible detail of real software instead of an illegible whole, which is
+  // also how a real desktop app looks on a phone. Portrait compositions are
+  // designed for narrow frames already and are left alone.
+  const isPortrait = media.aspect === "9/16" || media.aspect === "4/5";
+
   return (
     <div
-      className="size-full"
+      className="h-full"
+      // Marks this as a deliberately cropped picture rather than a truncated
+      // value, so the layout sweep's unreachable-clipping check doesn't read a
+      // framed interface as unreadable data. See `e2e/helpers.ts`.
+      data-media-crop=""
+      style={isPortrait ? { width: "100%" } : { width: "max(100%, 56rem)" }}
       // The composition is decorative chrome around content the caption and
       // surrounding copy already carry; `alt` is the accessible description
       // where one is warranted.

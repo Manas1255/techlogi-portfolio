@@ -51,7 +51,10 @@ export function ServicesSection() {
           role="tablist"
           aria-label="Capability groups"
           aria-orientation="vertical"
-          className="border-hairline flex flex-col border-t lg:sticky lg:top-28 lg:self-start"
+          // Below `lg` the rail becomes a horizontal snap row rather than a
+          // six-item vertical list, so the panel it controls is on screen at
+          // the moment you tap — same DOM, same semantics, different form.
+          className="rail-snap border-hairline -mx-5 flex overflow-x-auto border-t px-5 sm:-mx-8 sm:px-8 lg:sticky lg:top-28 lg:mx-0 lg:flex-col lg:self-start lg:overflow-visible lg:px-0"
         >
           {serviceGroups.map((group, index) => {
             const isActive = group.id === activeId;
@@ -65,10 +68,11 @@ export function ServicesSection() {
                 aria-controls={`service-panel-${group.id}`}
                 onClick={() => setActiveId(group.id)}
                 className={cn(
-                  "border-hairline focus-visible:outline-ring group/tab flex items-baseline gap-4 border-b py-4 text-left transition-colors duration-[var(--dur-base)] focus-visible:outline-2 focus-visible:-outline-offset-2",
+                  "focus-visible:outline-ring group/tab flex shrink-0 items-baseline gap-2.5 border-b-2 py-4 pr-6 text-left whitespace-nowrap transition-colors duration-[var(--dur-base)] focus-visible:outline-2 focus-visible:-outline-offset-2",
+                  "lg:border-hairline lg:w-full lg:gap-4 lg:border-b lg:pr-0",
                   isActive
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "border-primary text-foreground lg:border-hairline"
+                    : "text-muted-foreground hover:text-foreground border-transparent",
                 )}
               >
                 <span

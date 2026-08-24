@@ -44,8 +44,20 @@ export async function findUnreachableClipping(page: Page): Promise<string[]> {
       // flagging it is the kind of false positive that teaches people to
       // ignore the whole check.
       if (element.classList.contains("sr-only")) continue;
+      // A framed picture that extends past its frame is a CROP, not a truncated
+      // value. `MediaFrame` marks those subtrees so a deliberate composition
+      // crop isn't reported as content the user can't reach — the same reason
+      // `sr-only` is skipped above.
+      if (element.closest("[data-media-crop]") !== null) continue;
+      if (element.querySelector("[data-media-crop]") !== null) continue;
 
       const style = getComputedStyle(element);
+      // A scrollable container isn't hiding anything — scrolling IS the way to
+      // reach the rest. Only a container that clips with no scroll and no
+      // reveal affordance is a finding.
+      if (style.overflowX === "auto" || style.overflowX === "scroll") continue;
+      if (style.overflowY === "auto" || style.overflowY === "scroll") continue;
+
       const clips =
         style.overflow !== "visible" || style.textOverflow === "ellipsis";
       if (!clips) continue;
@@ -71,11 +83,26 @@ export async function findUnreachableClipping(page: Page): Promise<string[]> {
 export async function findUnnamedControls(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const offenders: string[] = [];
-    const controls = document.querySelectorAll<HTMLElement>(
-      "button, a[href], input, select, textarea",
+    // Scoped to the page's own landmarks and any open dialog, NOT the whole
+    // document: Next's dev overlay injects its own unlabelled controls in dev,
+    // and a check that fails on the framework's debug UI is a check people
+    // learn to ignore.
+    const roots = document.querySelectorAll<HTMLElement>(
+      "main, header, footer, [role='dialog']",
     );
+    const controls = [...roots].flatMap((root) => [
+      ...root.querySelectorAll<HTMLElement>(
+        "button, a[href], input, select, textarea",
+      ),
+    ]);
 
     for (const control of controls) {
+      // Not in the accessibility tree, so "has no accessible name" is not a
+      // finding: Radix renders a hidden bubble <input> beside each radio and
+      // checkbox purely so native form submission still works.
+      if (control.getAttribute("aria-hidden") === "true") continue;
+      if (control.closest("[aria-hidden='true']") !== null) continue;
+
       const text = control.textContent?.trim() ?? "";
       const named =
         text.length > 0 ||

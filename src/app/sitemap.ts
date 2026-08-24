@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { APP_ROUTES } from "@/constants";
+import { APP_ROUTES, HOME_ROUTE } from "@/constants";
 import { projectSlugs } from "@/content";
 import { siteConfig } from "@/config/site";
 
@@ -11,12 +11,14 @@ import { siteConfig } from "@/config/site";
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
-  const staticRoutes = Object.values(APP_ROUTES).map((route) => ({
-    url: `${siteConfig.url}${route === "/" ? "" : route}`,
-    lastModified: now,
-    changeFrequency: "monthly" as const,
-    priority: route === APP_ROUTES.home ? 1 : 0.8,
-  }));
+  const staticRoutes = [HOME_ROUTE, ...Object.values(APP_ROUTES)].map(
+    (route) => ({
+      url: `${siteConfig.url}${route === "/" ? "" : route}`,
+      lastModified: now,
+      changeFrequency: "monthly" as const,
+      priority: route === HOME_ROUTE ? 1 : 0.8,
+    }),
+  );
 
   const caseStudies = projectSlugs().map((slug) => ({
     url: `${siteConfig.url}/work/${slug}`,

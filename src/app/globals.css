@@ -198,11 +198,11 @@
   --success-foreground: #06140c;
   --warning: #d99a2b;
   --warning-foreground: #1a1104;
-  --danger: #e0503f;
+  --danger: #e5474f;
   --danger-foreground: #1a0705;
   --info: var(--brand-500);
   --info-foreground: #15100d;
-  --destructive: #e0503f;
+  --destructive: #e5474f;
 
   /* Status — subtle (badges/pills — always via <StatusBadge>) */
   --success-subtle: #0e2015;
@@ -211,9 +211,9 @@
   --warning-subtle: #221a0a;
   --warning-subtle-foreground: #e8bd6a;
   --warning-border: #4d3a12;
-  --danger-subtle: #23100d;
-  --danger-subtle-foreground: #f28d80;
-  --danger-border: #55211b;
+  --danger-subtle: #240f12;
+  --danger-subtle-foreground: #f4909a;
+  --danger-border: #582128;
   --info-subtle: #241209;
   --info-subtle-foreground: var(--brand-300);
   --info-border: #542211;
@@ -278,11 +278,11 @@
   --success-foreground: #ffffff;
   --warning: #a06710;
   --warning-foreground: #ffffff;
-  --danger: #b5301f;
+  --danger: #b62636;
   --danger-foreground: #ffffff;
   --info: var(--brand-700);
   --info-foreground: #ffffff;
-  --destructive: #b5301f;
+  --destructive: #b62636;
 
   --success-subtle: #edf7f0;
   --success-subtle-foreground: #146034;
@@ -331,11 +331,11 @@
   --success-foreground: #06140c;
   --warning: #d99a2b;
   --warning-foreground: #1a1104;
-  --danger: #e0503f;
+  --danger: #e5474f;
   --danger-foreground: #1a0705;
   --info: var(--brand-500);
   --info-foreground: #15100d;
-  --destructive: #e0503f;
+  --destructive: #e5474f;
 
   --success-subtle: #0e2015;
   --success-subtle-foreground: #6ede9c;
@@ -343,9 +343,9 @@
   --warning-subtle: #221a0a;
   --warning-subtle-foreground: #e8bd6a;
   --warning-border: #4d3a12;
-  --danger-subtle: #23100d;
-  --danger-subtle-foreground: #f28d80;
-  --danger-border: #55211b;
+  --danger-subtle: #240f12;
+  --danger-subtle-foreground: #f4909a;
+  --danger-border: #582128;
   --info-subtle: #241209;
   --info-subtle-foreground: var(--brand-300);
   --info-border: #542211;

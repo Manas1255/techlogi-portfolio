@@ -25,6 +25,12 @@ interface InquiryState {
   close: () => void;
   setStep: (step: number) => void;
   setValues: (values: Partial<InquiryFormValues>) => void;
+  /**
+   * Clear the saved draft WITHOUT closing. Used after a successful submit: the
+   * answers shouldn't come back half-filled, but the visitor still has to see
+   * that it worked.
+   */
+  clearDraft: () => void;
   reset: () => void;
 }
 
@@ -55,6 +61,7 @@ export const useInquiryStore = create<InquiryState>()(
       setStep: (step) => set({ step }),
       setValues: (values) =>
         set((state) => ({ values: { ...state.values, ...values } })),
+      clearDraft: () => set({ ...EMPTY }),
       reset: () => set({ ...EMPTY, isOpen: false }),
     }),
     {

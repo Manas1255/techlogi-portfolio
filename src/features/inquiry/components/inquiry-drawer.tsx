@@ -65,7 +65,7 @@ export function InquiryDrawer() {
   const close = useInquiryStore((state) => state.close);
   const setStep = useInquiryStore((state) => state.setStep);
   const setValues = useInquiryStore((state) => state.setValues);
-  const reset = useInquiryStore((state) => state.reset);
+  const clearDraft = useInquiryStore((state) => state.clearDraft);
 
   // A File can't be serialized, so the attachment lives here rather than in the
   // persisted store — losing it silently on rehydrate would be worse.
@@ -105,6 +105,14 @@ export function InquiryDrawer() {
   }
 
   function handleClose() {
+    // Closing a finished inquiry ends it: reopening should offer a fresh form,
+    // not the success panel from five minutes ago.
+    if (mutation.isSuccess) {
+      mutation.reset();
+      setStep(0);
+      close();
+      return;
+    }
     persist();
     close();
   }
@@ -130,8 +138,10 @@ export function InquiryDrawer() {
       { ...values, attachment: attachment ?? undefined },
       {
         onSuccess: () => {
-          // Clear the draft: a submitted inquiry shouldn't reappear half-filled.
-          reset();
+          // Clear the draft — a submitted inquiry shouldn't reappear
+          // half-filled — but leave the drawer open, because the success state
+          // is the whole point of having submitted.
+          clearDraft();
           setAttachment(null);
           form.reset();
         },

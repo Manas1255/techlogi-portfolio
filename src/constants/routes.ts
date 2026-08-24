@@ -4,15 +4,21 @@
  * edit and `jinn-web doctor` can verify pages ↔ constants stay in sync.
  */
 
+/**
+ * The home route is separate from `APP_ROUTES` because that object is keyed by
+ * PAGE SEGMENT — `jinn-web doctor` verifies each key against a directory under
+ * `src/app/(app)`, and the home page has no segment of its own.
+ */
+export const HOME_ROUTE = "/";
+
 export const APP_ROUTES = {
-  home: "/",
   work: "/work",
   services: "/services",
   about: "/about",
   contact: "/contact",
 } as const;
 
-export const ROUTES = { ...APP_ROUTES } as const;
+export const ROUTES = { home: HOME_ROUTE, ...APP_ROUTES } as const;
 
 export type Route = (typeof ROUTES)[keyof typeof ROUTES];
 

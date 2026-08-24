@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { APP_ROUTES } from "@/constants";
+import { APP_ROUTES, HOME_ROUTE } from "@/constants";
 
 /**
  * 404. A Server Component, so the copy can't come from the client-only `t()` —
@@ -23,7 +23,7 @@ export default function NotFound() {
           <Link href={APP_ROUTES.work}>Explore our work</Link>
         </Button>
         <Button asChild size="lg" variant="ghost">
-          <Link href={APP_ROUTES.home}>Back to home</Link>
+          <Link href={HOME_ROUTE}>Back to home</Link>
         </Button>
       </div>
     </main>
