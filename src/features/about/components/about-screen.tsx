@@ -9,7 +9,7 @@ import {
 } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
 import { ClosingCta } from "@/components/sections";
-import { projects } from "@/content";
+import { findProject, projects } from "@/content";
 import { siteConfig } from "@/config/site";
 
 const PRINCIPLES = [
@@ -48,7 +48,8 @@ const PRINCIPLES = [
  * philosophy, which is the thing a buyer is actually assessing.
  */
 export function AboutScreen() {
-  const showcase = projects[3] ?? projects[0];
+  // A landscape frame: this sits in a wide column beside the intro.
+  const showcase = findProject("zyuela") ?? projects[0];
 
   return (
     <>

@@ -107,13 +107,16 @@ describe("content integrity", () => {
     }
   });
 
-  it("marks every unverified metric with a note", () => {
+  it("never publishes a metric on a draft case study", () => {
+    // No number goes on this site until someone can point at where it was
+    // measured. While a write-up is a draft, it carries no figures at all.
     for (const project of projects) {
       for (const metric of project.metrics) {
         expect(metric.note.length).toBeGreaterThan(0);
-        if (project.isPlaceholder) {
-          expect(metric.note).toContain("PLACEHOLDER");
-        }
+        expect(
+          project.isDraft,
+          `${project.slug} publishes a metric while its write-up is still a draft`,
+        ).toBe(false);
       }
     }
   });
@@ -132,7 +135,7 @@ describe("content integrity", () => {
     }
   });
 
-  it("reserves an aspect ratio for every piece of media", () => {
+  it("reserves a box for every piece of media, so nothing shifts on load", () => {
     const media = projects.flatMap((project) => [
       project.heroMedia,
       ...project.galleryMedia,
@@ -142,7 +145,14 @@ describe("content integrity", () => {
     ]);
     expect(media.length).toBeGreaterThan(0);
     for (const item of media) {
-      expect(item.aspect).toBeTruthy();
+      // An image reserves its box from its intrinsic size; everything else has
+      // to declare a ratio.
+      if (item.kind === "image") {
+        expect(item.width).toBeGreaterThan(0);
+        expect(item.height).toBeGreaterThan(0);
+      } else {
+        expect(item.aspect).toBeTruthy();
+      }
     }
   });
 });

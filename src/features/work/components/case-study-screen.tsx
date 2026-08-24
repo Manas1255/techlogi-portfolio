@@ -10,6 +10,7 @@ import {
   CaseStudyHero,
   CaseStudySection,
   ClosingCta,
+  heroMediaCount,
 } from "@/components/sections";
 import { CaseStudySchema } from "@/components/layout/structured-data";
 import { caseStudyPath } from "@/constants";
@@ -25,6 +26,9 @@ import { nextProject, type Project } from "@/content";
  */
 export function CaseStudyScreen({ project }: { project: Project }) {
   const next = nextProject(project.slug);
+  // A mobile project's hero shows a row of screens; the gallery picks up from
+  // wherever that left off rather than repeating them.
+  const gallery = project.galleryMedia.slice(heroMediaCount(project));
 
   return (
     <>
@@ -47,14 +51,14 @@ export function CaseStudyScreen({ project }: { project: Project }) {
         </div>
       </Section>
 
-      {project.galleryMedia.length > 0 && (
+      {gallery.length > 0 && (
         <Section surface="ink" width="wide" rhythm="base" divided>
           <Reveal variant="fade" className="flex flex-col gap-8">
             <p className="text-eyebrow text-muted-foreground">
               More from {project.name}
             </p>
             <div className="grid gap-8 lg:grid-cols-2">
-              {project.galleryMedia.map((media, index) => (
+              {gallery.map((media, index) => (
                 <MediaFrame
                   key={index}
                   media={media}

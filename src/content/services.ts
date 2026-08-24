@@ -47,7 +47,7 @@ export const serviceGroups: ServiceGroup[] = [
           "A clickable version of the risky flow, tested before it becomes a schema.",
       },
     ],
-    relatedProjectSlug: "harborlight",
+    relatedProjectSlug: "our-ummah",
   },
   {
     id: "design",
@@ -87,7 +87,7 @@ export const serviceGroups: ServiceGroup[] = [
           "Marketing surfaces that carry the same standard as the product behind them.",
       },
     ],
-    relatedProjectSlug: "nova",
+    relatedProjectSlug: "soulmate-society",
   },
   {
     id: "engineering",
@@ -132,7 +132,7 @@ export const serviceGroups: ServiceGroup[] = [
           "Infrastructure as code, environments that match, and a rollback you have actually rehearsed.",
       },
     ],
-    relatedProjectSlug: "ledgerline",
+    relatedProjectSlug: "our-ummah",
   },
   {
     id: "mobile",
@@ -162,7 +162,7 @@ export const serviceGroups: ServiceGroup[] = [
           "One codebase where that is honest, with platform-specific behaviour where it is not.",
       },
     ],
-    relatedProjectSlug: "northbound",
+    relatedProjectSlug: "orthotrack",
   },
   {
     id: "ai",
@@ -202,7 +202,9 @@ export const serviceGroups: ServiceGroup[] = [
           "Assistants over your own documents and systems, with permissions that hold.",
       },
     ],
-    relatedProjectSlug: "nova",
+    // TODO: point at a shipped AI engagement once one is public. Better to
+    // show nothing than to attach this group to unrelated work.
+    relatedProjectSlug: null,
   },
   {
     id: "evolution",
@@ -242,7 +244,8 @@ export const serviceGroups: ServiceGroup[] = [
           "An embedded team working in your process, with our standards, reporting to you.",
       },
     ],
-    relatedProjectSlug: "switchyard",
+    // TODO: point at a modernization engagement once one is public.
+    relatedProjectSlug: null,
   },
 ];
 

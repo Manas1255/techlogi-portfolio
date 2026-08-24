@@ -5,7 +5,7 @@ import {
   PlaceholderNote,
   Reveal,
 } from "@/components/marketing";
-import { hasPlaceholderWork, projects } from "@/content";
+import { hasDraftCaseStudies, projects } from "@/content";
 import { WorkFilters } from "./work-filters";
 
 /**
@@ -38,7 +38,7 @@ export function WorkScreen() {
                 trade-offs — including the decisions we would make differently.
               </p>
             </Reveal>
-            {hasPlaceholderWork() && (
+            {hasDraftCaseStudies() && (
               <Reveal variant="fade" delay={180} className="max-w-2xl pt-2">
                 <PlaceholderNote tone="panel">
                   These case studies are illustrative placeholders. The

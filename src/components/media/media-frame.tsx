@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { Media } from "@/content/schemas";
+import type { Aspect, Media } from "@/content/schemas";
 import { cn } from "@/lib/utils";
 import { AutoVideo } from "./auto-video";
 import { SyntheticComposition } from "./compositions";
@@ -16,9 +16,16 @@ export interface MediaFrameProps {
   priority?: boolean;
   /** Hairline caption under the frame. */
   caption?: string;
+  /**
+   * Impose a ratio on the frame regardless of the media's own, letting the
+   * picture cover it. For bands that hold DIFFERENT media in the same box —
+   * the showreel, where a jumping block height between clips reads as a bug.
+   * Everywhere else, leave it alone: the media's own ratio is the honest one.
+   */
+  aspectOverride?: Aspect;
 }
 
-const ASPECT: Record<Media["aspect"], string> = {
+const ASPECT: Record<string, string> = {
   "16/9": "16 / 9",
   "16/10": "16 / 10",
   "4/3": "4 / 3",
@@ -48,11 +55,20 @@ export function MediaFrame({
   sizes,
   priority = false,
   caption,
+  aspectOverride,
 }: MediaFrameProps) {
   const content = (
     <MediaContent media={media} sizes={sizes} priority={priority} />
   );
-  const ratio = ASPECT[media.aspect];
+  // An image knows its own proportions; only synthetic and video media have to
+  // declare one. Reserving the box from the intrinsic size means a picture can
+  // never be letterboxed by a mistyped ratio.
+  const ratio =
+    aspectOverride !== undefined
+      ? ASPECT[aspectOverride]
+      : media.kind === "image"
+        ? `${media.width} / ${media.height}`
+        : ASPECT[media.aspect];
 
   if (media.frame === "browser") {
     return (

@@ -13,7 +13,7 @@ export { ServicesSection } from "./services-section";
 export { ProcessSection } from "./process-section";
 export { TechnologiesSection } from "./technologies-section";
 export { TestimonialsSection } from "./testimonials-section";
-export { CaseStudyHero } from "./case-study-hero";
+export { CaseStudyHero, heroMediaCount } from "./case-study-hero";
 export {
   CaseStudySection,
   type CaseStudySectionProps,

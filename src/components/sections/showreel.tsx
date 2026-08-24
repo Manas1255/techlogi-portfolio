@@ -3,20 +3,36 @@
 import { useEffect, useState } from "react";
 import { Container, Eyebrow } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
-import { projects } from "@/content";
+import { projects, type Media } from "@/content";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
-// Starts on the SECOND project: the hero directly above already shows the
-// first one's interface, and two identical frames in a row read as a template
-// however good the composition is.
-const CLIPS = [...projects.slice(1, 5), projects[0]].map((project) => ({
-  slug: project.slug,
-  name: project.name,
-  productType: project.productType,
-  industry: project.industry,
-  media: project.heroMedia,
-}));
+/**
+ * The reel frame is wide, so only projects whose lead media is LANDSCAPE belong
+ * in it — a portrait phone capture letterboxed into a 16:9 frame is a worse
+ * advertisement for the work than leaving it out.
+ *
+ * It also starts on the second eligible project: the hero directly above
+ * already shows the first one, and two identical frames in a row read as a
+ * template however good the media is.
+ */
+function isLandscape(media: Media): boolean {
+  return media.kind === "image"
+    ? media.width > media.height
+    : media.aspect !== "9/16" && media.aspect !== "4/5";
+}
+
+const LANDSCAPE = projects.filter((project) => isLandscape(project.heroMedia));
+
+const CLIPS = [...LANDSCAPE.slice(1), ...LANDSCAPE.slice(0, 1)].map(
+  (project) => ({
+    slug: project.slug,
+    name: project.name,
+    productType: project.productType,
+    industry: project.industry,
+    media: project.heroMedia,
+  }),
+);
 
 const INTERVAL_MS = 4200;
 
@@ -64,7 +80,10 @@ export function Showreel() {
             </p>
           </div>
 
-          <div className="relative">
+          {/* One fixed band for every clip: media of different ratios sharing a
+              box means the block height jumps as it rotates, which reads as a
+              bug rather than as a transition. */}
+          <div className="relative mx-auto w-full max-w-5xl">
             {CLIPS.map((item, index) => (
               <div
                 key={item.slug}
@@ -78,7 +97,8 @@ export function Showreel() {
               >
                 <MediaFrame
                   media={item.media}
-                  sizes="(min-width: 1280px) 1560px, 96vw"
+                  aspectOverride="3/2"
+                  sizes="(min-width: 1280px) 1100px, 96vw"
                 />
               </div>
             ))}

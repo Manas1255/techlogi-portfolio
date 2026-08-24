@@ -18,6 +18,23 @@ import type { Project } from "@/content";
  * `position: sticky` on a grid column, so it costs nothing and degrades to
  * normal flow below `lg`.
  */
+/** True when a piece of media is taller than it is wide. */
+function isPortrait(media: Project["heroMedia"]): boolean {
+  return media.kind === "image"
+    ? media.height > media.width
+    : media.aspect === "9/16" || media.aspect === "4/5";
+}
+
+/**
+ * How many gallery items the hero consumes. A single phone alone in a
+ * 1200px column reads as an accident rather than a composition, so a mobile
+ * project opens on a row of three screens instead — and the gallery below
+ * skips the ones already shown.
+ */
+export function heroMediaCount(project: Project): number {
+  return isPortrait(project.heroMedia) ? 2 : 0;
+}
+
 export function CaseStudyHero({ project }: { project: Project }) {
   const facts = [
     { label: "Industry", value: project.industry },
@@ -45,11 +62,34 @@ export function CaseStudyHero({ project }: { project: Project }) {
           </Reveal>
 
           <Reveal variant="fade" delay={80}>
-            <MediaFrame
-              media={project.heroMedia}
-              priority
-              sizes="(min-width: 1280px) 1200px, 94vw"
-            />
+            {isPortrait(project.heroMedia) ? (
+              <div className="flex flex-wrap items-start justify-center gap-6 sm:gap-8">
+                {[
+                  project.heroMedia,
+                  ...project.galleryMedia.slice(0, heroMediaCount(project)),
+                ].map((media, index) => (
+                  // A definite width at every breakpoint: `w-auto` here would
+                  // shrink-wrap the wrapper, and the device shell inside sizes
+                  // itself with `w-full`.
+                  <div
+                    key={index}
+                    className="w-[68%] max-w-[17rem] sm:w-[17rem]"
+                  >
+                    <MediaFrame
+                      media={media}
+                      priority={index === 0}
+                      sizes="(min-width: 640px) 272px, 68vw"
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <MediaFrame
+                media={project.heroMedia}
+                priority
+                sizes="(min-width: 1280px) 1200px, 94vw"
+              />
+            )}
           </Reveal>
 
           <div className="grid gap-10 pt-4 lg:grid-cols-[18rem_1fr] lg:gap-16">
@@ -130,20 +170,20 @@ export function CaseStudyHero({ project }: { project: Project }) {
                       </div>
                     ))}
                   </dl>
-                  {project.isPlaceholder && (
+                  {project.isDraft && (
                     <PlaceholderNote>
-                      Figures shown are illustrative placeholders, not measured
-                      results.
+                      Figures shown are not yet verified against a measured
+                      source.
                     </PlaceholderNote>
                   )}
                 </div>
               )}
 
-              {project.isPlaceholder && (
+              {project.isDraft && (
                 <PlaceholderNote tone="panel">
-                  Illustrative case study. The engagement, the figures and the
-                  quotes are placeholders until real, cleared client work
-                  replaces them.
+                  Draft write-up. The product and the screens are real; this
+                  account of the work is a draft awaiting review by the team who
+                  built it, and by the client.
                 </PlaceholderNote>
               )}
             </Reveal>

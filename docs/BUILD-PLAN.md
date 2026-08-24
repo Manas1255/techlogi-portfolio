@@ -166,6 +166,47 @@ jinn-web doctor      # 6/6 architectural checks
 npm audit --omit=dev # 0 vulnerabilities
 ```
 
+## Portfolio content
+
+The six fictional projects the site was built against have been replaced with **real Techlogi
+work**, using real screen captures from `~/Personal/MockUps` (kaprayy deliberately excluded):
+
+| Project | What it is | Stack evidence |
+|---|---|---|
+| DineKaro | Restaurant discovery and table booking, Lahore | Flutter, Node.js, MongoDB — stated on the client's own mockup |
+| Soulmate Society | Values-first relationship app | `soulmate_society` pubspec (Flutter); backend unconfirmed |
+| Zyuela | Reflection and wellbeing, no streaks | `zyuela` pubspec (Flutter); backend unconfirmed |
+| OrthoTrack | Two-sided orthodontic compliance | `orthotrack` pubspec (Flutter); backend unconfirmed |
+| OurUmmah | Mosque membership, check-ins and giving | `islamic_app` pubspec + `our-ummah-backend` (Express, MongoDB, Stripe, S3, JWT) |
+| CodeAble HR | Employee attendance, leave and salary | `codeable_hr` pubspec (Flutter); backend unconfirmed |
+
+**What is verified and what is not.** The products, the screens and the stack entries above are
+real. The written case studies are **drafts inferred from the products themselves** — every entry
+carries `isDraft: true`, and the case-study page says so rather than presenting an unverified
+account as fact. `metrics` is empty everywhere: no number ships until someone can point at where it
+was measured. Engagement dates are marked `TODO:`.
+
+Media lives in `public/media/projects/<slug>/` — photographic composites as JPEG, UI captures as
+PNG, all downscaled (5.9MB total). Two screenshots showing test data (a placeholder email and phone
+number) were deliberately left out, as was one file that turned out to be a different app.
+
+### What changed in the code to support it
+
+- **An image now declares `width`/`height` instead of an `aspect`**, and the frame reserves its box
+  from the intrinsic size. Making an author restate a picture's ratio is only a chance to get it
+  wrong, and a wrong one letterboxes or crops. `aspect` remains required for synthetic and video
+  media, which have no intrinsic size.
+- **`MediaFrame` takes an `aspectOverride`** for bands that hold different media in one box — the
+  showreel, where a jumping block height between clips reads as a bug.
+- **The showreel only carries landscape media.** A portrait phone capture letterboxed into a wide
+  frame is a worse advertisement than leaving it out.
+- **A mobile case study opens on a row of three screens**, not one phone alone in a 1200px column,
+  and the gallery below picks up from where that left off.
+- **`isPlaceholder` became `isDraft`** on projects. The old flag meant "this engagement is
+  invented"; the new one means "this write-up has not been reviewed", which is the honest claim now.
+- The synthetic interface compositions are kept: they are the fallback for a project with no
+  cleared media yet, and the design-system page documents them.
+
 ## Open questions for a human
 
 - Real client names, logos and testimonials — every one on the site is a marked placeholder.

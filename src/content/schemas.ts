@@ -41,13 +41,27 @@ export const compositionSchema = z.enum([
   "mobile-field",
 ]);
 
+/**
+ * Ratios for media that has no intrinsic size of its own. An IMAGE does not
+ * appear here: it declares `width` and `height`, and the frame reserves the box
+ * from those. Making an author restate an image's ratio is just a chance to get
+ * it wrong, and a wrong one letterboxes or crops the picture.
+ */
+export const aspectSchema = z.enum([
+  "16/9",
+  "16/10",
+  "4/3",
+  "3/2",
+  "1/1",
+  "9/16",
+  "4/5",
+]);
+
 const mediaBase = z.object({
   /** Frame treatment. */
   frame: mediaFrameSchema.default("bare"),
   /** Shown in browser chrome. Cosmetic — never a link. */
   chromeUrl: z.string().nullable().default(null),
-  /** Reserved in CSS so nothing shifts on load. */
-  aspect: z.enum(["16/9", "16/10", "4/3", "3/2", "1/1", "9/16", "4/5"]),
   /**
    * Empty string marks the media decorative, which is correct when the caption
    * beside it already carries the meaning.
@@ -58,6 +72,7 @@ const mediaBase = z.object({
 export const imageMediaSchema = mediaBase.extend({
   kind: z.literal("image"),
   src: z.string().min(1),
+  /** Intrinsic pixel size. The frame reserves its box from these two. */
   width: z.number().int().positive(),
   height: z.number().int().positive(),
   /** Responsive `sizes`. Get this wrong and the browser downloads the wrong file. */
@@ -67,6 +82,7 @@ export const imageMediaSchema = mediaBase.extend({
 
 export const videoMediaSchema = mediaBase.extend({
   kind: z.literal("video"),
+  aspect: aspectSchema,
   /** At least one source. `.webm` first, `.mp4` as the fallback. */
   sources: z
     .array(
@@ -85,6 +101,7 @@ export const videoMediaSchema = mediaBase.extend({
 
 export const syntheticMediaSchema = mediaBase.extend({
   kind: z.literal("synthetic"),
+  aspect: aspectSchema,
   composition: compositionSchema,
   /** Drives the composition's own subtle motion; `false` keeps it still. */
   animate: z.boolean().default(true),
@@ -98,6 +115,7 @@ export const mediaSchema = z.discriminatedUnion("kind", [
 
 export type Media = z.infer<typeof mediaSchema>;
 export type MediaFrameKind = z.infer<typeof mediaFrameSchema>;
+export type Aspect = z.infer<typeof aspectSchema>;
 export type Composition = z.infer<typeof compositionSchema>;
 
 /* ─── Projects ───────────────────────────────────────────────────────────── */
@@ -179,11 +197,12 @@ export const projectSchema = z.object({
   /** Controls selection on the home page. */
   featured: z.boolean(),
   /**
-   * PLACEHOLDER: true while this is an illustrative engagement rather than a
-   * real, cleared one. Case-study pages surface it honestly instead of quietly
-   * presenting invented work as fact.
+   * True while the written case study is a DRAFT — the product and the screens
+   * are real, but the narrative has not been checked by the people who did the
+   * work or cleared with the client. The case-study page says so plainly rather
+   * than presenting an unverified account as fact.
    */
-  isPlaceholder: z.boolean(),
+  isDraft: z.boolean(),
 });
 
 export type Project = z.infer<typeof projectSchema>;

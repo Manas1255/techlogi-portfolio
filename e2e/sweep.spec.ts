@@ -19,7 +19,7 @@ import {
 const ROUTES = [
   "/",
   "/work",
-  "/work/nova",
+  "/work/dinekaro",
   "/services",
   "/about",
   "/contact",
@@ -114,7 +114,7 @@ test.describe("navigation", () => {
   });
 
   test("a case study links onward to the next project", async ({ page }) => {
-    await page.goto("/work/nova");
+    await page.goto("/work/dinekaro");
     await page.getByRole("link", { name: /Next project/ }).click();
     await expect(page).toHaveURL(/\/work\/[a-z-]+$/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();

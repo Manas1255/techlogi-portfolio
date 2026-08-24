@@ -71,9 +71,9 @@ export function findServiceGroup(id: string) {
 }
 
 /**
- * True while any published claim is still illustrative. Drives the honest
- * footnote next to metrics — see `siteConfig.hasVerifiedClientResults`.
+ * True while any case study is still an unreviewed draft. Drives the honest
+ * notice on `/work` — see `siteConfig.hasVerifiedClientResults`.
  */
-export function hasPlaceholderWork(): boolean {
-  return projects.some((project) => project.isPlaceholder);
+export function hasDraftCaseStudies(): boolean {
+  return projects.some((project) => project.isDraft);
 }
