@@ -263,7 +263,7 @@ test.describe("project inquiry", () => {
       .getByLabel("The project, in your words")
       .fill("A portal our field engineers can use with one hand, offline.");
     await page.getByRole("radio", { name: /In the next few months/ }).click();
-    await page.getByRole("radio", { name: "$50k – $150k" }).click();
+    await page.getByRole("radio", { name: "$5k – $10k" }).click();
     await page.getByRole("button", { name: "Continue" }).click();
 
     await page.getByLabel("Your name").fill("Ada Lovelace");

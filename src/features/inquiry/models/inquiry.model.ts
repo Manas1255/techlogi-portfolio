@@ -14,7 +14,7 @@ import type { BuildTypeId } from "@/content/schemas";
  *   "description": "…",                   // 20–1000 chars
  *   "services":    ["design", "ai"],      // service group ids, may be empty
  *   "timeline":    "1-3-months",          // TimelineId
- *   "budget":      "50-150k",             // BudgetId
+ *   "budget":      "5-10k",             // BudgetId
  *   "name":        "…",
  *   "company":     "…",                   // may be empty
  *   "email":       "…",                   // normalized: trimmed, lowercased

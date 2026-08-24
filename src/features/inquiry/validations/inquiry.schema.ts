@@ -34,10 +34,10 @@ export const TIMELINES = [
   to tell us what shape of team fits.
 */
 export const BUDGETS = [
-  { id: "under-50k", label: "Under $50k" },
-  { id: "50-150k", label: "$50k – $150k" },
-  { id: "150-400k", label: "$150k – $400k" },
-  { id: "400k-plus", label: "More than $400k" },
+  { id: "under-5k", label: "Under $5k" },
+  { id: "5-10k", label: "$5k – $10k" },
+  { id: "10-25k", label: "$10k – $25k" },
+  { id: "over-25k", label: "More than $25k" },
   { id: "unsure", label: "I'm not sure yet" },
   { id: "private", label: "I'd rather not say" },
 ] as const;
