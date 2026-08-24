@@ -90,7 +90,10 @@ export function MediaFrame({
       <figure
         className={cn("flex min-w-0 flex-col items-center gap-3", className)}
       >
-        <div className="border-hairline-strong bg-raised media-lift relative overflow-hidden rounded-[2rem] border-[6px] p-0 shadow-[0_0_0_1px_var(--hairline)]">
+        {/* A definite width is required, not optional: the figure centres its
+            children, which shrink-wraps this box, and a shrink-wrapped parent
+            gives the `w-full` screen inside it a width of zero. */}
+        <div className="border-hairline-strong bg-raised media-lift relative w-full max-w-[17rem] overflow-hidden rounded-[2rem] border-[6px] p-0 shadow-[0_0_0_1px_var(--hairline)]">
           <span
             aria-hidden="true"
             className="bg-sunken absolute top-2 left-1/2 z-10 h-1.5 w-16 -translate-x-1/2 rounded-full"

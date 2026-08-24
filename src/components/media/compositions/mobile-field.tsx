@@ -21,7 +21,11 @@ export function MobileFieldComposition({
   return (
     <div
       className="bg-background text-foreground @container size-full overflow-hidden"
-      style={{ ["--synth-u" as string]: "3.4cqw", padding: U(1.4) }}
+      // Extra headroom so the status row clears the frame's notch.
+      style={{
+        ["--synth-u" as string]: "3.4cqw",
+        padding: `${U(2.4)} ${U(1.4)} ${U(1.4)}`,
+      }}
     >
       <div className="flex h-full min-h-0 flex-col" style={{ gap: U(1.2) }}>
         {/* Status bar */}

@@ -144,7 +144,10 @@ Recorded because the fixes are the interesting part, not the pass:
 7. **The error tone was too close to the brand vermilion**; shifted toward crimson so "this failed"
    doesn't read as "this is branded".
 8. **The services page eyebrow printed its index twice** ("01 — 01").
-9. **Three sweep false-positive classes** — deliberate media crops, scrollable rails, and Radix's
+9. **Device frames collapsed to zero width.** The figure centres its children, which
+   shrink-wrapped the phone shell, so the `w-full` screen inside it had nothing to fill — the
+   mobile composition never rendered anywhere it was used. Only visible by looking at the page.
+10. **Three sweep false-positive classes** — deliberate media crops, scrollable rails, and Radix's
    `aria-hidden` bubble inputs — were taught to the helpers rather than deleted, because a check
    that cries wolf is a check people stop reading.
 
