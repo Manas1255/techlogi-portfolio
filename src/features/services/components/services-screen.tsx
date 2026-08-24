@@ -101,7 +101,7 @@ export function ServicesScreen() {
                         <h3 className="text-[0.9375rem] font-medium">
                           {capability.name}
                         </h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
+                        <p className="text-muted-foreground text-[0.9375rem] leading-relaxed">
                           {capability.description}
                         </p>
                       </div>

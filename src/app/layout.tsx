@@ -94,7 +94,22 @@ export default function RootLayout({
   return (
     // TODO(i18n): when a second locale ships, drive `lang` from the active
     // locale so screen readers announce content in the right language.
-    <html lang="en" suppressHydrationWarning>
+    /*
+      The font variables go on <html>, NOT <body>.
+
+      `globals.css` applies `font-sans` to the html element, and custom
+      properties inherit DOWNWARD only. With the variables one level below on
+      <body>, `var(--font-figtree)` is undefined where `--font-sans` is read,
+      `--font-sans` resolves to nothing, and every piece of body copy on the
+      site silently falls back to Times. The display face still worked, because
+      headings live inside <body> where the variable does exist, which is
+      exactly what made it easy to miss.
+    */
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${sans.variable} ${display.variable} ${mono.variable}`}
+    >
       <head>
         {/*
           Enables the scroll-reveal system before first paint. The CSS that
@@ -109,9 +124,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} antialiased`}
-      >
+      <body className="antialiased">
         <AppProviders>
           <a
             href="#main"
