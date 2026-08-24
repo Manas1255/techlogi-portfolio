@@ -7,7 +7,10 @@ import { projects } from "@/content";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
-const CLIPS = projects.slice(0, 5).map((project) => ({
+// Starts on the SECOND project: the hero directly above already shows the
+// first one's interface, and two identical frames in a row read as a template
+// however good the composition is.
+const CLIPS = [...projects.slice(1, 5), projects[0]].map((project) => ({
   slug: project.slug,
   name: project.name,
   productType: project.productType,

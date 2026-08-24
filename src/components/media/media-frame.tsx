@@ -75,7 +75,7 @@ export function MediaFrame({
           </div>
           <div
             style={{ aspectRatio: ratio }}
-            className="relative overflow-hidden"
+            className="synth-frame relative overflow-hidden"
           >
             {content}
           </div>
@@ -97,7 +97,7 @@ export function MediaFrame({
           />
           <div
             style={{ aspectRatio: ratio }}
-            className="relative w-full overflow-hidden rounded-[1.6rem]"
+            className="synth-frame relative w-full overflow-hidden rounded-[1.6rem]"
           >
             {content}
           </div>
@@ -111,7 +111,7 @@ export function MediaFrame({
     <figure className={cn("flex min-w-0 flex-col gap-3", className)}>
       <div
         style={{ aspectRatio: ratio }}
-        className="border-hairline bg-raised media-lift rounded-frame relative overflow-hidden border"
+        className="border-hairline bg-raised media-lift rounded-frame synth-frame relative overflow-hidden border"
       >
         {content}
       </div>
@@ -166,12 +166,11 @@ function MediaContent({
 
   return (
     <div
-      className="h-full"
       // Marks this as a deliberately cropped picture rather than a truncated
       // value, so the layout sweep's unreachable-clipping check doesn't read a
       // framed interface as unreadable data. See `e2e/helpers.ts`.
       data-media-crop=""
-      style={isPortrait ? { width: "100%" } : { width: "max(100%, 56rem)" }}
+      className={isPortrait ? "h-full w-full" : "synth-fill h-full"}
       // The composition is decorative chrome around content the caption and
       // surrounding copy already carry; `alt` is the accessible description
       // where one is warranted.

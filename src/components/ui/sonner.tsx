@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 import {
   CircleCheckIcon,
@@ -10,12 +9,16 @@ import {
   Loader2Icon,
 } from "lucide-react";
 
+/**
+ * Deviation from the generated shadcn file: the site has no theme provider and
+ * no toggle — the ink ground IS the design — so `next-themes` was reading a
+ * theme nobody sets, and the dependency was otherwise unused. The colours below
+ * come from tokens either way; only the value passed to `theme` changed.
+ */
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
       icons={{
         success: <CircleCheckIcon className="size-4" />,

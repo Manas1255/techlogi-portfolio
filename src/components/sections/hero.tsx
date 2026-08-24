@@ -32,7 +32,7 @@ export function Hero() {
       className="grain relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-24"
     >
       <Container>
-        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+        <div className="grid items-center gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
           <div className="flex flex-col gap-8">
             <Reveal variant="fade">
               <Eyebrow>Product engineering studio</Eyebrow>

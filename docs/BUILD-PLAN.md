@@ -86,11 +86,24 @@ recorded here.
    shadcn primitives and the shared catalog keep working untouched. Surface inversion is
    token-scoped per section (`[data-surface]`), not per component.
 
-### Dependencies added
+### Dependencies
 
-None yet. The scaffold already ships Zod, RHF, Tailwind v4, Radix, lucide, sonner. Motion is
-CSS + `IntersectionObserver` + the Web Animations API — §9 of the brief explicitly rules out
-adding an animation framework to fade and translate things. Each addition, if any, gets a line here.
+**Added: none.** The scaffold already ships Zod, react-hook-form, Tailwind v4, Radix, lucide and
+sonner, which covers everything this site needed. Motion is CSS custom properties plus one shared
+`IntersectionObserver` — §9 of the brief explicitly rules out adding an animation framework to fade
+and translate things, and nothing here needed more than that.
+
+**Removed:**
+
+- `next-themes` — read a theme nobody set. The site is ink-only by design, and the Toaster's
+  colours come from tokens either way. `components/ui/sonner.tsx` now passes `theme="dark"`
+  directly; that is a deliberate, commented deviation from generated shadcn output.
+- `input-otp` and `components/ui/input-otp.tsx` — orphaned when the auth screens went.
+
+**Upgraded:** `next` and `eslint-config-next` `16.2.10 → 16.3.2` (same major). The scaffolded
+version carried three high-severity advisories in shipped code (`next`, `postcss`, `sharp`);
+`npm audit --omit=dev` now reports zero. The exact pin the scaffold uses was restored after the
+bump, and the full gate — verify, build, sweep, doctor — was re-run green on the new version.
 
 ---
 
@@ -99,14 +112,56 @@ adding an animation framework to fade and translate things. Each addition, if an
 - [x] **Phase 0** — inspect `jinn-web`, scaffold, verify a known-good baseline, commit
 - [x] **Phase 1** — research: patterns worth taking, patterns to reject (`docs/DESIGN-DIRECTION.md`)
 - [x] **Phase 2** — design thesis and positioning language (`docs/DESIGN-DIRECTION.md`)
-- [ ] **Phase 3** — token + primitive layer (type scale, surfaces, motion, media frames)
-- [ ] **Phase 4** — IA, routes, content model
-- [ ] **Phase 5** — sections: nav, hero, inquiry, showreel, portfolio, services, process, tech, proof, close, footer
-- [ ] **Phase 6** — case study architecture
-- [ ] **Phase 7** — responsive refinement
-- [ ] **Phase 8** — QA (verify, build, doctor, sweep, content stress)
-- [ ] **Phase 9** — visual refinement pass
-- [ ] **Phase 10** — completion summary
+- [x] **Phase 3** — token + primitive layer (type scale, surfaces, motion, media frames)
+- [x] **Phase 4** — IA, routes, content model
+- [x] **Phase 5** — sections: nav, hero, inquiry, showreel, portfolio, services, process, tech, proof, close, footer
+- [x] **Phase 6** — case study architecture
+- [x] **Phase 7** — responsive refinement
+- [x] **Phase 8** — QA (verify, build, doctor, sweep, content stress)
+- [x] **Phase 9** — visual refinement pass
+- [x] **Phase 10** — completion summary
+
+## What QA actually found
+
+Recorded because the fixes are the interesting part, not the pass:
+
+1. **The inquiry drawer closed instead of showing its success state.** The store's `reset()` also
+   cleared `isOpen`, so a successful submit dismissed the drawer and the visitor never saw that it
+   worked. Split into `clearDraft()` (keeps it open) and `reset()`.
+2. **Synthetic interfaces rendered ~3px text on a phone.** A dense desktop composition scaled to a
+   350px frame is a smear. Frames narrower than `40rem` now render the composition at its design
+   width and crop it — a legible detail of real software, which is also what a desktop app looks
+   like on a phone. The switch is a container query on the frame, not a viewport breakpoint,
+   because the same composition appears in a 590px column and a 1560px panel on one screen.
+3. **The mobile services rail buried its own content** under six full-width tabs. It is now a
+   horizontal snap row above the panel — same DOM, same semantics, different form.
+4. **`Start a Project` was hidden below 640px.** "Persistent and always reachable" has to hold on a
+   phone; it is now visible at every width.
+5. **One composition appeared three times on the home page** (hero, reel, first project panel).
+   The reel now starts on the second project and the first panel shows its gallery frame.
+6. **A heading skip on `/work`** — panels sat directly under the `h1` as `h3`. `ProjectPanel` now
+   takes a heading level.
+7. **The error tone was too close to the brand vermilion**; shifted toward crimson so "this failed"
+   doesn't read as "this is branded".
+8. **The services page eyebrow printed its index twice** ("01 — 01").
+9. **Three sweep false-positive classes** — deliberate media crops, scrollable rails, and Radix's
+   `aria-hidden` bubble inputs — were taught to the helpers rather than deleted, because a check
+   that cries wolf is a check people stop reading.
+
+An earlier attempt to give the hero the `wide` container was reverted: it fixed a crop at 2560px
+and broke alignment with every section below it at 1440px. Consistency won.
+
+## The gate
+
+All of these are green as of the final commit:
+
+```
+npm run verify       # typecheck + lint + 59 unit tests
+npm run build        # 18 routes, all static or SSG
+npm run sweep        # 83 Playwright checks, desktop + mobile
+jinn-web doctor      # 6/6 architectural checks
+npm audit --omit=dev # 0 vulnerabilities
+```
 
 ## Open questions for a human
 

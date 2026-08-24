@@ -602,6 +602,31 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /*
+    SYNTHETIC COMPOSITION SIZING.
+
+    A dense product interface has a width below which its own labels stop being
+    readable. Above that the whole composition fits and should be shown whole;
+    below it, showing the whole thing means three-pixel text, so the frame
+    renders it at its design width and CROPS instead — a legible detail of real
+    software, which is also how a desktop app looks on a phone.
+
+    The switch is a container query on the frame, not a viewport breakpoint,
+    because the same composition appears in a 590px hero column and a 1560px
+    full-bleed panel on the very same screen.
+  */
+  .synth-frame {
+    container-type: inline-size;
+  }
+  .synth-fill {
+    width: 100%;
+  }
+  @container (max-width: 40rem) {
+    .synth-fill {
+      width: 56rem;
+    }
+  }
+
   .press {
     transition: transform var(--dur-fast) var(--ease-in-out-quart);
   }

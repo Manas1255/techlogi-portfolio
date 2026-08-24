@@ -31,6 +31,15 @@ import {
   type StatusTone,
 } from "@/components/shared";
 import { ApiError } from "@/lib/http";
+import {
+  ArrowLink,
+  ChoiceCards,
+  Eyebrow,
+  HairlineList,
+  PlaceholderNote,
+} from "@/components/marketing";
+import { MediaFrame } from "@/components/media";
+import type { Media } from "@/content/schemas";
 
 const BRAND_STEPS = [
   50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950,
@@ -48,6 +57,37 @@ const SEMANTIC_TOKENS = [
 ] as const;
 
 const TONES: StatusTone[] = ["success", "warning", "danger", "info", "neutral"];
+
+const MARKETING_TYPE_STEPS = [
+  ["text-hero", "Hero — the home page headline, and nowhere else"],
+  ["text-display-1", "Display 1 — page titles"],
+  ["text-display-2", "Display 2 — section headlines"],
+  ["text-display-3", "Display 3 — sub-headings, project names in a rail"],
+  ["text-quote", "Quote — pull quotes and testimonials"],
+  ["text-lead", "Lead — the paragraph under a headline"],
+  ["text-marketing-body", "Marketing body — reading copy at 16/1.65"],
+  ["text-eyebrow", "Eyebrow — section labels"],
+  ["text-mono-label", "Mono label — indices, stacks, footnotes"],
+] as const;
+
+const MOTION_TOKENS = [
+  ["--dur-fast", "120ms", "State feedback: press, focus"],
+  ["--dur-base", "240ms", "Hover, expand, collapse"],
+  ["--dur-slow", "420ms", "Scroll reveals"],
+  ["--dur-cinema", "720ms", "Hero choreography only"],
+  ["--ease-out-expo", "cubic-bezier(.16,1,.3,1)", "Entrances"],
+  ["--ease-in-out-quart", "cubic-bezier(.65,0,.35,1)", "State changes"],
+] as const;
+
+const DEMO_MEDIA: Media = {
+  kind: "synthetic",
+  composition: "analytics",
+  animate: false,
+  frame: "browser",
+  chromeUrl: "app.example.com/insights",
+  aspect: "16/9",
+  alt: "",
+};
 
 const TYPE_STEPS = [
   ["text-display", "Display — page hero"],
@@ -95,6 +135,7 @@ export function DesignSystemView() {
   const [multi, setMulti] = useState<string[]>(["a"]);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [search, setSearch] = useState("");
+  const [choice, setChoice] = useState("a");
 
   return (
     <div className="bg-canvas min-h-svh p-6 md:p-10">
@@ -348,6 +389,116 @@ export function DesignSystemView() {
 
           <div className="mt-4">
             <StatsSkeleton count={4} />
+          </div>
+        </Section>
+
+        {/* ── The marketing layer, added on top of the product catalog above ── */}
+
+        <Section
+          title="Surfaces"
+          description="A section flips the whole palette for its subtree with data-surface. Every child adapts, including shadcn primitives, because they consume semantic slots and never raw ramp steps."
+        >
+          <div className="grid gap-3 sm:grid-cols-2">
+            {(["ink", "bone"] as const).map((surface) => (
+              <div
+                key={surface}
+                data-surface={surface}
+                className="border-hairline flex flex-col gap-3 rounded-lg border p-5"
+              >
+                <Eyebrow>data-surface=&quot;{surface}&quot;</Eyebrow>
+                <p className="text-display-3">The ground changes</p>
+                <p className="text-muted-foreground text-sm">
+                  Body copy, muted copy, hairlines and the primary action all
+                  resolve against this surface.
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button size="sm">Primary</Button>
+                  <StatusBadge tone="success">Live</StatusBadge>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section
+          title="Marketing type scale"
+          description="Fluid, editorial, and separate from the dense product scale above — which the shared component catalog still depends on."
+        >
+          <div className="flex flex-col gap-4">
+            {MARKETING_TYPE_STEPS.map(([className, label]) => (
+              <div key={className} className="flex flex-col gap-1">
+                <span className="text-caption text-muted-foreground font-mono">
+                  .{className}
+                </span>
+                <span className={className}>{label}</span>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section
+          title="Motion"
+          description="Four durations, two easings. Anything not built from these does not ship. All of them resolve to 1ms under prefers-reduced-motion."
+        >
+          <DescriptionList
+            items={MOTION_TOKENS.map(([token, value, use]) => ({
+              label: token,
+              value: `${value} — ${use}`,
+            }))}
+          />
+        </Section>
+
+        <Section
+          title="Media frames"
+          description="One API over images, video and synthetic interface compositions. The aspect ratio is reserved in CSS, so nothing shifts on load."
+        >
+          <MediaFrame
+            media={DEMO_MEDIA}
+            caption="frame=browser · kind=synthetic"
+          />
+        </Section>
+
+        <Section
+          title="Choice cards"
+          description="The site's low-effort choice control. Single-select is a real radio group (arrow keys, announced position); multi-select uses aria-pressed toggles."
+        >
+          <ChoiceCards
+            label="Example choice"
+            columns={2}
+            options={[
+              {
+                id: "a",
+                label: "Web Application",
+                hint: "An internal tool, a portal",
+              },
+              {
+                id: "b",
+                label: "AI Product",
+                hint: "Agents, retrieval, LLM features",
+              },
+            ]}
+            value={choice}
+            onChange={setChoice}
+          />
+        </Section>
+
+        <Section
+          title="Editorial primitives"
+          description="Eyebrow, hairline list, arrow link and the honesty marker used wherever a claim is not yet verified."
+        >
+          <div className="flex flex-col gap-6">
+            <Eyebrow index={1}>Section label</Eyebrow>
+            <HairlineList
+              items={[
+                "A supporting point, separated by a rule rather than a bullet",
+                "A second one, to show the rhythm",
+              ]}
+            />
+            <ArrowLink href="/work">View all work</ArrowLink>
+            <PlaceholderNote tone="panel">
+              Illustrative content. Replace it in src/content and this treatment
+              disappears on its own.
+            </PlaceholderNote>
           </div>
         </Section>
       </div>

@@ -117,7 +117,7 @@ export const projects: Project[] = [
       "agent-console",
       "nova.app/dispatch",
       "Nova's dispatch console: an exception queue beside an agent run showing each tool call it made before recommending a carrier.",
-      "16/10",
+      "16/9",
     ),
     galleryMedia: [
       bare(

@@ -8,7 +8,7 @@ import {
   SectionIntro,
 } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
-import { ClosingCta, ProcessSection } from "@/components/sections";
+import { ClosingCta } from "@/components/sections";
 import { projects } from "@/content";
 import { siteConfig } from "@/config/site";
 
@@ -156,8 +156,6 @@ export function AboutScreen() {
           </Reveal>
         </div>
       </Section>
-
-      <ProcessSection />
 
       <Section surface="bone" rhythm="base">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-16">

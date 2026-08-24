@@ -70,7 +70,7 @@ export function ServicesScreen() {
             <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
               <Reveal className={isReversed ? "lg:order-2" : undefined}>
                 <div className="flex flex-col gap-5 lg:sticky lg:top-28">
-                  <Eyebrow index={index + 1}>{`0${index + 1}`}</Eyebrow>
+                  <Eyebrow index={index + 1}>Capability group</Eyebrow>
                   <h2 className="text-display-2">{group.name}</h2>
                   <p className="text-marketing-body text-muted-foreground">
                     {group.summary}
