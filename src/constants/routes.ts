@@ -37,3 +37,39 @@ export const NAV_ITEMS = [
   { href: APP_ROUTES.about, labelKey: "nav.about" },
   { href: APP_ROUTES.contact, labelKey: "nav.contact" },
 ] as const;
+
+/**
+ * LOCALE PREFIXING. Every internal href on the site goes through here.
+ *
+ * `/work` is not a page any more; `/en/work` and `/de/work` are. A raw href
+ * therefore does not 404 (proxy.ts redirects it), it does something worse: it
+ * silently drops a German reader back into English, and because the redirect
+ * succeeds, nothing in the build or the type check ever complains. That is why
+ * this is a function rather than a convention, and why `jinn-web doctor` and
+ * the sweep both check for unprefixed internal links.
+ */
+export function localePath(locale: string, route: string): string {
+  return route === HOME_ROUTE ? `/${locale}` : `/${locale}${route}`;
+}
+
+/** A case study, already prefixed. The common case, so it gets its own helper. */
+export function localeCaseStudyPath(locale: string, slug: string): string {
+  return localePath(locale, caseStudyPath(slug));
+}
+
+/**
+ * Swap the locale on the CURRENT path, for the language switcher.
+ *
+ * The switcher has to keep the reader where they are: someone three quarters
+ * of the way down the OrthoTrack case study who picks Deutsch wants the German
+ * OrthoTrack case study, not the German home page. Dropping them at `/de` is
+ * the commonest bug in a language switcher and the most annoying.
+ */
+export function swapLocale(pathname: string, locale: string): string {
+  const segments = pathname.split("/").filter(Boolean);
+  // The first segment is always the locale on a routed path; if it is missing
+  // (a direct hit that proxy.ts has not rewritten yet) prefix rather than
+  // replace, so nothing is eaten.
+  const rest = segments.slice(1).join("/");
+  return rest === "" ? `/${locale}` : `/${locale}/${rest}`;
+}

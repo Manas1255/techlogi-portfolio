@@ -10,9 +10,9 @@ import { buildTypeSchema } from "@/content/schemas";
  * Messages are i18n keys, resolved by `useFieldError`, so an error is
  * translated like every other string on the site.
  *
- * `STEP_FIELDS` is what makes the multi-step flow work off ONE form instance:
- * each step validates only its own fields, so moving forward can't be blocked
- * by a field the visitor hasn't been shown yet.
+ * There is no step machine any more. The three-step wizard this replaced
+ * validated one slice of the schema per screen, which was the right design for
+ * the form it was and the wrong one for a first contact.
  */
 
 /*
@@ -71,43 +71,3 @@ export type InquiryFormValues = z.input<typeof inquirySchema>;
 export type InquiryValues = z.output<typeof inquirySchema>;
 export type TimelineId = (typeof TIMELINES)[number]["id"];
 export type BudgetId = (typeof BUDGETS)[number]["id"];
-
-/**
- * THREE steps, and which fields each one owns.
- *
- * It was four. The scope step (timeline and budget) and the brief step were
- * merged, because every extra screen is another place to stop, and because
- * both of the scope questions are now optional, so a step that could be
- * skipped entirely does not deserve a screen of its own.
- */
-export const STEP_FIELDS = [
-  ["buildType"],
-  ["description", "services", "timeline", "budget"],
-  ["name", "company", "email", "phone"],
-] as const satisfies readonly (readonly (keyof InquiryFormValues)[])[];
-
-export const STEP_COUNT = STEP_FIELDS.length;
-
-/**
- * THE SHORT FORM, as it appears in the hero.
- *
- * Four fields, one of them optional. A visitor who has just landed will not
- * fill in timeline and budget, and asking anyway is how a hero form becomes
- * decoration, so the short form collects only what is needed to reply, and
- * the reply asks for the rest. It submits through the SAME repository and the
- * same success path as the dialog; there is one implementation of "send an
- * inquiry", not two.
- */
-export const quickInquirySchema = z.object({
-  buildType: buildTypeSchema.shape.id,
-  name: nameField,
-  email: emailField,
-  description: z
-    .string()
-    .max(1000, "validation.maxLength")
-    .transform((value) => value.trim())
-    .default(""),
-});
-
-export type QuickInquiryFormValues = z.input<typeof quickInquirySchema>;
-export type QuickInquiryValues = z.output<typeof quickInquirySchema>;

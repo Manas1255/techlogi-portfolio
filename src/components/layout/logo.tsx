@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { HOME_ROUTE } from "@/constants";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,16 @@ export function Logo({
   const mark = (
     <span
       className={cn(
-        "font-display inline-flex items-baseline text-[1.375rem] leading-none font-semibold tracking-[-0.03em]",
+        /*
+          `whitespace-nowrap` and `shrink-0` are load-bearing on a phone. The
+          wordmark shares a flex row with the primary CTA, and German runs
+          about 30% longer than English: "Gespräch buchen" squeezed the logo
+          until "GA Studio." wrapped onto two lines. A translated interface
+          breaks layouts the source language never touches, so the fix belongs
+          on the element that must never wrap rather than on the label that
+          happened to grow.
+        */
+        "font-display inline-flex shrink-0 items-baseline text-[1.375rem] leading-none font-semibold tracking-[-0.03em] whitespace-nowrap",
         className,
       )}
     >

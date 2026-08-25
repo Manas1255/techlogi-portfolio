@@ -1,7 +1,7 @@
 "use client";
 
 import { ChoiceCards } from "@/components/marketing";
-import { buildTypes } from "@/content";
+import { useContent } from "@/content/use-content";
 import { useTranslations } from "@/i18n";
 import { useInquiryStore } from "@/features/inquiry/inquiry-store";
 import type { BuildTypeId } from "@/content/schemas";
@@ -25,6 +25,7 @@ export function InquiryLauncher({
   className,
 }: InquiryLauncherProps) {
   const t = useTranslations();
+  const { buildTypes } = useContent();
   const open = useInquiryStore((state) => state.open);
   const buildType = useInquiryStore((state) => state.values.buildType);
 

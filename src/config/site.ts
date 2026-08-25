@@ -37,16 +37,20 @@ export const siteConfig = {
   legalName: "GA Studio", // TODO: replace with the registered company name.
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
 
-  /** One line. Used in metadata, the footer and Open Graph. */
+  /**
+   * One line, used in the footer and Open Graph. Short on purpose: it sits
+   * under the wordmark in a narrow column, and the previous version ran to
+   * three lines listing four product types before it said anything.
+   */
   tagline:
-    "Product engineering studio. Web applications, SaaS platforms, mobile apps and AI systems, from discovery to production.",
+    "We build websites, mobile apps, SaaS platforms and AI products, and stay on after launch.",
 
   /** ~155 characters. This is the default meta description. */
   description:
-    "GA Studio is a product engineering studio. We build web applications, SaaS platforms, mobile apps and AI systems, and stay on after launch to keep them fast and worth using.",
+    "GA Studio builds websites, mobile apps, SaaS platforms and AI products, from an idea to something real people use. Book a 30-minute call and get a straight answer on scope and cost.",
 
   /**
-   * DIRECT BOOKING.
+   * BOOKING. The primary conversion action on this site.
    *
    * The strongest evidence in the whole research pass was about response time,
    * not form design: a Harvard Business Review study of 1.25 million leads
@@ -54,19 +58,85 @@ export const siteConfig = {
    * to qualify than responding after a day. A booking link collapses that to
    * zero, because the prospect picks the slot themselves.
    *
-   * Set this to a Cal.com or Calendly URL and it appears beside the inquiry
-   * form as a secondary path. Leave it null, the shipped default, and nothing
-   * renders: an empty booking page is worse than no link at all.
+   * So the site no longer leads with "send an inquiry". An inquiry is a
+   * promise to reply; a booked slot is the meeting itself, and the difference
+   * is the whole redesign. The project brief still exists, as the secondary
+   * path for someone who would rather write than talk.
    *
-   * Deliberately a LINK, not an embed. A booking iframe is heavy, renders
-   * badly at narrow widths, and is a cross-origin frame you cannot style or
-   * fix when it breaks. On a phone that is a bad trade for the primary
-   * conversion path.
+   * ⚠️ TODO: SET `calLink` AND EVERYTHING TURNS ON.
+   *
+   * Format is Cal.com's own `username/event-slug`, NOT a full URL: the embed
+   * SDK and the fallback link both build what they need from it. Until it is
+   * set, every booking control degrades to the project brief and the embed
+   * renders an honest "scheduling opens shortly" panel instead of an iframe
+   * pointed at nothing. Nothing 404s and nothing lies.
    */
   booking: {
-    url: null as string | null, // TODO: e.g. "https://cal.com/ga-studio/intro".
-    /** Shown on the link, so the commitment is bounded before the click. */
-    label: "Book a 30-minute call",
+    calLink: null as string | null, // TODO: e.g. "ga-studio/intro".
+    /** Shown on the control, so the commitment is bounded before the click. */
+    label: "Book a call",
+    /** Reinforces that bound next to the label. Keep it honest. */
+    duration: "30 minutes",
+  },
+
+  /**
+   * THE FIVE-MINUTE OFFER.
+   *
+   * A visible countdown offering 25% off to anyone who books inside five
+   * minutes. It is real: the discount applies to anyone who books in the
+   * window, and the code below is the one they quote.
+   *
+   * The design constraints exist because this pattern is usually a lie, and a
+   * visitor has met the lying version many times:
+   *
+   *   · The clock starts ONCE, on the first visit, and is persisted. It does
+   *     not restart on a reload, on a route change, or on a second visit. A
+   *     timer that resets is the tell that the offer is theatre.
+   *   · When it runs out it says so, and the offer is gone. It does not
+   *     quietly begin again at 05:00.
+   *   · No flashing, no red, no "HURRY". It is set in the same brass and the
+   *     same mono as every other piece of metadata on the site.
+   *
+   * If any of that is ever traded away for conversions, the section stops
+   * being an incentive and becomes the reason nobody believes the rest of the
+   * page. Set `enabled: false` to remove it entirely.
+   */
+  offer: {
+    enabled: true,
+    /** Percent off. Shown as written; keep it a whole number. */
+    discountPercent: 25,
+    windowSeconds: 5 * 60,
+    /** Quoted by the visitor on the call, so it has to be sayable. */
+    code: "EARLY25",
+    /*
+      What the discount applies to is COPY, so it lives in the catalogs under
+      `offer.appliesTo`. It was here, and being interpolated into a translated
+      sentence, which produced "Gilt für your first project invoice." on the
+      German page: a config string cannot be translated, and any config value
+      that ends up inside a sentence will eventually prove it.
+    */
+  },
+
+  /**
+   * CONFIDENTIALITY.
+   *
+   * The commonest unspoken reason a founder does not describe their idea is
+   * that they think it will be taken. Saying nothing does not answer that;
+   * saying too much sounds defensive and slightly guilty.
+   *
+   * So this is deliberately narrow, and every clause is something the studio
+   * can actually stand behind without a signed agreement in place. It claims
+   * no certification, no encryption standard and no legal guarantee, because
+   * an unbacked security claim is worse than silence. An NDA on request is a
+   * real offer and the strongest thing on the list.
+   */
+  confidentiality: {
+    headline: "Your idea stays yours",
+    points: [
+      "What you share stays between you and the people on your project.",
+      "We never reuse your concept, your research or your materials elsewhere.",
+      "Happy to sign your NDA before the call, or send ours.",
+    ],
   },
 
   contact: {
@@ -74,8 +144,12 @@ export const siteConfig = {
     email: "hello@gastudio.com",
     /** Null hides the phone line entirely rather than printing a placeholder. */
     phone: null as string | null, // TODO: add a real number, or leave null.
-    /** Shown next to the inquiry form as an expectation, not a promise. */
-    responseTime: "We reply to every inquiry within one business day.",
+    /**
+     * NO LONGER HERE. It is UI copy, not a deployment fact, so it lives in the
+     * message catalogs under `contact.responseTime` where it can be
+     * translated. Config holds the things that differ per DEPLOYMENT: an
+     * address, a link, a key. A sentence the visitor reads is not one of them.
+     */
   },
 
   locations: [
@@ -124,14 +198,25 @@ export const siteConfig = {
    */
   inquiry: {
     endpoint: null as string | null, // TODO: e.g. "/inquiries".
-    /** Bytes. Anything larger is rejected client-side with a real message. */
-    maxAttachmentBytes: 10 * 1024 * 1024,
-    acceptedAttachmentTypes: [
-      "application/pdf",
-      "image/png",
-      "image/jpeg",
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    ],
+    /** Bytes, PER FILE. Larger is rejected client-side with a real message. */
+    maxAttachmentBytes: 25 * 1024 * 1024,
+    /**
+     * How many files, not which kinds.
+     *
+     * There is deliberately NO accepted-types list any more. The old one was
+     * four MIME strings (PDF, PNG, JPEG, .docx) which quietly rejected the
+     * things people most often have: a Figma export, a .sketch file, a zip of
+     * screenshots, a Keynote deck, a .mov screen recording, an .xlsx of the
+     * data they want migrated. The file picker greys them out with no
+     * explanation, and the visitor concludes their material is unwelcome and
+     * sends nothing.
+     *
+     * Whitelisting types is a SERVER's job in any case: an `accept` attribute
+     * is a hint the browser applies to a dialog and any client can ignore, so
+     * it was never buying safety, only friction. Whatever finally receives
+     * these must validate type and content itself.
+     */
+    maxAttachments: 5,
   },
 
   /**
@@ -159,4 +244,21 @@ export function publishedLegal(): readonly { label: string; href: string }[] {
 /** Locations confirmed real, for the footer. */
 export function publishedLocations(): readonly SiteLocation[] {
   return siteConfig.locations.filter((location) => location.isReal);
+}
+
+/**
+ * The full Cal.com URL, or null while `calLink` is unset.
+ *
+ * Every booking control routes through this rather than concatenating its own,
+ * so there is exactly one place that knows the format and exactly one thing to
+ * change when it moves.
+ */
+export function bookingUrl(): string | null {
+  const link = siteConfig.booking.calLink;
+  return link === null ? null : `https://cal.com/${link}`;
+}
+
+/** Whether scheduling is live. Controls degrade to the brief when it is not. */
+export function isBookingLive(): boolean {
+  return siteConfig.booking.calLink !== null;
 }

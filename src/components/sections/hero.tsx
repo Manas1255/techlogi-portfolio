@@ -1,153 +1,141 @@
-import Link from "next/link";
-import { Container, Eyebrow, Reveal } from "@/components/marketing";
-import { MediaFrame } from "@/components/media";
-import { APP_ROUTES, caseStudyPath } from "@/constants";
-import { HERO_PROJECT_SLUG, findProject, projects } from "@/content";
-import { HeroInquiryForm } from "@/features/inquiry";
+import { Clock3, MessageSquareText, Repeat2 } from "lucide-react";
+import { Container, Reveal } from "@/components/marketing";
+import { BookCallButton, OfferCountdown } from "@/features/booking";
+import { QuickBriefForm } from "@/features/inquiry";
+import { getTranslations } from "@/i18n/server";
 
 /**
  * THE HERO.
  *
- * Four questions in the first seconds: who GA Studio is, what it builds, why to
- * trust it, and what to do next. The headline answers the first two, the
- * capability rail answers the third by naming artifacts rather than adjectives,
- * and the fourth is not a button that routes somewhere, it is a form, right
- * there, above the fold.
+ * Rewritten around one decision: the visitor's next action is booking a call,
+ * not filling in a form. The old hero put a four-field inquiry above the fold,
+ * which was a good answer to the wrong question. A form asks someone to
+ * compose a message and then wait; the wait is the part that loses them, and
+ * no amount of form design shortens it. A calendar does.
  *
- * That is the whole shape of this section. A visitor is at their most willing
- * in the first few seconds and least willing to be sent somewhere else; a hero
- * whose primary action is "go to a contact page" spends that willingness on
- * navigation. The four-step dialog still exists for anyone who wants to brief
- * properly, the header's "Start a Project" opens it, but the default path is
- * four fields and done.
+ * What went, and why:
  *
- * Beneath the fold the section keeps going into a proof band: one real product
- * at full measure, captioned, so the claim above it is answered by evidence
- * rather than by another claim.
+ *   · The "Product engineering studio" chip. It spent the most valuable line
+ *     on the page describing our category to someone who has not yet been told
+ *     what we make. The headline now does both jobs.
+ *   · Three sentences of subhead, down to one. The previous lead listed four
+ *     product types and two guarantees before the first full stop, which is
+ *     the paragraph you write when you have not decided what matters.
+ *   · The inline form is still HERE, in the right-hand column, because the
+ *     people who will write but will not commit to a slot at first contact
+ *     are worth keeping. What changed is that it is four fields on one screen
+ *     rather than the entrance to a three-step wizard.
+ *   · The lead project frame, a full-measure shot of one case study sitting
+ *     under the copy. It was doing the product strip's job one band early and
+ *     doing it worse: the strip below shows six real products in a fifth of
+ *     the height, and the frame pushed the three answers most of a screen
+ *     further down for a second look at something the visitor sees again in
+ *     Selected Work. Proof belongs to the strip; the hero states the offer.
+ *
+ * The section sits on the SLAB. The site is otherwise light-first, and this is
+ * one of the two dark bands the rhythm allows: opening on graphite makes the
+ * app icons in the strip below it glow rather than sit, and it is what buys
+ * the page its premium register in the first second, before a word is read.
+ *
+ * Three answers under the fold, not four. Each names a mechanism rather than a
+ * virtue, because "we're reliable" is what everyone writes and "a running
+ * build every second week" is checkable.
  */
-export function Hero() {
-  // The lead frame is chosen by slug rather than by position: it is an
-  // art-direction decision about which product opens the site, and it should
-  // not silently change because the portfolio was reordered.
-  const lead = findProject(HERO_PROJECT_SLUG) ?? projects[0];
+
+const ANSWERS = [
+  { icon: Clock3, key: "talk" },
+  { icon: Repeat2, key: "ship" },
+  { icon: MessageSquareText, key: "straight" },
+] as const;
+
+export async function Hero() {
+  const t = await getTranslations();
 
   return (
-    <section className="wash-warm grain relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
+    <section
+      data-surface="slab"
+      className="wash-slab grain relative overflow-hidden pt-32 pb-16 md:pt-40 md:pb-20"
+    >
       <Container>
-        {/*
-          Three grid children, ordered for a PHONE: copy, then the form, then
-          the capability rail. On a narrow screen the rail would otherwise push
-          the form most of a screen further down, and the form is the point of
-          this section. On `lg` the rail returns to the left column under the
-          copy and the form spans both rows on the right, which is the
-          composition the desktop layout wants, no duplicated markup, and
-          nothing hidden at either size.
-        */}
-        <div className="grid items-start gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-16 lg:gap-y-10">
-          <div className="flex flex-col gap-8 lg:col-start-1 lg:row-start-1 lg:pt-6">
-            <Reveal variant="fade">
-              <Eyebrow>Product engineering studio</Eyebrow>
-            </Reveal>
-
-            <Reveal delay={60}>
+        <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-16">
+          <div className="flex flex-col gap-7">
+            <Reveal>
               <h1 className="text-hero text-balance">
                 <span className="mask-line">
-                  <span>We build production</span>
-                </span>
-                <span className="mask-line">
-                  <span>software for companies</span>
+                  <span>{t("hero.line1")}</span>
                 </span>
                 <span className="mask-line">
                   <span>
-                    that can&apos;t afford a{" "}
-                    <span className="text-primary">rewrite</span>.
+                    {t("hero.line2")}{" "}
+                    <span className="text-primary">{t("hero.accent")}</span>.
                   </span>
                 </span>
               </h1>
             </Reveal>
 
-            <Reveal delay={120}>
+            <Reveal delay={60}>
               <p className="text-lead text-muted-foreground">
-                Web applications, SaaS platforms, mobile apps and AI systems,
-                taken from discovery to production, then kept fast, secure and
-                worth using long after launch.
+                {t("hero.lead")}
               </p>
+            </Reveal>
+
+            <Reveal delay={120} className="flex flex-col gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <BookCallButton origin="hero" size="lg" />
+              </div>
+              {/* Starts the offer window: this is the first booking surface a
+                  visitor reaches, and the clock should time their decision
+                  rather than their reading. */}
+              <OfferCountdown autoStart />
             </Reveal>
           </div>
 
-          <Reveal
-            variant="lift"
-            delay={100}
-            className="lg:sticky lg:top-28 lg:col-start-2 lg:row-span-2 lg:row-start-1"
-          >
-            <HeroInquiryForm />
-          </Reveal>
+          {/*
+            THE BRIEF, back above the fold and back on one screen.
 
-          {/* Capability rail, concrete nouns instead of a trust badge. */}
-          <Reveal
-            delay={180}
-            variant="fade"
-            className="lg:col-start-1 lg:row-start-2"
-          >
-            <dl className="border-hairline grid grid-cols-2 gap-x-8 gap-y-5 border-t pt-6 sm:grid-cols-4">
-              {[
-                { term: "Discovery", detail: "to a written plan" },
-                { term: "Design", detail: "as a system" },
-                { term: "Engineering", detail: "typed end to end" },
-                { term: "After launch", detail: "we stay on" },
-              ].map((item) => (
-                <div key={item.term} className="flex flex-col gap-1">
-                  <dt className="text-mono-label text-foreground">
-                    {item.term}
-                  </dt>
-                  <dd className="text-muted-foreground text-[0.8125rem] leading-snug">
-                    {item.detail}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            It was removed in favour of a booking-only hero, and that lost the
+            people who will type but will not commit to a slot at first
+            contact. It came back as four fields rather than the wizard,
+            because the wizard is what made the written path feel like the
+            long way round. Booking is still the primary action, in brass,
+            first in the reading order; this is the alternative sitting beside
+            it rather than a step behind a button.
+
+            Sticky on desktop so it stays with the reader as the copy column
+            settles beside it.
+          */}
+          <Reveal variant="lift" delay={100} className="lg:sticky lg:top-28">
+            <QuickBriefForm origin="hero" />
           </Reveal>
         </div>
 
-        {/* The proof band: one real product, at full measure, captioned. */}
-        <Reveal variant="fade" delay={80} className="mt-20 md:mt-28">
-          <div className="flex flex-col gap-5">
-            <div className="border-hairline flex flex-wrap items-end justify-between gap-4 border-t pt-6">
-              <p className="text-mono-label text-muted-foreground">
-                <span className="text-foreground">{lead.name}</span> ·{" "}
-                {lead.tagline}
-              </p>
-              <Link
-                href={caseStudyPath(lead.slug)}
-                className="tap-target text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
-              >
-                View case study →
-              </Link>
-            </div>
-
-            <Link
-              href={caseStudyPath(lead.slug)}
-              className="group rounded-frame focus-visible:outline-ring block focus-visible:outline-2 focus-visible:outline-offset-4"
-            >
-              <MediaFrame
-                media={lead.heroMedia}
-                priority
-                sizes="(min-width: 1280px) 1200px, 94vw"
-              />
-              <span className="sr-only">
-                {lead.name}, {lead.tagline}. View case study.
-              </span>
-            </Link>
-
-            <p className="text-mono-label text-muted-foreground">
-              <Link
-                href={APP_ROUTES.work}
-                className="tap-target hover:text-foreground transition-colors"
-              >
-                Explore all work →
-              </Link>
-            </p>
-          </div>
+        <Reveal
+          variant="fade"
+          delay={220}
+          className="border-hairline mt-14 border-t pt-7 md:mt-20"
+        >
+          <dl className="grid gap-x-8 gap-y-6 sm:grid-cols-3">
+            {ANSWERS.map(({ icon: Icon, key }) => (
+              <div key={key} className="flex items-start gap-3">
+                <Icon
+                  aria-hidden="true"
+                  className="text-primary mt-0.5 size-4 shrink-0"
+                />
+                <div className="flex flex-col gap-0.5">
+                  <dt className="text-[0.9375rem] font-medium">
+                    {t(
+                      `hero.answers.${key}.label` as "hero.answers.talk.label",
+                    )}
+                  </dt>
+                  <dd className="text-muted-foreground text-[0.8125rem] leading-snug">
+                    {t(
+                      `hero.answers.${key}.detail` as "hero.answers.talk.detail",
+                    )}
+                  </dd>
+                </div>
+              </div>
+            ))}
+          </dl>
         </Reveal>
       </Container>
     </section>

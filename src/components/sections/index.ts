@@ -1,25 +1,20 @@
 /**
- * Page sections.
+ * Page sections. These MAY compose `features/`, which is what separates them
+ * from `components/marketing/`.
  *
- * This is composition tier, alongside `components/layout`, a section may reach
- * into `features/` (the closing CTA embeds the inquiry's first step), which is
- * why it is deliberately outside the shared-layer import boundary.
+ * The home page's order is the argument the site makes, and it is documented
+ * in `features/home/components/home-screen.tsx` rather than here.
  */
 export { Hero } from "./hero";
-export { Showreel } from "./showreel";
-export { ProjectPanel, type ProjectPanelProps } from "./project-panel";
-export { ProjectCard, type ProjectCardProps } from "./project-card";
+export { ProductStrip } from "./product-strip";
+export { HowItWorks } from "./how-it-works";
+export { WhatWeBuild } from "./what-we-build";
 export { FeaturedWork } from "./featured-work";
-export { ServicesSection } from "./services-section";
-export { ProcessSection } from "./process-section";
-export { TechnologiesSection } from "./technologies-section";
-export { CapabilitiesSection } from "./capabilities-section";
-export { DifferenceSection } from "./difference-section";
+export { ProofSection } from "./proof-section";
 export { FaqSection } from "./faq-section";
-export { TestimonialsSection } from "./testimonials-section";
+export { BookACall, type BookACallProps } from "./book-a-call";
+export { TechnologiesSection } from "./technologies-section";
+export { ProjectCard, type ProjectCardProps } from "./project-card";
+export { ProjectPanel, type ProjectPanelProps } from "./project-panel";
 export { CaseStudyHero, heroMediaCount } from "./case-study-hero";
-export {
-  CaseStudySection,
-  type CaseStudySectionProps,
-} from "./case-study-section";
-export { ClosingCta, type ClosingCtaProps } from "./closing-cta";
+export { CaseStudySection } from "./case-study-section";

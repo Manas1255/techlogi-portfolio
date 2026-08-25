@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { NAV_ITEMS } from "@/constants";
 import { siteConfig } from "@/config/site";
+import { BookCallButton } from "@/features/booking";
 import { InquiryTrigger } from "@/features/inquiry";
 import { useTranslations, type MessageKey } from "@/i18n";
 import { Logo } from "./logo";
@@ -96,10 +97,17 @@ export function MobileNav() {
         </nav>
 
         <div className="border-hairline flex flex-col gap-4 border-t p-5">
-          <InquiryTrigger
+          <BookCallButton
             origin="mobile-nav"
             size="lg"
             className="w-full"
+            onClickCapture={() => setIsOpen(false)}
+          />
+          <InquiryTrigger
+            origin="mobile-nav-brief"
+            variant="ghost"
+            size="lg"
+            className="w-full rounded-full"
             onClickCapture={() => setIsOpen(false)}
           />
           <a

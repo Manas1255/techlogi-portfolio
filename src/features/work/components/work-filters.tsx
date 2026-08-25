@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { ProjectPanel } from "@/components/sections";
 import { APP_ROUTES } from "@/constants";
 import {
@@ -6,8 +6,7 @@ import {
   projectsByCategory,
   type ProjectCategory,
 } from "@/content";
-import { translate } from "@/i18n/translate";
-import { SOURCE_LOCALE } from "@/i18n/locales";
+import { getLocale, getTranslations } from "@/i18n/server";
 import type { MessageKey } from "@/i18n/types";
 import { cn } from "@/lib/utils";
 
@@ -33,14 +32,16 @@ import { cn } from "@/lib/utils";
  * the filter row, and jumping them to the top of the document on every choice
  * would be its own bug.
  */
-export function WorkFilters({
+export async function WorkFilters({
   category,
 }: {
   category: ProjectCategory | null;
 }) {
+  const locale = await getLocale();
+  const translate = await getTranslations();
   const categories = activeCategories();
-  const visible = projectsByCategory(category);
-  const t = (key: string) => translate(SOURCE_LOCALE, key as MessageKey);
+  const visible = projectsByCategory(category, locale);
+  const t = (key: string) => translate(key as MessageKey);
 
   return (
     <>
@@ -48,7 +49,7 @@ export function WorkFilters({
         <FilterChip
           href={APP_ROUTES.work}
           isActive={category === null}
-          count={projectsByCategory(null).length}
+          count={projectsByCategory(null, locale).length}
         >
           {t("site.allWork")}
         </FilterChip>

@@ -40,6 +40,53 @@ The display face keeps working, because headings live inside `<body>`. That is w
 survive review: headings look right in every screenshot, so serif body copy reads as a design
 choice rather than a failure.
 
+### A client hook cannot know the locale during server rendering
+
+`useTranslations` read the language from the Zustand store, which an effect
+fills **after** hydration. So every Client Component on `/de` rendered ENGLISH
+into the prerendered HTML and swapped to German once JS ran. A visitor saw a
+flash; a crawler saw an English page at a German URL, which is the one thing
+routing the locale was supposed to prevent.
+
+**Read the locale from `usePathname`**, which is available during server
+rendering. `useTranslations`, `AppLink` and `useContent` all do. The store
+survives only for `getLocale()`, called from non-React code. A sweep test
+asserts the SERVED markup, because `getByText` passes either way.
+
+### An unprefixed `href` does not 404, it changes language
+
+`/work` is a 307 to `/en/work`. The redirect **succeeds**, so nothing breaks,
+nothing fails to build, and no type is wrong. The only symptom is that a German
+reader lands back in English. Every internal link goes through
+`components/layout/app-link.tsx`, imported **as `Link`**, so call sites keep
+writing `href={APP_ROUTES.work}`. A sweep test walks `/de` and fails on any
+href that is not `/de`-prefixed.
+
+### A server-rendered inline style cannot know `prefers-reduced-motion`
+
+Framer Motion writes `opacity: 0` into the prerendered HTML for a `whileInView`
+entrance. A reduced-motion visitor hydrates with `initial={false}`, which
+correctly animates nothing, **including that inline zero**, so every staggered
+item below the fold stays invisible forever. `useReducedMotion` cannot fix it:
+the server has to assume motion is allowed.
+
+The guarantee lives in CSS. Every staggered element carries `data-stagger-item`
+and `globals.css` forces it back to `opacity: 1 !important` under the query, the
+same way `[data-reveal]` is handled. **On this site, reduced motion means
+nothing is ever hidden**, in either motion system. A sweep test asserts both.
+
+### Next REPLACES `openGraph`, it does not merge it
+
+Top-level metadata merges down the tree. `openGraph` does not: the moment a page
+declared its own, it dropped the layout's `images`, and every route shipped an
+Open Graph card with **no picture**. Nothing failed. The pages built, rendered
+and passed every other test; the only symptom was a blank preview when someone
+pasted a link into Slack.
+
+`lib/page-metadata.ts` therefore sets `metadataBase`, `openGraph.images` and
+`twitter` on every page rather than inheriting any of them. A sweep test asserts
+an absolute `og:image` on all four route shapes.
+
 ### `useSearchParams` inside a Suspense boundary deletes the boundary from the HTML
 
 `/work` read its filter with `useQueryState`. Next then dropped the **entire** Suspense boundary
@@ -48,6 +95,15 @@ crawler, and refilled on hydration for **0.56 CLS** against a 0.1 budget.
 
 Read query params on the **server** (`searchParams` in the page) and make filters **links**. A
 sweep test asserts the served HTML contains project names; do not delete it.
+
+### The countdown must never restart
+
+The five-minute offer is real, so its clock starts **once per visitor** and is
+persisted to `localStorage` (not `sessionStorage`, which would silently hand
+every returning visitor a fresh five minutes). When it expires it says so and
+offers nothing in its place. A timer that resets is the single most
+recognisable dark pattern on the web, and a visitor who catches it stops
+believing the case studies too. See `features/booking/offer-store.ts`.
 
 ### Every form field id must come from `useId`
 
@@ -114,6 +170,20 @@ and they have held through every change so far.
 
 - **Never invent a metric, a testimonial, a client name, a logo, an award, a headcount, or an
   office.** Not as a placeholder that looks real, not "for now".
+- **A config value must never end up inside a sentence.** `siteConfig` holds deployment facts: a
+  link, an address, a key, a number. The moment one is interpolated into copy it cannot be
+  translated, and the German page printed "Gilt für your first project invoice." Copy belongs in the
+  catalogs, even when it looks like configuration (`offer.appliesTo`, `contact.responseTime`).
+- **Every mark on the product strip is a real app icon**, lifted from that product's own Flutter
+  repository. Nothing there was drawn for this website and nothing may be: a fabricated mark is
+  indistinguishable from a real one to a visitor and instantly obvious to anyone who knows the
+  client, and the moment one is invented the other six stop counting. A unit test asserts the file
+  exists; a sweep test asserts the browser decoded it.
+- **The five-minute discount is real.** Anyone who books inside the window gets it. If that ever
+  stops being true, delete the section rather than keeping the clock.
+- **Confidentiality copy claims no certification, encryption standard or legal guarantee**, because
+  an unbacked security claim is worse than silence. "Happy to sign your NDA" is the strongest item
+  on that list precisely because it is a concrete offer.
 - `metrics` is **empty** on every project. No number ships until someone can point at where it was
   measured.
 - Unverified content carries a flag (`isDraft`, `isPlaceholder`) and the UI **says so on the page**.
@@ -140,7 +210,8 @@ and they have held through every change so far.
 
 ```
 src/
-├── app/(app)/            # the public routes: / /work /work/[slug] /services /about /contact
+├── app/[locale]/(app)/   # the public routes, TWICE: /en/… and /de/…
+├── proxy.ts              # locale negotiation: cookie, then Accept-Language
 ├── content/              # AUTHORED CONTENT. Zod schemas + typed data. See below.
 ├── config/site.ts        # company facts: contact, socials, booking, inquiry endpoint
 ├── components/
@@ -150,7 +221,8 @@ src/
 │   ├── layout/           # header, footer, mobile nav, structured data
 │   ├── ui/               # shadcn output. Restyle via tokens, never fork
 │   ├── shared/ form/     # the scaffold's component catalog
-├── features/inquiry/     # the one real feature: store, schema, repository, dialog
+├── features/booking/     # THE primary conversion path: Cal.com, offer clock, trust
+│   ├── inquiry/          # the secondary path: store, schema, repository, brief dialog
 ├── hooks/                # use-reveal-on-scroll, use-onstage, use-scroll-position
 └── app/globals.css       # EVERY design token. No component hardcodes a colour or size.
 ```
@@ -161,6 +233,53 @@ convention). `src/content/` is a new cross-cutting layer, because portfolio copy
 rather than wire data. `constants/routes.ts` is hand-edited, because `jinn-web domain` emits a
 backend-coupled CRUD screen, which is the wrong artifact for `/work/[slug]`.
 
+### Two languages, and where each kind of string lives
+
+`/en/work` and `/de/work` are separate, prerendered, indexable documents. The
+locale is a route segment above the root layout, so `next/root-params` gives
+any Server Component the active language with no prop drilling.
+
+**German is the DEFAULT, English is the SOURCE, and they are two different
+constants.** `DEFAULT_LOCALE` (de) is what an unprefixed URL resolves to, what
+`x-default` points at, and which URL the sitemap prioritises. `SOURCE_LOCALE`
+(en) is what `messages/en.ts` defines the shape against and what every lookup
+falls back to. Reordering `SUPPORTED_LOCALES` to change the default would have
+silently moved the type system's source of truth with it.
+
+**German is served unconditionally.** `Accept-Language` is deliberately NOT
+consulted: nearly every browser ships `en-US` whatever its owner reads, so
+honouring it sent most visitors, German ones included, to the English site. The
+only thing that overrides the default is the `locale` cookie, because it is the
+only signal that is a decision rather than a setting. The q-value parser is
+still in `proxy.ts`, unused, because "respect the browser again" is a call that
+gets reversed more than once in a site's life.
+
+**Two stores of text, and the split is deliberate:**
+
+| | `src/i18n/messages/` | `src/content/` |
+|---|---|---|
+| holds | interface text | authored prose |
+| keyed | `t("hero.lead")` | beside the thing it describes |
+| shape | one file per locale | `l("English", "Deutsch")` inline |
+
+A case study is a thousand words of argument and belongs next to its project,
+not under `projects.zyuela.sections.2.body.1`. So content carries every
+language at once, and the accessors flatten one out before anything renders:
+
+- **Server**: `getContent(await getLocale())`, memoised per locale.
+- **Client**: `useContent()`, which reads the path.
+
+`RawProject` is as authored; `Project` is `Resolved<RawProject>`, every
+`Localized` collapsed to a `string`. That is why localising the content layer
+changed almost no component: `project.tagline` is still a string.
+
+Adding a locale to `SUPPORTED_LOCALES` makes every untranslated entry in the
+repo a **compile error**. There is no silent fallback to English, because a
+half-translated page is worse than an English one: the reader cannot tell
+whether the missing part is an oversight or a different offer. A unit test also
+flags any long string that reads identically in both languages, which is how a
+copy-paste-to-satisfy-the-type-checker gets caught.
+
 ### Content is data, never markup
 
 `src/content/` holds the Zod schemas **and** the data, with every type as `z.infer`. Nothing parses
@@ -170,9 +289,33 @@ at render time; `content.test.ts` parses every entry instead, so a malformed pro
 Adding a project is a data edit plus media in `public/media/projects/<slug>/`. Routes, the home-page
 selection, `/work` filters, related-project links and the sitemap all derive from it.
 
+**Never pin a test to a sentence of copy.** A regression guard that fails on an ordinary headline
+edit is a guard people delete. Assert the property instead: project *names* on `/work`, German
+*function words and umlauts* on `/de`, not the paragraph that happened to be there when it was
+written.
+
 An **image declares `width`/`height`** and the frame reserves its box from the intrinsic size.
 `aspect` is only for synthetic and video media, which have no intrinsic size. Making an author
 restate a picture's ratio is only a chance to get it wrong.
+
+**Every project hero must be a 4:3 landscape composite**, and a content test enforces it. The cards
+render at 4:3 with `cover`, so a hero of any other shape either loses a corner of a composed frame
+(the wordmark sits in one, the device in the other) or gains pale letterbox bars that read as a
+rendering fault. Fix the ratio at the SOURCE, where a human can see what is being cropped, not in
+the component.
+
+**The masters live in `~/Personal/MockUps/<project>/`**, and the `Vector*.png` in each folder is the
+brand frame that becomes `01-brand`. Take them at their native 4:3 rather than cropping a 16:9 one:
+cropping Zyuela's sliced its own wordmark off, which is the kind of thing only a person looking at
+the picture will catch.
+
+Two tests bracket the media: one fails if a referenced file is missing, the other if a file in
+`public/media/projects/` is referenced by nothing. The second catches the leftover from a swap,
+which ships and caches forever without appearing on a page.
+
+⚠️ **`next build` caches optimised images by URL.** Replacing a file without renaming it serves the
+OLD picture from `.next/cache/images` and everything looks broken-but-green. `rm -rf .next` after
+swapping media.
 
 ---
 
@@ -182,24 +325,48 @@ restate a picture's ratio is only a chance to get it wrong.
 reaches for, and it drags every screenshot toward the same sand cast, which is fatal when the
 product work has to supply its own colour.
 
-- Surfaces flip per section with `data-surface="slab"` (dark) or `"paper"`. Every colour token is
-  re-declared for the subtree, so children including shadcn primitives adapt without knowing where
-  they landed. **Two dark interruptions on the home page, not five.**
-- `--primary` is `brand-700` on paper and `brand-500` on slab. White on `brand-600` is 4.0:1 and
-  fails AA at label sizes.
+- Surfaces flip per section with `data-surface="slab"` (dark), `"tint"` (stone) or `"paper"`. Every
+  colour token is re-declared for the subtree, so children including shadcn primitives adapt without
+  knowing where they landed. **Two dark bands on the home page, not five**, and no two adjacent
+  sections share a ground. A sweep test asserts it.
+- **GRAPHITE & BRASS.** Cool neutral structure, and the accent is the only warm thing in the system.
+  It was drawn from the portfolio rather than imposed on it: four of the seven shipped app icons are
+  gold or amber, so brass is the colour these products already had in common.
+- `--primary` is `brand-700` on paper (5.6:1 on white) and `brand-400` on slab, where the type on top
+  flips to **ink, not white**. White on `brand-600` is 3.6:1 and fails AA at label sizes.
+- Every route opens on the ink ground. The header therefore declares `data-surface="slab"` while it
+  is at the top and drops it once it detaches into the light glass capsule.
 - Type: **Familjen Grotesk** (display), **Figtree** (body), **JetBrains Mono** (metadata).
 - **Never hardcode a hex.** Add or adjust a token in `globals.css`.
 
 ### Motion
 
+**Two systems, and the split is deliberate.**
+
+`Reveal` is CSS plus one shared `IntersectionObserver`. It costs a ref, it works on
+server-rendered children, and it is right for the ~90% of entrances that are "one block fades up".
 Four durations, two easings, all in tokens. Only `transform`, `opacity`, `clip-path` and
 `background-color` are ever animated. `prefers-reduced-motion` resolves every duration to `1ms` **at
 the token level**, so a pattern added later inherits the behaviour for free.
 
+The **marquee** is CSS too, and its three traps are all counter-intuitive. It repeats the product
+set SIX times because the reset translates by exactly `-50%`, so the loop only looks seamless while
+half the track is at least as wide as the viewport; two copies is what everyone writes first and it
+gaps on anything bigger than a laptop. Its container is `overflow-x: auto`, not `clip`, so the row
+stays draggable and the tiles are never content nobody can reach. And only the first copy is real:
+the rest are `aria-hidden` with unfocusable links, or a keyboard user meets the same six links six
+times. Do not put a second `overflow-hidden` on the section around it.
+
+`Stagger` / `StaggerItem` is Framer Motion, and only for a ROW whose items arrive in sequence, where
+each delay depends on position among siblings. Doing that in CSS means threading an index into a
+custom property at every call site, which stops scaling the moment a list is filtered. Reach for
+`Reveal` first; this is the exception, not the upgrade. See the reduced-motion trap in section 1.
+
 Two attributes that are easy to confuse and do opposite jobs:
 
 - **`data-revealed`** fires **once** and stays. For entrances.
-- **`data-onstage`** toggles **both ways** as an element enters and leaves. For **loops**. Six
+- **`data-onstage`** toggles **both ways** as an element enters and leaves. For **loops**, and the
+  product marquee is the expensive one: it composites a 6000px layer, so it must stop offstage. Six
   diagrams compositing forever while the reader is three screens away costs real battery and shows
   up in no synthetic test. The sweep asserts the OFF direction specifically, because the ON
   direction failing is visible and the OFF direction failing is not.
@@ -319,11 +486,22 @@ a render cost.
 
 ## 9. Open items for a human
 
-- **Real client proof.** Every testimonial is a marked placeholder; no metric is published.
+- **`siteConfig.booking.calLink`**, the one value that turns the whole site on. Cal.com's
+  `username/event-slug`, not a URL. Until it is set, every booking control degrades to the project
+  brief and the closing embed renders an honest "scheduling opens shortly" panel. Nothing 404s.
+- **Real client proof.** Every testimonial is a marked placeholder; no metric is published. The
+  proof rail is built for **vertical video**: add a portrait clip plus poster to a testimonial entry
+  and the empty frames become a player, with no layout change.
 - **The inquiry endpoint** (`siteConfig.inquiry.endpoint`). Until set, submission takes a logged
-  mock-success path. Payload shape: `src/features/inquiry/models/inquiry.model.ts`.
-- **The booking URL** (`siteConfig.booking.url`). Hidden until set.
+  mock-success path. Payload shape: `src/features/inquiry/models/inquiry.model.ts`. It now carries
+  `attachments: File[]` with **no client-side type whitelist**, so whatever receives it MUST
+  validate the type and content of every file itself.
+- **Confirm the product strip.** Four of the seven have written case studies; SMA, Whispering Clouds
+  and Yusuf were taken from the same Flutter workspace. Drop any that are not GA Studio's to ship.
 - **Privacy and terms pages**, then `published: true` in `siteConfig.legal`.
+- **A native German pass.** The German is correct and idiomatic as far as an
+  engineer can take it, and it uses Sie throughout; what a native speaker would
+  improve is rhythm and the handful of places the English pun does not carry.
 - **The domain.** `gastudio.com` is a placeholder in `config/env.ts`.
 - **An `/admin` editor** was discussed and deferred. Decided: it lives in this project at `/admin`.
   Still open: where the public site reads content from, media upload, roles, and scope.
@@ -331,3 +509,13 @@ a render cost.
 `docs/BUILD-PLAN.md` records what was built and why, `docs/DESIGN-DIRECTION.md` the visual
 argument, and `docs/techlogi-claude-code-prompt.md` is the original brief, kept verbatim as a
 record.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

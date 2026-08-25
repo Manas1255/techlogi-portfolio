@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import {
   Container,
   Eyebrow,
@@ -6,6 +6,7 @@ import {
   Reveal,
 } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
+import { getTranslations } from "@/i18n/server";
 import { APP_ROUTES } from "@/constants";
 import type { Project } from "@/content";
 
@@ -35,16 +36,20 @@ export function heroMediaCount(project: Project): number {
   return isPortrait(project.heroMedia) ? 2 : 0;
 }
 
-export function CaseStudyHero({ project }: { project: Project }) {
+export async function CaseStudyHero({ project }: { project: Project }) {
+  const t = await getTranslations();
   const facts = [
-    { label: "Industry", value: project.industry },
-    { label: "Product", value: project.productType },
-    { label: "Period", value: project.period },
-    { label: "Platforms", value: project.platforms.join(", ") },
+    { label: t("site.industry"), value: project.industry },
+    { label: t("site.productType"), value: project.productType },
+    { label: t("site.period"), value: project.period },
+    { label: t("site.platforms"), value: project.platforms.join(", ") },
   ];
 
   return (
-    <section className="wash-warm grain pt-28 pb-16 md:pt-36 md:pb-24">
+    <section
+      data-surface="slab"
+      className="wash-slab grain pt-28 pb-16 md:pt-36 md:pb-24"
+    >
       <Container>
         <div className="flex flex-col gap-10">
           <Reveal variant="fade" className="flex flex-col gap-6">
@@ -52,7 +57,7 @@ export function CaseStudyHero({ project }: { project: Project }) {
               href={APP_ROUTES.work}
               className="tap-target text-mono-label text-muted-foreground hover:text-foreground focus-visible:outline-ring w-fit rounded-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-4"
             >
-              ← All work
+              ← {t("site.allWork")}
             </Link>
             <Eyebrow>{project.industry}</Eyebrow>
             <h1 className="text-display-1 max-w-4xl text-balance">
@@ -140,7 +145,7 @@ export function CaseStudyHero({ project }: { project: Project }) {
               <dl className="border-hairline grid gap-x-10 gap-y-5 border-t pt-6 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <dt className="text-eyebrow text-muted-foreground">
-                    What we did
+                    {t("site.whatWeDid")}
                   </dt>
                   <dd className="text-marketing-body text-muted-foreground">
                     {project.whatWeDid}
@@ -148,7 +153,7 @@ export function CaseStudyHero({ project }: { project: Project }) {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <dt className="text-eyebrow text-muted-foreground">
-                    Outcome
+                    {t("site.outcome")}
                   </dt>
                   <dd className="text-marketing-body text-muted-foreground">
                     {project.outcome}

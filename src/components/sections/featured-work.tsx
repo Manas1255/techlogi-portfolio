@@ -6,6 +6,7 @@ import {
 } from "@/components/marketing";
 import { APP_ROUTES } from "@/constants";
 import { featuredProjects } from "@/content";
+import { getLocale, getTranslations } from "@/i18n/server";
 import { ProjectCard } from "./project-card";
 
 /**
@@ -16,18 +17,21 @@ import { ProjectCard } from "./project-card";
  * mode this rhythm exists to prevent, and the variation does real work, giving
  * the strongest project the widest frame.
  */
-export function FeaturedWork() {
-  const projects = featuredProjects();
+export async function FeaturedWork() {
+  const t = await getTranslations();
+  const projects = featuredProjects(await getLocale());
 
   return (
-    <Section rhythm="loose" id="work">
+    <Section rhythm="base" id="work">
       <SectionIntro
-        index={2}
-        eyebrow="Selected work"
-        title="Products in production, not pitches."
-        lead="Every engagement below shipped, went live, and is still running. Each case study covers the problem, the approach and the trade-offs, including the ones that didn't go to plan."
+        index={3}
+        eyebrow={t("featuredWork.eyebrow")}
+        title={t("featuredWork.title")}
+        lead={t("featuredWork.lead")}
         align="split"
-        aside={<ArrowLink href={APP_ROUTES.work}>View all work</ArrowLink>}
+        aside={
+          <ArrowLink href={APP_ROUTES.work}>{t("site.viewAllWork")}</ArrowLink>
+        }
       />
 
       <div className="mt-12 grid gap-6 sm:grid-cols-2 md:mt-14">

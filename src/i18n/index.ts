@@ -1,9 +1,9 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useCallback } from "react";
-import { useLocaleStore } from "./locale-store";
 import { resolve, translate } from "./translate";
-import type { Locale } from "./locales";
+import { toLocale, type Locale } from "./locales";
 import type { MessageKey, MessageVars } from "./types";
 
 /**
@@ -13,14 +13,25 @@ import type { MessageKey, MessageVars } from "./types";
  *
  * Usage:
  *   const t = useTranslations();
- *   t("auth.login.title")
- *   t("dashboard.welcome", { name: user.name })
+ *   t("booking.trigger")
+ *   t("offer.percentOff", { percent: 25 })
+ *
+ * ⚠️ THE LOCALE COMES FROM THE PATH, NOT FROM THE STORE, and the difference is
+ * not cosmetic. The store is filled by an effect after hydration, so during
+ * SERVER rendering it still holds the source locale: every Client Component on
+ * `/de` emitted ENGLISH into the prerendered HTML and then swapped to German
+ * once JavaScript ran. A visitor saw a flash; a crawler saw an English page at
+ * a German URL, which is the one thing routing the locale was supposed to fix.
+ *
+ * `usePathname` is available during server rendering, so the first render is
+ * already correct. The store remains for `getLocale()`, which non-React code
+ * calls where no hook is available.
  */
 
 export type TranslateFn = (key: MessageKey, vars?: MessageVars) => string;
 
 export function useTranslations(): TranslateFn {
-  const locale = useLocaleStore((state) => state.locale);
+  const locale = useLocale();
   return useCallback(
     (key: MessageKey, vars?: MessageVars) => translate(locale, key, vars),
     [locale],
@@ -28,11 +39,8 @@ export function useTranslations(): TranslateFn {
 }
 
 export function useLocale(): Locale {
-  return useLocaleStore((state) => state.locale);
-}
-
-export function useSetLocale(): (locale: Locale) => void {
-  return useLocaleStore((state) => state.setLocale);
+  const pathname = usePathname();
+  return toLocale(pathname.split("/").filter(Boolean)[0]);
 }
 
 /**
@@ -41,7 +49,7 @@ export function useSetLocale(): (locale: Locale) => void {
  * ready-made sentence. A non-key string passes through unchanged.
  */
 export function useMessageResolver(): (value: string) => string {
-  const locale = useLocaleStore((state) => state.locale);
+  const locale = useLocale();
   return useCallback(
     (value: string) => resolve(locale, value) ?? value,
     [locale],

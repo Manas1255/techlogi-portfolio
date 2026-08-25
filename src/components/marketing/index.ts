@@ -27,5 +27,10 @@ export {
   type Choice,
   type ChoiceCardsProps,
 } from "./choice-cards";
-export { CapabilityDiagram } from "./capability-diagram";
-export { BookingLink } from "./booking-link";
+export { CtaButton, ctaVariants, type CtaButtonProps } from "./cta-button";
+export {
+  Stagger,
+  StaggerItem,
+  type StaggerProps,
+  type StaggerItemProps,
+} from "./stagger";

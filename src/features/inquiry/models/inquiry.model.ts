@@ -19,7 +19,8 @@ import type { BuildTypeId } from "@/content/schemas";
  *   "company":     "…",                   // may be empty
  *   "email":       "…",                   // normalized: trimmed, lowercased
  *   "phone":       "…",                   // optional, omitted when empty
- *   "attachment":  File,                  // optional, ≤ 10MB, multipart only
+ *   "attachments": File[],                // optional, ≤5 files, ≤25MB each,
+ *                                         // repeated `attachments[]` parts
  *   "submittedAt": "2026-01-01T00:00:00.000Z",
  *   "source":      "site:gastudio.com"
  * }
@@ -44,18 +45,19 @@ export interface InquiryPayload {
   buildType: BuildTypeId;
   description: string;
   services: string[];
-  /**
-   * Optional because the hero's short form omits them. The dialog collects
-   * both; the hero trades them for a form a visitor will actually finish in
-   * the first ten seconds, and a reply asks for the rest.
-   */
+  /** Optional: a brief sent from a launcher may skip them. */
   timeline?: string;
   budget?: string;
   name: string;
   company: string;
   email: string;
   phone?: string;
-  attachment?: File;
+  /**
+   * Any format. The site deliberately does not whitelist types client-side
+   * (see `siteConfig.inquiry`), so WHATEVER RECEIVES THIS MUST VALIDATE the
+   * type and the content of every file itself.
+   */
+  attachments: File[];
   submittedAt: string;
   source: string;
 }

@@ -32,6 +32,20 @@ export interface MediaFrameProps {
    * a device-framed project renders at half the card's width.
    */
   frameOverride?: MediaFrameKind;
+  /**
+   * How the picture fills an overridden ratio.
+   *
+   * `cover` is right when the media is already near the box's shape. It is
+   * badly wrong when it is not: a 9:16 phone capture forced to cover a 16:10
+   * card keeps a horizontal strip about a fifth of the screen tall, which on
+   * these captures is the status bar and the notch. Four cards on the home
+   * page were showing a black pill and half a greeting.
+   *
+   * `contain` shows the whole screen, scaled to the box's height and centred.
+   * Narrower, and honest: it reads as a product shot rather than a rendering
+   * fault. Only meaningful alongside `aspectOverride`.
+   */
+  fit?: "cover" | "contain";
 }
 
 const ASPECT: Record<string, string> = {
@@ -66,6 +80,7 @@ export function MediaFrame({
   caption,
   aspectOverride,
   frameOverride,
+  fit = "cover",
 }: MediaFrameProps) {
   const frame = frameOverride ?? media.frame;
 
@@ -95,6 +110,7 @@ export function MediaFrame({
       sizes={sizes}
       priority={priority}
       objectPosition={objectPosition}
+      fit={fit}
     />
   );
   // An image knows its own proportions; only synthetic and video media have to
@@ -193,11 +209,13 @@ function MediaContent({
   sizes,
   priority,
   objectPosition,
+  fit = "cover",
 }: {
   media: Media;
   sizes?: string;
   priority: boolean;
   objectPosition?: "top";
+  fit?: "cover" | "contain";
 }) {
   if (media.kind === "image") {
     return (
@@ -210,8 +228,9 @@ function MediaContent({
         priority={priority || media.priority}
         loading={priority || media.priority ? undefined : "lazy"}
         className={cn(
-          "size-full object-cover",
-          objectPosition === "top" && "object-top",
+          "size-full",
+          fit === "contain" ? "object-contain" : "object-cover",
+          objectPosition === "top" && fit !== "contain" && "object-top",
         )}
       />
     );

@@ -1,8 +1,9 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { ArrowLink, Reveal } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
 import { caseStudyPath } from "@/constants";
 import type { Media, Project } from "@/content";
+import { getTranslations } from "@/i18n/server";
 import { cn } from "@/lib/utils";
 
 export interface ProjectPanelProps {
@@ -39,7 +40,7 @@ export interface ProjectPanelProps {
  * thumbnail, and a grid of thumbnails is the failure state this section exists
  * to avoid.
  */
-export function ProjectPanel({
+export async function ProjectPanel({
   project,
   index,
   reversed = false,
@@ -47,6 +48,7 @@ export function ProjectPanel({
   media: mediaOverride,
   headingLevel: Heading = "h3",
 }: ProjectPanelProps) {
+  const t = await getTranslations();
   const frameMedia = mediaOverride ?? project.heroMedia;
   const media = (
     <Link
@@ -96,11 +98,15 @@ export function ProjectPanel({
 
       <dl className="border-hairline grid gap-x-8 gap-y-4 border-t pt-5 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <dt className="text-eyebrow text-muted-foreground">What we did</dt>
+          <dt className="text-eyebrow text-muted-foreground">
+            {t("site.whatWeDid")}
+          </dt>
           <dd className="text-[0.9375rem] leading-snug">{project.whatWeDid}</dd>
         </div>
         <div className="flex flex-col gap-1.5">
-          <dt className="text-eyebrow text-muted-foreground">Outcome</dt>
+          <dt className="text-eyebrow text-muted-foreground">
+            {t("site.outcome")}
+          </dt>
           <dd className="text-[0.9375rem] leading-snug">{project.outcome}</dd>
         </div>
       </dl>

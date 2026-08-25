@@ -16,14 +16,32 @@ import {
  * accessible name, a drawer that loses focus, motion that ignores a user's
  * stated preference.
  */
+/*
+  Every route is locale-prefixed now: `/work` is a 307 to `/en/work`, not a
+  page. Tests navigate to the prefixed URL directly rather than leaning on the
+  redirect, so a broken proxy shows up as its own failure instead of quietly
+  making every other test slower and still green.
+*/
 const ROUTES = [
-  "/",
-  "/work",
-  "/work/zyuela",
-  "/services",
-  "/about",
-  "/contact",
-  "/design-system",
+  "/en",
+  "/en/work",
+  "/en/work/zyuela",
+  "/en/services",
+  "/en/about",
+  "/en/contact",
+  "/en/design-system",
+  /*
+    German is checked for layout too, and not as a formality: it runs roughly
+    30% longer than English, so it is the language that overflows first. The
+    header wordmark wrapped onto two lines at 390px and the CTA ran off the
+    edge at 320px, and neither was visible in English at any width.
+  */
+  "/de",
+  "/de/work",
+  "/de/work/zyuela",
+  "/de/services",
+  "/de/about",
+  "/de/contact",
 ] as const;
 
 test.describe("layout resilience", () => {
@@ -83,10 +101,24 @@ test.describe("document structure", () => {
     control in the other, which typing into the page proves and no type check
     ever will.
   */
-  for (const route of ["/", "/contact"] as const) {
+  for (const route of ["/en", "/en/contact"] as const) {
     test(`${route} has no duplicate DOM ids`, async ({ page }) => {
       await page.goto(route);
-      await page.getByRole("button", { name: "Start a Project" }).first().click();
+      /*
+        The two routes open the brief differently, and both have to be checked
+        with it OPEN, because the bug this guards is two forms on one page.
+        The home page offers a plain trigger; `/contact` leads with the
+        launcher, whose choice cards answer step one and open the dialog on
+        step two.
+      */
+      const trigger = page.getByRole("button", {
+        name: /send a project brief/i,
+      });
+      if ((await trigger.count()) > 0) {
+        await trigger.first().click();
+      } else {
+        await page.getByRole("radio", { name: /A web platform/ }).first().click();
+      }
       await expect(page.getByRole("dialog")).toBeVisible();
 
       const duplicates = await page.evaluate(() => {
@@ -109,7 +141,7 @@ test.describe("document structure", () => {
   }
 
   test("every page has the three landmarks", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/en");
     await expect(page.locator("main")).toHaveCount(1);
     await expect(page.locator("header")).toHaveCount(1);
     await expect(page.locator("footer")).toHaveCount(1);
@@ -117,12 +149,42 @@ test.describe("document structure", () => {
 });
 
 test.describe("navigation", () => {
+  test("booking is the primary action, and the inquiry is not", async ({
+    page,
+  }) => {
+    /*
+      The redesign's whole thesis. "Send inquiry" ends with the visitor waiting
+      for someone else to act; a booked slot ends with a meeting. If a primary
+      brass CTA labelled as an inquiry ever comes back to the header or the
+      hero, the page has quietly reverted to asking rather than closing.
+    */
+    await page.goto("/en");
+    await expect(
+      page.getByRole("banner").getByRole("button", { name: /book a call/i }),
+    ).toBeVisible();
+
+    const hero = page.locator("main section").first();
+    await expect(
+      hero.getByRole("button", { name: /book a call/i }).first(),
+    ).toBeVisible();
+
+    const primaries = await hero
+      .locator('[data-slot="cta"][class*="bg-primary"]')
+      .allTextContents();
+    for (const label of primaries) {
+      expect(
+        label.toLowerCase(),
+        `a primary hero CTA still reads "${label}"`,
+      ).not.toContain("inquiry");
+    }
+  });
+
   test("the primary action is reachable at every viewport", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/en");
     await expect(
-      page.getByRole("button", { name: "Start a Project" }).first(),
+      page.getByRole("button", { name: /book a call/i }).first(),
     ).toBeVisible();
   });
 
@@ -130,7 +192,7 @@ test.describe("navigation", () => {
     page,
   }, testInfo) => {
     test.skip(testInfo.project.name !== "mobile", "mobile viewport only");
-    await page.goto("/");
+    await page.goto("/en");
 
     await page.getByRole("button", { name: "Open navigation" }).click();
     const panel = page.getByRole("dialog");
@@ -148,7 +210,7 @@ test.describe("navigation", () => {
   });
 
   test("a case study links onward to the next project", async ({ page }) => {
-    await page.goto("/work/zyuela");
+    await page.goto("/en/work/zyuela");
     await page.getByRole("link", { name: /Next project/ }).click();
     await expect(page).toHaveURL(/\/work\/[a-z-]+$/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
@@ -159,9 +221,9 @@ test.describe("work index", () => {
   test("filtering by capability is reflected in the URL and survives reload", async ({
     page,
   }) => {
-    await page.goto("/work");
+    await page.goto("/en/work");
     // Scoped by href: the footer's capability list also links to "Mobile".
-    const mobileFilter = page.locator('a[href="/work?category=mobile"]');
+    const mobileFilter = page.locator('a[href="/en/work?category=mobile"]');
     await mobileFilter.click();
     await expect(page).toHaveURL(/category=mobile/);
 
@@ -170,9 +232,9 @@ test.describe("work index", () => {
   });
 
   test("no filter ever produces an empty result set", async ({ page }) => {
-    await page.goto("/work");
+    await page.goto("/en/work");
     const hrefs = await page
-      .locator('a[href^="/work?category="]')
+      .locator('a[href^="/en/work?category="]')
       .evaluateAll((links) => links.map((l) => l.getAttribute("href") ?? ""));
     expect(hrefs.length).toBeGreaterThan(0);
     for (const href of hrefs) {
@@ -192,10 +254,10 @@ test.describe("work index", () => {
     project to a crawler, and refilled on hydration for 0.56 CLS against a 0.1
     budget. Both symptoms are invisible to every other check in this suite.
   */
-  test("/work ships its content in the HTML, not on hydration", async ({
+  test("/en/work ships its content in the HTML, not on hydration", async ({
     request,
   }) => {
-    const html = await (await request.get("/work")).text();
+    const html = await (await request.get("/en/work")).text();
     expect(html, "no <h1> in the served HTML").toContain("<h1");
     // Assert on project NAMES rather than a sentence of copy: copy gets
     // rewritten, and a regression guard that fails on an ordinary edit is a
@@ -208,67 +270,98 @@ test.describe("work index", () => {
   });
 });
 
-test.describe("project inquiry", () => {
-  test("a single choice advances, and going back keeps the answer", async ({
+test.describe("project brief", () => {
+  /*
+    The brief was a three-step wizard and is now ONE screen with four required
+    fields, everything else behind an optional disclosure. These tests assert
+    the properties that survived the rewrite, not the steps that did not.
+  */
+
+  test("the whole brief is on one screen, with no wizard to walk", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.getByRole("button", { name: "Start a Project" }).first().click();
+    await page.goto("/en");
+    // Four fields, all present at once. If a step machine ever comes back,
+    // three of these are on screens the visitor has not reached.
+    const form = page.locator("form").filter({ has: page.getByLabel("Email") });
+    await expect(form.getByLabel("What are you building?")).toBeVisible();
+    await expect(form.getByLabel("The project, in your words")).toBeVisible();
+    await expect(form.getByLabel("Your name")).toBeVisible();
+    await expect(form.getByLabel("Email")).toBeVisible();
 
-    await page.getByRole("radio", { name: /A product I sell to customers/ }).click();
-    await expect(page.getByText("Tell us about it")).toBeVisible();
-
-    await page.getByRole("button", { name: "Back" }).click();
+    // Budget and timeline are OFFERED, not demanded: they are the questions
+    // people abandon a form over, so they must start collapsed.
     await expect(
-      page.getByRole("radio", { name: /A product I sell to customers/ }),
-    ).toHaveAttribute("aria-checked", "true");
+      page.getByLabel("Rough budget"),
+      "budget is visible by default, which is the friction this rewrite removed",
+    ).toBeHidden();
   });
 
-  test("a step cannot be skipped while its fields are invalid", async ({
+  test("the optional detail opens without leaving the screen", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await page.getByRole("radio", { name: /A web app/ }).click();
-
-    await page.getByRole("button", { name: "Continue" }).click();
-    // Still on step two: the description is required and empty.
-    await expect(page.getByText("Tell us about it")).toBeVisible();
-    await expect(page.locator("[aria-invalid='true']")).toHaveCount(1);
-  });
-
-  test("the draft survives closing and reopening the drawer", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await page.getByRole("radio", { name: /Something with AI in it/ }).click();
+    await page.goto("/en");
     await page
-      .getByLabel("The project, in your words")
-      .fill("An internal assistant over our own runbooks and incident history.");
+      .getByText("Add budget, timeline or files (optional)")
+      .first()
+      .click();
+    await expect(page.getByLabel("Rough budget").first()).toBeVisible();
+    await expect(page.getByLabel("Your name").first()).toBeVisible();
+  });
+
+  test("the draft survives closing and reopening the dialog", async ({
+    page,
+  }) => {
+    await page.goto("/en");
+    await page
+      .getByRole("button", { name: /send a project brief/i })
+      .first()
+      .click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+
+    const field = page
+      .getByRole("dialog")
+      .getByLabel("The project, in your words");
+    await field.fill(
+      "An internal assistant over our own runbooks and incident history.",
+    );
+    // The draft is persisted on blur, not per keystroke.
+    await field.blur();
 
     await page.keyboard.press("Escape");
     await expect(page.getByRole("dialog")).toBeHidden();
 
-    await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await expect(page.getByLabel("The project, in your words")).toHaveValue(
-      /internal assistant/,
-    );
+    await page
+      .getByRole("button", { name: /send a project brief/i })
+      .first()
+      .click();
+    await expect(
+      page.getByRole("dialog").getByLabel("The project, in your words"),
+    ).toHaveValue(/internal assistant/);
+  });
+
+  test("an empty required field blocks the send and is marked invalid", async ({
+    page,
+  }) => {
+    await page.goto("/en");
+    const form = page.locator("form").filter({ has: page.getByLabel("Email") });
+    await form.getByRole("button", { name: "Send the brief" }).click();
+    await expect(page.locator("[aria-invalid='true']").first()).toBeVisible();
+    await expect(page.getByText("Thanks, that's with us.")).toBeHidden();
   });
 
   test("submitting reaches a designed success state", async ({ page }) => {
-    await page.goto("/contact");
-    await page.getByRole("radio", { name: /A web app/ }).first().click();
-    await page
+    await page.goto("/en");
+    const form = page.locator("form").filter({ has: page.getByLabel("Email") });
+
+    await form.getByLabel("What are you building?").click();
+    await page.getByRole("option", { name: /A website/ }).click();
+    await form
       .getByLabel("The project, in your words")
       .fill("A portal our field engineers can use with one hand, offline.");
-    await page.getByRole("radio", { name: /In the next few months/ }).click();
-    await page.getByRole("radio", { name: "$5k – $10k" }).click();
-    await page.getByRole("button", { name: "Continue" }).click();
-
-    await page.getByLabel("Your name").fill("Ada Lovelace");
-    await page.getByLabel("Email").fill("ada@example.com");
-    await page.getByRole("button", { name: "Send it" }).click();
+    await form.getByLabel("Your name").fill("Ada Lovelace");
+    await form.getByLabel("Email").fill("ada@example.com");
+    await form.getByRole("button", { name: "Send the brief" }).click();
 
     await expect(page.getByText("Thanks, that's with us.")).toBeVisible();
   });
@@ -276,13 +369,326 @@ test.describe("project inquiry", () => {
   test("survives pathological input without breaking the layout", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.getByRole("button", { name: "Start a Project" }).first().click();
-    await page.getByRole("radio", { name: /I'm not sure yet/ }).first().click();
+    await page.goto("/en");
     await page
       .getByLabel("The project, in your words")
+      .first()
       .fill(`${PATHOLOGICAL_TEXT} ${PATHOLOGICAL_TOKEN}`);
     await expectNoHorizontalOverflow(page);
+  });
+});
+
+test.describe("product marquee", () => {
+  const track = ".marquee-track";
+  const offset = (page: import("@playwright/test").Page) =>
+    page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element === null) return null;
+      return new DOMMatrix(getComputedStyle(element).transform).m41;
+    }, track);
+
+  test("moves, and by enough to be seen", async ({ page }) => {
+    /*
+      The capability diagrams once drifted 4.93px over seven seconds, which
+      reads as completely static: motion nobody can perceive is just battery.
+      A screenshot cannot show a loop, so measure the actual travel.
+    */
+    await page.goto("/en");
+    await page.evaluate(() =>
+      document.querySelector("[data-marquee]")?.scrollIntoView({ block: "center" }),
+    );
+    await page.waitForTimeout(600);
+
+    const before = await offset(page);
+    await page.waitForTimeout(2000);
+    const after = await offset(page);
+    expect(before, "no marquee track on the page").not.toBeNull();
+    const travelled = Math.abs((after ?? 0) - (before ?? 0));
+    expect(
+      travelled,
+      `the marquee moved ${travelled.toFixed(1)}px in two seconds, which reads as static`,
+    ).toBeGreaterThan(40);
+  });
+
+  test("loops without a seam at any width", async ({ page }) => {
+    /*
+      The reset translates the track by exactly -50%, so the loop is only
+      seamless while HALF the track is at least as wide as the container.
+      Two copies is the version everyone writes first and it shows a gap on
+      anything wider than a laptop.
+    */
+    await page.goto("/en");
+    const geometry = await page.evaluate(() => {
+      const box = document.querySelector("[data-marquee]");
+      const rail = document.querySelector(".marquee-track");
+      if (box === null || rail === null) return null;
+      return { container: box.clientWidth, half: rail.scrollWidth / 2 };
+    });
+    if (geometry === null) throw new Error("no marquee track on the page");
+    const { half, container } = geometry;
+    expect(
+      half,
+      `half the track is ${half}px against a ${container}px container, so the loop will show a gap`,
+    ).toBeGreaterThanOrEqual(container);
+  });
+
+  test("stops when it scrolls out of view", async ({ page }) => {
+    /*
+      The OFF direction, asserted specifically: a marquee composites a 3000px
+      layer forever, and the ON direction failing is visible while the OFF
+      direction failing is not.
+    */
+    await page.goto("/en");
+    await page.evaluate(() =>
+      document.querySelector("[data-marquee]")?.scrollIntoView({ block: "center" }),
+    );
+    await page.waitForTimeout(600);
+    expect(
+      await page.evaluate(
+        () => document.querySelectorAll("[data-marquee][data-onstage]").length,
+      ),
+    ).toBe(1);
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(900);
+    expect(
+      await page.evaluate(
+        () => document.querySelectorAll("[data-marquee][data-onstage]").length,
+      ),
+      "the marquee kept animating after leaving the viewport",
+    ).toBe(0);
+  });
+
+  test("holds still, and stays reachable, under reduced motion", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/en");
+    await page.evaluate(() =>
+      document.querySelector("[data-marquee]")?.scrollIntoView({ block: "center" }),
+    );
+    await page.waitForTimeout(600);
+
+    const before = await offset(page);
+    await page.waitForTimeout(1500);
+    expect(await offset(page), "the marquee moved under reduced motion").toBe(
+      before,
+    );
+
+    // Stopped is only acceptable because the row can still be dragged.
+    expect(
+      await page.evaluate(() => {
+        const box = document.querySelector("[data-marquee]");
+        return box === null ? "" : getComputedStyle(box).overflowX;
+      }),
+      "a stopped marquee that cannot scroll is content nobody can reach",
+    ).toBe("auto");
+  });
+
+  test("announces six products, not thirty-six", async ({ page }) => {
+    await page.goto("/en");
+    const focusable = await page.evaluate(
+      () =>
+        [...document.querySelectorAll("[data-marquee] a")].filter(
+          (link) => (link as HTMLAnchorElement).tabIndex !== -1,
+        ).length,
+    );
+    // The repeats exist to fill the row; only the first set is real.
+    expect(
+      focusable,
+      "duplicated tiles are in the tab order, so keyboard users meet the same links five times",
+    ).toBeLessThanOrEqual(6);
+  });
+});
+
+test.describe("localisation", () => {
+  /*
+    The point of routing the locale rather than toggling it is that `/de` is a
+    real German DOCUMENT: server-rendered, correctly tagged, and indexable.
+    Every assertion here is something a client-side toggle would fail, and
+    every one of them is invisible to a type check.
+  */
+  test("/de is a German document, not an English one with swapped strings", async ({
+    request,
+  }) => {
+    const html = await (await request.get("/de")).text();
+    expect(html, "the document is not tagged German").toContain(
+      '<html lang="de"',
+    );
+
+    /*
+      Detect the LANGUAGE, not a sentence. This assertion used to name the hero
+      headline, and rewriting that headline failed a test that had nothing to
+      do with the change: a regression guard that breaks on ordinary copy edits
+      is a guard people delete. Function words and umlauts survive any rewrite
+      while still being impossible in an English document.
+
+      Server-rendered, not hydrated in: a crawler never runs the JS.
+    */
+    const markers = html.match(/\b(und|Sie|Ihre|nicht|werden|einem?)\b|[äöüß]/g);
+    expect(
+      markers?.length ?? 0,
+      "the served HTML reads as English, so the page is English to a crawler",
+    ).toBeGreaterThan(40);
+  });
+
+  test("a German page never links back into English", async ({ page }) => {
+    /*
+      The failure this catches is silent and total: an unprefixed `href="/work"`
+      still resolves, because the proxy redirects it, so nothing 404s and
+      nothing fails to build. The only symptom is that half the site changes
+      language when someone clicks. See `components/layout/app-link.tsx`.
+    */
+    await page.goto("/de");
+    const leaks = await page.evaluate(() =>
+      [...document.querySelectorAll("a[href]")]
+        .map((link) => link.getAttribute("href") ?? "")
+        .filter(
+          (href) =>
+            href.startsWith("/") &&
+            !href.startsWith("//") &&
+            !href.startsWith("/de"),
+        ),
+    );
+    expect(
+      leaks,
+      `these links drop a German reader into English: ${leaks.join(", ")}`,
+    ).toEqual([]);
+  });
+
+  test("no English leaks into the German HTML", async ({ request }) => {
+    /*
+      The failure this catches was invisible in the browser and fatal to the
+      point of the exercise. `useTranslations` used to read the locale from the
+      Zustand store, which an effect fills AFTER hydration, so every Client
+      Component on `/de` rendered ENGLISH into the prerendered HTML and swapped
+      to German once JavaScript ran. A visitor saw a flash. A crawler saw an
+      English page at a German URL.
+
+      Asserting on the SERVED markup rather than the rendered page is the whole
+      point: `page.getByText` would have passed throughout.
+    */
+    const marks = [
+      "Book a call",
+      "Send a project brief",
+      "All work",
+      "What we did",
+      "Outcome",
+      "Selected work",
+      "How it works",
+    ];
+    for (const route of ["/de", "/de/work", "/de/work/zyuela", "/de/about"]) {
+      const html = await (await request.get(route)).text();
+      const found = marks.filter((mark) => html.includes(`>${mark}<`));
+      expect(found, `${route} serves English: ${found.join(", ")}`).toEqual([]);
+    }
+  });
+
+  test("both languages are declared to each other", async ({ request }) => {
+    // Without hreflang the two translations compete as near-duplicates and a
+    // crawler is entitled to drop one of them.
+    const html = await (await request.get("/de")).text();
+    expect(html).toContain('hrefLang="en"');
+    expect(html).toContain('hrefLang="de"');
+    expect(html).toContain('hrefLang="x-default"');
+    expect(html).toContain('rel="canonical" href="https://gastudio.com/de"');
+  });
+
+  test("an unprefixed URL lands on German, whatever the browser asks for", async ({
+    request,
+  }) => {
+    /*
+      German is served unconditionally. `Accept-Language` is deliberately not
+      consulted: nearly every browser ships `en-US` whatever its owner reads,
+      so honouring it sent most visitors, German ones included, to the English
+      site. This asserts the header is ignored, because reinstating
+      negotiation is a one-line change that looks harmless.
+    */
+    for (const header of ["en-GB,en;q=0.9", "de-DE,de;q=0.9", ""]) {
+      const response = await request.get("/work", {
+        maxRedirects: 0,
+        headers: { "accept-language": header },
+      });
+      // 307, never 308: the target depends on a cookie, so a cache must not
+      // pin one visitor's language onto everyone behind the same key.
+      expect(response.status(), `accept-language: "${header}"`).toBe(307);
+      expect(
+        response.headers()["location"],
+        `accept-language: "${header}" did not land on German`,
+      ).toContain("/de/work");
+    }
+  });
+
+  test("an explicit choice outranks the default", async ({ request }) => {
+    /*
+      The cookie is the switcher's memory, and the only signal that is a
+      DECISION rather than a setting. If the default ever outranks it, the
+      switcher appears not to work: you pick English, come back tomorrow, and
+      the site is German again.
+    */
+    const response = await request.get("/work", {
+      maxRedirects: 0,
+      headers: { cookie: "locale=en", "accept-language": "de-DE,de;q=0.9" },
+    });
+    expect(response.status()).toBe(307);
+    expect(response.headers()["location"]).toContain("/en/work");
+  });
+
+  test("a shared link is never redirected out of its language", async ({
+    request,
+  }) => {
+    // Someone sent this URL on purpose; the default has no business overriding
+    // it, and neither does the recipient's cookie.
+    const response = await request.get("/en/work", {
+      maxRedirects: 0,
+      headers: { cookie: "locale=de" },
+    });
+    expect(response.status()).toBe(200);
+  });
+
+  test("every page ships a complete Open Graph card", async ({ request }) => {
+    /*
+      Next merges top-level metadata down the tree but REPLACES `openGraph`
+      wholesale, so the moment a page declared its own openGraph it dropped the
+      layout's `images` and every route shipped a card with no picture. Nothing
+      failed: the pages built, rendered and passed every other test, and the
+      only symptom was a blank preview when someone pasted a link into Slack.
+
+      Absolute URLs, not relative: without `metadataBase` a relative image
+      resolves against localhost at build time, which ships a preview pointing
+      at the machine that built it.
+    */
+    for (const route of ["/de", "/en", "/de/services", "/en/work/zyuela"]) {
+      const html = await (await request.get(route)).text();
+      const image = html.match(/property="og:image" content="([^"]*)"/)?.[1];
+      expect(image, `${route} ships no og:image`).toBeTruthy();
+      expect(
+        image,
+        `${route} ships a relative og:image, so the preview points nowhere`,
+      ).toMatch(/^https:\/\//);
+      expect(
+        html.match(/property="og:title" content="([^"]*)"/)?.[1],
+        `${route} ships no og:title`,
+      ).toBeTruthy();
+    }
+  });
+
+  test("x-default points at German", async ({ request }) => {
+    const html = await (await request.get("/de")).text();
+    expect(html).toContain(
+      '<link rel="alternate" hrefLang="x-default" href="https://gastudio.com/de"',
+    );
+  });
+
+  test("switching language keeps the reader on the same page", async ({
+    page,
+  }) => {
+    // Dropping someone at the home page is the commonest bug in a language
+    // switcher, and the most annoying one.
+    await page.goto("/en/work/zyuela");
+    await page.getByRole("button", { name: /language/i }).click();
+    await page.getByRole("menuitem", { name: "Deutsch" }).click();
+    await expect(page).toHaveURL(/\/de\/work\/zyuela$/);
   });
 });
 
@@ -295,7 +701,7 @@ test.describe("section rhythm", () => {
     quietly breaks.
   */
   test("no two adjacent sections share a ground", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/en");
     const grounds = await page.evaluate(() =>
       [...document.querySelectorAll("main > section, main > div > section")].map(
         (section) => {
@@ -342,7 +748,7 @@ test.describe("home page work cards", () => {
     own max width and rendered at HALF the card's, leaving rows 191px apart.
   */
   test("cards sharing a row are the same height", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/en");
     await page.evaluate(() =>
       document.querySelector("#work")?.scrollIntoView(),
     );
@@ -375,7 +781,7 @@ test.describe("home page work cards", () => {
   test("the home page teases the work rather than reprinting it", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/en");
     // The editorial panels belong on /work. If they come back here the section
     // returns to four full screens, which is what readers called endless.
     const summaries = await page.evaluate(
@@ -389,54 +795,63 @@ test.describe("home page work cards", () => {
   });
 });
 
-test.describe("capability diagrams", () => {
+test.describe("shipped product strip", () => {
   /*
-    Regression guard. The looping drift, ring rotation and dash march are gated
-    on `data-onstage`, which an observer toggles BOTH ways. Six diagrams
-    compositing forever while the reader is three screens away costs real
-    battery and shows up in no synthetic test, so assert the OFF direction
-    specifically: the on direction failing is visible, the off direction
-    failing is not.
+    The strip's whole value is that the marks are REAL app icons, lifted from
+    each product's own repository. A missing or broken file turns the highest
+    trust section on the page into seven alt-text stubs, and nothing upstream
+    catches it: the path is a string, so it type-checks and it builds.
+
+    `content.test.ts` asserts the files exist on disk. This asserts the browser
+    actually decoded them, which is the part a wrong path or a corrupt export
+    would still fail.
   */
-  test("diagram animation stops when it scrolls out of view", async ({
+  test("every product logo loads and is not a broken image", async ({
     page,
   }) => {
-    await page.goto("/");
-    await page.evaluate(() =>
-      document.querySelector("#capabilities")?.scrollIntoView(),
-    );
-    await page.waitForTimeout(400);
-    const onstage = await page.evaluate(
-      () => document.querySelectorAll("[data-diagram][data-onstage]").length,
-    );
-    expect(onstage, "no diagram animated while in view").toBeGreaterThan(0);
+    await page.goto("/en");
+    const broken = await page.evaluate(() =>
+      /*
+        Next/Image rewrites the src through the optimiser, so the raw path
+        appears percent-encoded inside the query string.
 
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.waitForTimeout(700);
-    const stillOn = await page.evaluate(
-      () => document.querySelectorAll("[data-diagram][data-onstage]").length,
+        Only the FIRST set is checked. The marquee repeats the products six
+        times to fill the row, and the copies past the fold are lazy by
+        design, so counting them means counting images the browser has quite
+        correctly not fetched.
+      */
+      [...document.querySelectorAll("li:not([aria-hidden]) img")]
+        .filter((image) =>
+          decodeURIComponent((image as HTMLImageElement).src).includes(
+            "/media/logos/",
+          ),
+        )
+        /*
+          BROKEN, not merely unloaded. `complete === false` is a lazy image
+          the browser has correctly not fetched yet, which on a 393px screen
+          is most of the row; `complete === true` with no intrinsic width is a
+          file that failed, which is the thing worth failing a build over.
+        */
+        .filter(
+          (image) =>
+            (image as HTMLImageElement).complete &&
+            (image as HTMLImageElement).naturalWidth === 0,
+        )
+        .map((image) => (image as HTMLImageElement).src),
     );
-    expect(
-      stillOn,
-      "diagrams kept animating after scrolling away, which burns battery for nothing",
-    ).toBe(0);
-  });
+    expect(broken, `logos failed to load: ${broken.join(", ")}`).toEqual([]);
 
-  test("every chip is visible once its card has revealed", async ({ page }) => {
-    await page.goto("/");
-    await page.evaluate(() =>
-      document.querySelector("#capabilities")?.scrollIntoView(),
-    );
-    await page.waitForTimeout(900);
-    const hidden = await page.evaluate(
+    const count = await page.evaluate(
       () =>
-        [...document.querySelectorAll("[data-diagram] [data-chip]")].filter(
-          (chip) =>
-            chip.getBoundingClientRect().top < window.innerHeight &&
-            Number(getComputedStyle(chip).opacity) < 0.9,
+        [
+          ...document.querySelectorAll("li:not([aria-hidden]) img"),
+        ].filter((image) =>
+          decodeURIComponent((image as HTMLImageElement).src).includes(
+            "/media/logos/",
+          ),
         ).length,
     );
-    expect(hidden, "chips stayed hidden after their card revealed").toBe(0);
+    expect(count, "the logo strip is empty").toBeGreaterThanOrEqual(4);
   });
 });
 
@@ -450,7 +865,7 @@ test.describe("frequently asked questions", () => {
   test("a question opens and closes without crashing the page", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/en");
     const first = page.locator("#faq summary").first();
     await first.click();
     await expect(
@@ -468,7 +883,7 @@ test.describe("frequently asked questions", () => {
 test.describe("motion preferences", () => {
   test("no content stays hidden when motion is reduced", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
+    await page.goto("/en");
     const hidden = await page.evaluate(() =>
       [...document.querySelectorAll("[data-reveal]")].filter(
         (element) => Number(getComputedStyle(element).opacity) < 0.99,
@@ -480,13 +895,31 @@ test.describe("motion preferences", () => {
     ).toBe(0);
   });
 
-  test("the showreel does not advance by itself", async ({ page }) => {
+  test("staggered sections render fully with motion reduced", async ({
+    page,
+  }) => {
+    /*
+      The Framer Motion staggers are a SECOND motion system beside the CSS
+      reveals, and they fail differently: `Reveal` is hidden by a stylesheet
+      that resolves every duration to 1ms under the media query, so it cannot
+      strand content. A variant-driven entrance is inline style, and if the
+      reduced-motion branch is ever dropped, every logo tile, process step and
+      capability card stays at opacity 0 with nothing in CSS to save it.
+    */
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.goto("/");
-    const selected = page.locator('[aria-roledescription="carousel"] [aria-current="true"]');
-    const before = await selected.textContent();
-    await page.waitForTimeout(5000);
-    expect(await selected.textContent()).toBe(before);
+    await page.goto("/en");
+    const invisible = await page.evaluate(() =>
+      [
+        ...document.querySelectorAll(
+          "#capabilities li, #process li, [aria-labelledby='shipped-products'] li",
+        ),
+      ].filter((element) => Number(getComputedStyle(element).opacity) < 0.99)
+        .length,
+    );
+    expect(
+      invisible,
+      "staggered items stayed transparent under prefers-reduced-motion",
+    ).toBe(0);
   });
 });
 
@@ -498,7 +931,7 @@ test.describe("design system", () => {
     the opposite of what we want.
   */
   test.beforeEach(async ({ page }) => {
-    await page.goto("/design-system");
+    await page.goto("/en/design-system");
     // Next serves its not-found page with a 200 here, so the status is not a
     // reliable signal. Detect the rendered page instead.
     const isPresent = await page
@@ -511,7 +944,7 @@ test.describe("design system", () => {
   test("renders every section without overflow at any width", async ({
     page,
   }) => {
-    await page.goto("/design-system");
+    await page.goto("/en/design-system");
     await expect(
       page.getByRole("heading", { name: "Design system" }),
     ).toBeVisible();
@@ -528,7 +961,7 @@ test.describe("design system", () => {
   test("marks overflowing text as clipped and leaves short text alone", async ({
     page,
   }) => {
-    await page.goto("/design-system");
+    await page.goto("/en/design-system");
 
     const longValue = page.locator("[data-clipped]", {
       hasText: "Internationale Handelsgesellschaft",

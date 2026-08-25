@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import {
   Container,
   PlaceholderNote,
@@ -9,13 +9,14 @@ import { MediaFrame } from "@/components/media";
 import {
   CaseStudyHero,
   CaseStudySection,
-  ClosingCta,
+  BookACall,
   heroMediaCount,
 } from "@/components/sections";
 import { CaseStudySchema } from "@/components/layout/structured-data";
 import { caseStudyPath } from "@/constants";
 import { siteConfig } from "@/config/site";
 import { nextProject, type Project } from "@/content";
+import { getLocale, getTranslations } from "@/i18n/server";
 
 /**
  * A case study, assembled entirely from the content model.
@@ -24,8 +25,9 @@ import { nextProject, type Project } from "@/content";
  * gallery, the quote and the next-project link all read from the entry in
  * `src/content/projects.ts`. Adding a case study is a data addition plus media.
  */
-export function CaseStudyScreen({ project }: { project: Project }) {
-  const next = nextProject(project.slug);
+export async function CaseStudyScreen({ project }: { project: Project }) {
+  const t = await getTranslations();
+  const next = nextProject(project.slug, await getLocale());
   // A mobile project's hero shows a row of screens; the gallery picks up from
   // wherever that left off rather than repeating them.
   const gallery = project.galleryMedia.slice(heroMediaCount(project));
@@ -55,7 +57,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
         <Section width="wide" rhythm="base" divided>
           <Reveal variant="fade" className="flex flex-col gap-8">
             <p className="text-eyebrow text-muted-foreground">
-              More from {project.name}
+              {t("pages.caseStudy.moreFrom", { project: project.name })}
             </p>
             <div className="grid gap-8 lg:grid-cols-2">
               {gallery.map((media, index) => (
@@ -111,7 +113,7 @@ export function CaseStudyScreen({ project }: { project: Project }) {
             >
               <div className="flex flex-col gap-3">
                 <span className="text-eyebrow text-muted-foreground">
-                  Next project
+                  {t("site.nextProject")}
                 </span>
                 <span className="text-display-1">{next.name}</span>
                 <span className="text-muted-foreground text-lg">
@@ -129,10 +131,10 @@ export function CaseStudyScreen({ project }: { project: Project }) {
         </section>
       )}
 
-      <ClosingCta
+      <BookACall
         origin={`case-study:${project.slug}`}
-        title="Building something like this?"
-        lead="Start with one question. We'll tell you quickly whether we're the right team for it."
+        title={t("pages.caseStudy.closeTitle")}
+        lead={t("pages.caseStudy.closeLead")}
       />
     </>
   );

@@ -3,16 +3,17 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Reveal, Section, SectionIntro } from "@/components/marketing";
-import { faqs } from "@/content";
+import { useContent } from "@/content/use-content";
 import { siteConfig } from "@/config/site";
-import { InquiryTrigger } from "@/features/inquiry";
+import { BookCallButton } from "@/features/booking";
+import { useTranslations } from "@/i18n";
 import { cn } from "@/lib/utils";
 
 /**
  * FAQ, sat immediately before the closing inquiry.
  *
  * Trust signals work hardest next to the moment of doubt, and this is that
- * moment: the visitor has read the work and is deciding whether to write in.
+ * moment: the visitor has read the work and is deciding whether to book.
  * The first question is price, answered with real numbers, because across the
  * information types a B2B buyer looks for, price ranks highest by a wide margin
  * and most studio sites withhold it entirely.
@@ -24,6 +25,8 @@ import { cn } from "@/lib/utils";
  * mirrors the open set so the icon can rotate.
  */
 export function FaqSection() {
+  const t = useTranslations();
+  const { faqs } = useContent();
   const [open, setOpen] = useState<Set<number>>(new Set());
 
   return (
@@ -31,23 +34,19 @@ export function FaqSection() {
       <div className="grid gap-12 lg:grid-cols-[minmax(0,26rem)_1fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionIntro
-            index={7}
-            eyebrow="Questions"
-            title="The things people ask before they write in."
-            lead="Straight answers, including the one about money. If yours is not here, ask it in the form and a person will answer."
+            index={5}
+            eyebrow={t("faq.eyebrow")}
+            title={t("faq.title")}
+            lead={t("faq.lead")}
           />
           <Reveal
             variant="fade"
             delay={80}
             className="mt-8 flex flex-col gap-4"
           >
-            <InquiryTrigger
-              origin="faq"
-              size="lg"
-              className="w-fit rounded-full"
-            />
+            <BookCallButton origin="faq" size="md" className="w-fit" />
             <p className="text-mono-label text-muted-foreground">
-              Or email{" "}
+              {t("faq.orEmail")}{" "}
               <a
                 href={`mailto:${siteConfig.contact.email}`}
                 className="tap-target text-foreground hover:text-primary underline underline-offset-4 transition-colors"

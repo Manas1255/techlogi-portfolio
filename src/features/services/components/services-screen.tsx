@@ -7,13 +7,14 @@ import {
 } from "@/components/marketing";
 import { MediaFrame } from "@/components/media";
 import {
-  ClosingCta,
-  ProcessSection,
+  BookACall,
+  HowItWorks,
   TechnologiesSection,
 } from "@/components/sections";
 import { caseStudyPath } from "@/constants";
-import { findProject, serviceGroups } from "@/content";
+import { findProject, getContent } from "@/content";
 import { ArrowLink } from "@/components/marketing";
+import { getLocale, getTranslations } from "@/i18n/server";
 
 /**
  * `/services`, the long form of the capability index.
@@ -23,26 +24,30 @@ import { ArrowLink } from "@/components/marketing";
  * the footer links point at. Composition alternates side per group so six
  * sections in a row don't read as one long list.
  */
-export function ServicesScreen() {
+export async function ServicesScreen() {
+  const t = await getTranslations();
+  const locale = await getLocale();
+  const { serviceGroups } = getContent(locale);
+
   return (
     <>
-      <section className="wash-warm grain pt-32 pb-16 md:pt-40 md:pb-20">
+      <section
+        data-surface="slab"
+        className="wash-slab grain pt-32 pb-16 md:pt-40 md:pb-20"
+      >
         <Container>
           <div className="flex flex-col gap-6">
             <Reveal variant="fade">
-              <Eyebrow>Capabilities</Eyebrow>
+              <Eyebrow>{t("pages.services.eyebrow")}</Eyebrow>
             </Reveal>
             <Reveal delay={60}>
               <h1 className="text-display-1 max-w-4xl text-balance">
-                Everything it takes to get a product into production, and keep
-                it there.
+                {t("pages.services.title")}
               </h1>
             </Reveal>
             <Reveal delay={120}>
               <p className="text-lead text-muted-foreground">
-                Most engagements draw on several of these at once. They are
-                listed separately so it is obvious what you would actually be
-                buying, and what you would receive at the end of it.
+                {t("pages.services.lead")}
               </p>
             </Reveal>
           </div>
@@ -53,7 +58,7 @@ export function ServicesScreen() {
         const related =
           group.relatedProjectSlug === null
             ? undefined
-            : findProject(group.relatedProjectSlug);
+            : findProject(group.relatedProjectSlug, locale);
         const isReversed = index % 2 === 1;
 
         return (
@@ -67,7 +72,9 @@ export function ServicesScreen() {
             <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
               <Reveal className={isReversed ? "lg:order-2" : undefined}>
                 <div className="flex flex-col gap-5 lg:sticky lg:top-28">
-                  <Eyebrow index={index + 1}>Capability group</Eyebrow>
+                  <Eyebrow index={index + 1}>
+                    {t("pages.services.group")}
+                  </Eyebrow>
                   <h2 className="text-display-2">{group.name}</h2>
                   <p className="text-marketing-body text-muted-foreground">
                     {group.summary}
@@ -109,7 +116,7 @@ export function ServicesScreen() {
                   </div>
                   <div className="flex flex-col gap-4">
                     <h3 className="text-eyebrow text-muted-foreground">
-                      What you receive
+                      {t("pages.services.whatYouReceive")}
                     </h3>
                     <HairlineList items={group.deliverables} />
                   </div>
@@ -120,12 +127,12 @@ export function ServicesScreen() {
         );
       })}
 
-      <ProcessSection />
+      <HowItWorks />
       <TechnologiesSection />
-      <ClosingCta
+      <BookACall
         origin="services-close"
-        title="Which of these do you need?"
-        lead="Start with what you're building, we'll work out the rest together."
+        title={t("pages.services.closeTitle")}
+        lead={t("pages.services.closeLead")}
       />
     </>
   );

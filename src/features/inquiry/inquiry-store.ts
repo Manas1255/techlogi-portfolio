@@ -17,13 +17,11 @@ import type { InquiryFormValues } from "./validations/inquiry.schema";
  */
 interface InquiryState {
   isOpen: boolean;
-  step: number;
   values: Partial<InquiryFormValues>;
   /** Where the dialog was opened from, for reporting. */
   origin: string | null;
   open: (options?: { buildType?: BuildTypeId; origin?: string }) => void;
   close: () => void;
-  setStep: (step: number) => void;
   setValues: (values: Partial<InquiryFormValues>) => void;
   /**
    * Clear the saved draft WITHOUT closing. Used after a successful submit: the
@@ -34,7 +32,7 @@ interface InquiryState {
   reset: () => void;
 }
 
-const EMPTY: Pick<InquiryState, "step" | "values"> = { step: 0, values: {} };
+const EMPTY: Pick<InquiryState, "values"> = { values: {} };
 
 export const useInquiryStore = create<InquiryState>()(
   persist(
@@ -45,20 +43,18 @@ export const useInquiryStore = create<InquiryState>()(
       open: (options) =>
         set((state) => {
           const buildType = options?.buildType;
-          // Opening from a specific choice answers step one, so the visitor
-          // lands on step two rather than re-picking what they just clicked.
+          // Opening from a specific choice pre-answers the first field, so a
+          // visitor never re-picks the thing they just clicked.
           if (buildType !== undefined) {
             return {
               isOpen: true,
               origin: options?.origin ?? null,
-              step: Math.max(state.step, 1),
               values: { ...state.values, buildType },
             };
           }
           return { isOpen: true, origin: options?.origin ?? null };
         }),
       close: () => set({ isOpen: false }),
-      setStep: (step) => set({ step }),
       setValues: (values) =>
         set((state) => ({ values: { ...state.values, ...values } })),
       clearDraft: () => set({ ...EMPTY }),
@@ -67,7 +63,7 @@ export const useInquiryStore = create<InquiryState>()(
     {
       name: "ga-studio-inquiry",
       storage: createJSONStorage(() => sessionStorage),
-      partialize: (state) => ({ step: state.step, values: state.values }),
+      partialize: (state) => ({ values: state.values }),
     },
   ),
 );

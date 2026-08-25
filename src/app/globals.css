@@ -145,12 +145,18 @@
   A true WHITE canvas, not cream. Warm off-white reads as the default an
   image generator reaches for, and it drags every screenshot on the page
   toward the same sand cast — which is fatal here, because the product work
-  IS the art direction and it has to supply its own colour. The warmth in
-  this brand lives in the accent, in the section washes and in the ink, never
-  in the base.
+  IS the art direction and it has to supply its own colour.
 
-  Ink is a warm near-black rather than pure #000: at body size it reads as
-  black, and against the vermilion it stays in the same temperature family.
+  GRAPHITE & BRASS. The ground is neutral with a cool cast and the accent is
+  the only warm thing in the system. That split is the whole palette: cool
+  structure, warm signal. It was drawn from the portfolio rather than imposed
+  on it — four of the seven shipped app icons (Zyuela, Soulmate Society,
+  Yusuf, Whispering Clouds) are gold or amber, so brass is the colour these
+  products already had in common.
+
+  Ink is a cool near-black rather than pure #000, so it sits in the same
+  temperature family as the graphite slab and leaves the brass alone as the
+  only warm note on the page.
   ─────────────────────────────────────────────────────────────────────────
 */
 :root {
@@ -163,61 +169,64 @@
   --dur-cinema: 720ms; /* hero choreography only */
 
   /*
-    Brand ramp, rebuilt for a LIGHT ground. The CLI's generated ramp ran hot
-    at the pale end (its "50" was a mid peach), which is unusable for a tint
-    or a wash on white. `brand-600` is still exactly the project's brand
-    colour — that contract is kept — and the steps around it are redrawn so
-    there are real tints above it and real depth below.
+    Brand ramp: BRASS, built for a light ground and a graphite one at once.
+
+    Amber is the hardest accent family to make accessible, because the steps
+    that look best are the ones that fail on white. So the ramp is split by
+    ground rather than compromised: 700 carries text and buttons on paper
+    (5.6:1 on white), 400 carries them on the slab (9.2:1 against graphite,
+    with ink type on top rather than white), and 600 is the display step for
+    focus rings, large type and washes where 3:1 is the bar.
   */
-  --brand-50: #fff3ee;
-  --brand-100: #ffe3d7;
-  --brand-200: #ffc9b4;
-  --brand-300: #ffa88a;
-  --brand-400: #f87f55;
-  --brand-500: #ef5f30;
-  --brand-600: #e24a1e; /* THE BRAND COLOUR */
-  --brand-700: #be3a13;
-  --brand-800: #982d0e;
-  --brand-900: #7a250d;
-  --brand-950: #431105;
+  --brand-50: #fdf9ef;
+  --brand-100: #f9eed4;
+  --brand-200: #f2dda9;
+  --brand-300: #e9c676;
+  --brand-400: #dfb04a;
+  --brand-500: #cf9a2e;
+  --brand-600: #ae7d1a; /* THE BRAND COLOUR */
+  --brand-700: #8a6110;
+  --brand-800: #6e4c0d;
+  --brand-900: #573d0f;
+  --brand-950: #2c1e06;
 
   /* The pastel wash — peach, blush and warm sand, all a few points off white */
-  --wash-peach: #ffede4;
-  --wash-blush: #fde9e6;
-  --wash-sand: #fdf3ea;
+  --wash-peach: #f6f0e1;
+  --wash-blush: #eaeff6;
+  --wash-sand: #f7f4ed;
 
   /* Surfaces & text */
   --canvas: #ffffff;
   --background: #ffffff;
-  --foreground: #1a1512; /* warm near-black, never pure #000 */
+  --foreground: #0d1117; /* warm near-black, never pure #000 */
   --card: #ffffff;
-  --card-foreground: #1a1512;
+  --card-foreground: #0d1117;
   --popover: #ffffff;
-  --popover-foreground: #1a1512;
+  --popover-foreground: #0d1117;
   --raised: #ffffff;
-  --sunken: #faf7f5;
-  --hairline: #1a151214; /* structure from hairlines, not shadows */
-  --hairline-strong: #1a151229;
+  --sunken: #f6f7f9;
+  --hairline: #0d111714; /* structure from hairlines, not shadows */
+  --hairline-strong: #0d11172e;
 
   /*
     Interactive.
 
-    `--primary` is brand-700, not brand-600: white on the brand colour is
-    4.0:1, which fails AA at button-label sizes. One step down reaches 5.5:1
-    and is still unmistakably the same vermilion. brand-600 stays the display
-    accent — large type, washes, focus rings — where the ratio requirement is
-    3:1 and the brighter colour is worth having.
+    `--primary` is brand-700, not brand-600: white on brass-600 is 3.6:1,
+    which fails AA at button-label sizes. One step down reaches 5.6:1 and is
+    still unmistakably the same brass. brand-600 stays the display accent —
+    large type, washes, focus rings — where the bar is 3:1 and the brighter
+    colour is worth having.
   */
   --primary: var(--brand-700);
   --primary-foreground: #ffffff;
-  --secondary: #f6f2ef;
-  --secondary-foreground: #1a1512;
-  --muted: #f6f2ef;
-  --muted-foreground: #6b625b; /* 5.4:1 on white */
+  --secondary: #f2f4f7;
+  --secondary-foreground: #0d1117;
+  --muted: #f2f4f7;
+  --muted-foreground: #5b6572; /* 5.4:1 on white */
   --accent: var(--brand-50);
   --accent-foreground: var(--brand-800);
-  --border: #1a151214;
-  --input: #1a15122e;
+  --border: #0d111714;
+  --input: #0d11173d;
   --ring: var(--brand-600);
 
   /* Status — solid */
@@ -244,18 +253,18 @@
   --info-subtle: var(--brand-50);
   --info-subtle-foreground: var(--brand-800);
   --info-border: var(--brand-200);
-  --neutral-subtle: #f6f2ef;
-  --neutral-subtle-foreground: #514a44;
-  --neutral-border: #1a151229;
+  --neutral-subtle: #f2f4f7;
+  --neutral-subtle-foreground: #414b58;
+  --neutral-border: #0d11172e;
 
   /* Sidebar */
   --sidebar: #ffffff;
-  --sidebar-foreground: #514a44;
+  --sidebar-foreground: #414b58;
   --sidebar-primary: var(--brand-700);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: var(--brand-50);
   --sidebar-accent-foreground: var(--brand-800);
-  --sidebar-border: #1a151214;
+  --sidebar-border: #0d111714;
   --sidebar-ring: var(--brand-600);
 
   /* Charts */
@@ -263,7 +272,7 @@
   --chart-2: #2f6f8f;
   --chart-3: #17794a;
   --chart-4: #9a6206;
-  --chart-5: #6b625b;
+  --chart-5: #5b6572;
 }
 
 /*
@@ -274,33 +283,36 @@
   slots for its subtree, so buttons, badges and borders inside it are correct
   without a single component knowing which ground it landed on.
 
-  A near-neutral graphite with a trace of cool, NOT a warm near-black. The
-  vermilion has to be the only warm colour in the palette; put it on a warm
-  dark and the section reads as brown rather than as an interruption.
+  A cool graphite, NOT a warm near-black. The brass has to be the only warm
+  colour in the palette; put it on a warm dark and the section reads as brown
+  rather than as an interruption. It is also the ground the home page's hero
+  and closing sections are built on, so it carries more of this site than
+  "punctuation" suggests.
   ─────────────────────────────────────────────────────────────────────────
 */
 [data-surface="slab"] {
-  --canvas: #16161a;
-  --background: #16161a;
-  --foreground: #f4f2f0;
-  --card: #1e1e23;
-  --card-foreground: #f4f2f0;
-  --popover: #1e1e23;
-  --popover-foreground: #f4f2f0;
-  --raised: #1e1e23;
-  --sunken: #101014;
+  --canvas: #0d1117;
+  --background: #0d1117;
+  --foreground: #eef1f5;
+  --card: #161c24;
+  --card-foreground: #eef1f5;
+  --popover: #161c24;
+  --popover-foreground: #eef1f5;
+  --raised: #161c24;
+  --sunken: #090c11;
   --hairline: #ffffff1a;
   --hairline-strong: #ffffff33;
 
-  /* On the dark ground the brighter step is the readable one: brand-500 is
-     6.0:1 here, where brand-700 would sink into the slab. */
-  --primary: var(--brand-500);
-  --primary-foreground: #1a0f0a;
-  --secondary: #26262c;
-  --secondary-foreground: #f4f2f0;
-  --muted: #22222a;
-  --muted-foreground: #a49e98; /* 6.7:1 on the slab */
-  --accent: #2a2a32;
+  /* On the dark ground the bright steps are the readable ones, and the type
+     on top of them flips to ink. A brass button with ink type reads as the
+     metal it is named after; the same button with white type reads as mud. */
+  --primary: var(--brand-400);
+  --primary-foreground: #14100a;
+  --secondary: #1e252f;
+  --secondary-foreground: #eef1f5;
+  --muted: #1b2029;
+  --muted-foreground: #99a3b2; /* 6.7:1 on the slab */
+  --accent: #222a35;
   --accent-foreground: var(--brand-300);
   --border: #ffffff1a;
   --input: #ffffff2e;
@@ -313,7 +325,7 @@
   --danger: #ee5f6b;
   --danger-foreground: #1c0709;
   --info: var(--brand-500);
-  --info-foreground: #1a0f0a;
+  --info-foreground: #14100a;
   --destructive: #ee5f6b;
 
   --success-subtle: #0f2418;
@@ -325,18 +337,18 @@
   --danger-subtle: #260f13;
   --danger-subtle-foreground: #f79aa2;
   --danger-border: #5a2229;
-  --info-subtle: #2a1409;
+  --info-subtle: #241b06;
   --info-subtle-foreground: var(--brand-300);
-  --info-border: #5c2712;
-  --neutral-subtle: #26262c;
-  --neutral-subtle-foreground: #bdb7b1;
+  --info-border: #5a460f;
+  --neutral-subtle: #1e252f;
+  --neutral-subtle-foreground: #aab4c2;
   --neutral-border: #ffffff2e;
 
-  --sidebar: #1e1e23;
-  --sidebar-foreground: #bdb7b1;
+  --sidebar: #161c24;
+  --sidebar-foreground: #aab4c2;
   --sidebar-primary: var(--brand-500);
-  --sidebar-primary-foreground: #1a0f0a;
-  --sidebar-accent: #2a2a32;
+  --sidebar-primary-foreground: #14100a;
+  --sidebar-accent: #222a35;
   --sidebar-accent-foreground: var(--brand-300);
   --sidebar-border: #ffffff1a;
   --sidebar-ring: var(--brand-400);
@@ -345,7 +357,7 @@
   --chart-2: #7fb3cf;
   --chart-3: #74dda4;
   --chart-4: #ecc46a;
-  --chart-5: #bdb7b1;
+  --chart-5: #aab4c2;
 }
 
 /*
@@ -358,35 +370,35 @@
   two dark interruptions is what gives the page its chapters; a third would
   make it stripes.
 
-  So this is a warm sand about 4% off white. Enough that the band boundary is
+  So this is a cool stone about 5% off white. Enough that the band boundary is
   unmistakable, light enough that product screenshots still sit on it without
   the ground competing. `--sunken` here goes the other way, toward white, so a
   raised card inside a tinted section still reads as raised.
   ─────────────────────────────────────────────────────────────────────────
 */
 [data-surface="tint"] {
-  --canvas: #f7f2ec;
-  --background: #f7f2ec;
-  --foreground: #1a1512;
+  --canvas: #eff2f6;
+  --background: #eff2f6;
+  --foreground: #0d1117;
   --card: #ffffff;
-  --card-foreground: #1a1512;
+  --card-foreground: #0d1117;
   --popover: #ffffff;
-  --popover-foreground: #1a1512;
+  --popover-foreground: #0d1117;
   --raised: #ffffff;
-  --sunken: #f1eae2;
-  --hairline: #1a151217;
-  --hairline-strong: #1a15122e;
+  --sunken: #e4e9f0;
+  --hairline: #0d111721;
+  --hairline-strong: #0d11173d;
 
   --primary: var(--brand-700);
   --primary-foreground: #ffffff;
-  --secondary: #ece4da;
-  --secondary-foreground: #1a1512;
-  --muted: #ece4da;
-  --muted-foreground: #6b625b;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0d1117;
+  --muted: #e2e8f0;
+  --muted-foreground: #5b6572;
   --accent: var(--brand-50);
   --accent-foreground: var(--brand-800);
-  --border: #1a151217;
-  --input: #1a15122e;
+  --border: #0d111721;
+  --input: #0d11173d;
   --ring: var(--brand-600);
 
   --success: #17794a;
@@ -411,35 +423,35 @@
   --info-subtle: var(--brand-50);
   --info-subtle-foreground: var(--brand-800);
   --info-border: var(--brand-200);
-  --neutral-subtle: #ece4da;
-  --neutral-subtle-foreground: #514c46;
-  --neutral-border: #1a15122e;
+  --neutral-subtle: #e2e8f0;
+  --neutral-subtle-foreground: #414b58;
+  --neutral-border: #0d11173d;
 }
 
 /* Explicit return to the default ground, for a light child of a dark section. */
 [data-surface="paper"] {
   --canvas: #ffffff;
   --background: #ffffff;
-  --foreground: #1a1512;
+  --foreground: #0d1117;
   --card: #ffffff;
-  --card-foreground: #1a1512;
+  --card-foreground: #0d1117;
   --popover: #ffffff;
-  --popover-foreground: #1a1512;
+  --popover-foreground: #0d1117;
   --raised: #ffffff;
-  --sunken: #faf7f5;
-  --hairline: #1a151214;
-  --hairline-strong: #1a151229;
+  --sunken: #f6f7f9;
+  --hairline: #0d111714;
+  --hairline-strong: #0d11172e;
 
   --primary: var(--brand-700);
   --primary-foreground: #ffffff;
-  --secondary: #f6f2ef;
-  --secondary-foreground: #1a1512;
-  --muted: #f6f2ef;
-  --muted-foreground: #6b625b;
+  --secondary: #f2f4f7;
+  --secondary-foreground: #0d1117;
+  --muted: #f2f4f7;
+  --muted-foreground: #5b6572;
   --accent: var(--brand-50);
   --accent-foreground: var(--brand-800);
-  --border: #1a151214;
-  --input: #1a15122e;
+  --border: #0d111714;
+  --input: #0d11173d;
   --ring: var(--brand-600);
 
   --success: #17794a;
@@ -464,9 +476,9 @@
   --info-subtle: var(--brand-50);
   --info-subtle-foreground: var(--brand-800);
   --info-border: var(--brand-200);
-  --neutral-subtle: #f6f2ef;
-  --neutral-subtle-foreground: #514a44;
-  --neutral-border: #1a151229;
+  --neutral-subtle: #f2f4f7;
+  --neutral-subtle-foreground: #414b58;
+  --neutral-border: #0d11172e;
 }
 
 @layer base {
@@ -717,10 +729,22 @@
     transform: none;
   }
 
-  /* Per-line clip reveal, headlines only. */
+  /*
+    Per-line clip reveal, headlines only.
+
+    The padding is not optional. `overflow: hidden` is what makes the line
+    slide in from behind its own edge, and the display face is set at
+    `line-height: 1`, so the box ends exactly on the baseline and the clip
+    lands straight through every descender: the hero read "describin_" with
+    the tail of the g sliced off. The negative margin gives the room back, so
+    the line box is unchanged and the rhythm of a multi-line headline does not
+    shift.
+  */
   .mask-line {
     display: block;
     overflow: hidden;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
   }
   [data-motion="on"] .mask-line > * {
     display: block;
@@ -743,6 +767,74 @@
     .group:hover .media-lift {
       transform: scale(1.015);
       border-color: var(--hairline-strong);
+    }
+  }
+
+  /*
+    ───────────────────────────────────────────────────────────────────────
+    THE PRODUCT MARQUEE
+
+    One long row translating left forever. The track holds the product set
+    repeated six times and moves by exactly HALF its width, so the frame where
+    it snaps back is identical to the one before it and the loop has no seam.
+    Six copies rather than two because the seam only stays hidden while each
+    half is at least as wide as the viewport, and six products at 11rem is a
+    little over 1000px: two halves of three sets clears 2560px, which is the
+    widest the accessibility floor covers.
+
+    `overflow-x: auto` rather than `clip`, and the scrollbar is hidden. Clipping
+    would make every tile past the fold content the visitor cannot reach, which
+    is both a real problem under reduced motion and something the layout sweep
+    correctly fails. Scrollable, the row can always be dragged, and the sweep
+    skips it for the same reason it skips any other scroll container.
+
+    Only `transform` is animated, so the whole thing stays on the compositor.
+    ───────────────────────────────────────────────────────────────────────
+  */
+  .marquee {
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    /* The row dissolves into the ground rather than ending at a hard edge. */
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 6%,
+      #000 94%,
+      transparent
+    );
+  }
+  .marquee::-webkit-scrollbar {
+    display: none;
+  }
+
+  /*
+    Gated on `data-onstage`, which an observer toggles BOTH ways. A marquee is
+    the most expensive loop on the site: it composites a 3000px layer forever,
+    and there is no reason to pay for that while the reader is three screens
+    below it. The sweep asserts the OFF direction specifically, because the ON
+    direction failing is visible and the OFF direction failing is not.
+  */
+  [data-marquee][data-onstage] .marquee-track {
+    animation: marquee-left 60s linear infinite;
+  }
+  /*
+    Pause while a pointer is over it or anything inside has keyboard focus.
+    Four of these tiles are links, and asking someone to hit a moving target is
+    the reason most logo marquees are decoration rather than navigation.
+  */
+  @media (hover: hover) {
+    [data-marquee]:hover .marquee-track {
+      animation-play-state: paused;
+    }
+  }
+  [data-marquee]:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee-left {
+    to {
+      transform: translate3d(-50%, 0, 0);
     }
   }
 
@@ -807,13 +899,17 @@
   }
 
   /*
-    THE WARM WASH.
+    THE WASH.
 
-    Two soft radial stops over white — peach from the top-left, blush from the
-    right — so the hero and the closing section bloom instead of sitting on a
-    flat field. Radial gradients rather than a linear one: a linear wash has a
+    Two soft radial stops over white — brass from the top-left, a cool haze
+    from the right — so a page header blooms instead of sitting on a flat
+    field. Radial gradients rather than a linear one: a linear wash has a
     visible direction and starts to look like a banner, where a bloom reads as
     light falling on paper.
+
+    The HOME hero no longer uses this; it is built on the slab. This is the
+    treatment for the sub-page headers, where a full ink band on every route
+    would spend the contrast the home page needs.
 
     It is a background-image on a white ground, so any surface that overrides
     `--background` (a slab section, a card) simply paints over it.
@@ -856,7 +952,7 @@
   /*
     THE HEADER CAPSULE.
 
-    Warm glass: the card colour at 82%, blurred and saturated so the page
+    Glass: the card colour at 82%, blurred and saturated so the page
     reading through it keeps its colour instead of going grey, with a hairline
     and a soft drop. The `::before` carries it rather than the element itself
     so the blur can sit behind the content without the content inheriting it.
@@ -1046,6 +1142,25 @@
   [data-motion="on"] [data-reveal] {
     opacity: 1;
     transform: none;
+  }
+  /*
+    The marquee stops dead rather than slowing down. Its content stays
+    reachable because the row is a scroll container, so someone who asked for
+    less motion gets a row they drag instead of one that moves at them.
+  */
+  [data-marquee][data-onstage] .marquee-track {
+    animation: none;
+    transform: none;
+  }
+  /*
+    The Framer Motion staggers, which the rules above cannot reach: their
+    hidden state is an INLINE style written during server rendering, when the
+    preference is unknowable. `!important` is what outranks it, and it is the
+    only place on the site that needs the escape hatch. See `stagger.tsx`.
+  */
+  [data-stagger-item] {
+    opacity: 1 !important;
+    transform: none !important;
   }
   [data-motion="on"] .mask-line > * {
     transform: none;

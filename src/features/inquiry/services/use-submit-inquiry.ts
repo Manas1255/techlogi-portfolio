@@ -7,13 +7,10 @@ import type {
   InquiryPayload,
   InquiryReceipt,
 } from "@/features/inquiry/models/inquiry.model";
-import type {
-  InquiryValues,
-  QuickInquiryValues,
-} from "@/features/inquiry/validations/inquiry.schema";
+import type { InquiryValues } from "@/features/inquiry/validations/inquiry.schema";
 
 export interface SubmitInquiryVariables extends InquiryValues {
-  attachment?: File;
+  attachments: File[];
 }
 
 /**
@@ -44,33 +41,8 @@ function toPayload(values: SubmitInquiryVariables): InquiryPayload {
     // An empty optional field is omitted rather than sent as "", the receiving
     // end shouldn't have to distinguish "not given" from "given as blank".
     phone: values.phone === "" ? undefined : values.phone,
-    attachment: values.attachment,
+    attachments: values.attachments,
     submittedAt: new Date().toISOString(),
     source: `site:${siteConfig.url}`,
   };
-}
-
-/**
- * Submits the hero's short form.
- *
- * Same repository, same error handling, same success semantics, only the
- * shape of what was collected differs, so there is one place that knows how to
- * send an inquiry rather than two that drift.
- */
-export function useSubmitQuickInquiry() {
-  return useApiMutation<InquiryReceipt, QuickInquiryValues>({
-    mutationFn: (values) =>
-      inquiryRepository.submit({
-        buildType: values.buildType,
-        description: values.description,
-        services: [],
-        name: values.name,
-        company: "",
-        email: values.email,
-        submittedAt: new Date().toISOString(),
-        source: `site:${siteConfig.url}`,
-      }),
-    showErrorToast: false,
-    reportScope: "inquiry.submit.quick",
-  });
 }

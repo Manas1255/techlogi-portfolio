@@ -33,10 +33,10 @@ export const inquiryRepository = {
       return {};
     }
 
-    // An attachment forces multipart; without one, JSON keeps the payload
+    // Any attachment forces multipart; without one, JSON keeps the payload
     // readable in a log and cheap to parse.
     const body =
-      payload.attachment === undefined ? payload : toFormData(payload);
+      payload.attachments.length === 0 ? payload : toFormData(payload);
 
     return backendClient.post<InquiryReceipt>(endpoint, body, {
       auth: false,
@@ -52,6 +52,12 @@ function toFormData(payload: InquiryPayload): FormData {
     if (value instanceof File) {
       form.append(key, value, value.name);
     } else if (Array.isArray(value)) {
+      // Files repeat under `attachments[]`, which is the shape every
+      // server-side multipart parser already understands as a list.
+      if (value.every((entry) => entry instanceof File)) {
+        for (const file of value) form.append(`${key}[]`, file, file.name);
+        continue;
+      }
       // Repeated keys rather than a JSON string: this is what every server-side
       // multipart parser already understands.
       for (const entry of value) form.append(`${key}[]`, String(entry));
@@ -62,7 +68,7 @@ function toFormData(payload: InquiryPayload): FormData {
   return form;
 }
 
-/** Never log a visitor's message body or attachment, shape and size only. */
+/** Never log a visitor's message body or file contents: shape and size only. */
 function describeForLog(payload: InquiryPayload): Record<string, unknown> {
   return {
     buildType: payload.buildType,
@@ -72,6 +78,10 @@ function describeForLog(payload: InquiryPayload): Record<string, unknown> {
     descriptionLength: payload.description.length,
     hasCompany: payload.company !== "",
     hasPhone: payload.phone !== undefined,
-    attachmentBytes: payload.attachment?.size ?? 0,
+    attachmentCount: payload.attachments.length,
+    attachmentBytes: payload.attachments.reduce(
+      (total, file) => total + file.size,
+      0,
+    ),
   };
 }

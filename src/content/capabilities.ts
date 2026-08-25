@@ -1,162 +1,222 @@
-import type { Capability, TechChip } from "./schemas";
+import { l, type Localized } from "./localized";
+import type { RawCapability, TechChip } from "./schemas";
 
 /**
- * WHAT WE CAN BUILD.
+ * WHAT WE BUILD.
  *
- * The home page's answer to "are these people capable of my thing?". It is
- * deliberately a different artefact from `serviceGroups`: that one is a
- * reference index for someone who has decided to read, this one is for someone
- * deciding whether to keep scrolling.
+ * The portfolio proves we finished things. This section answers the question
+ * that comes before that one: can these people build MY thing? A visitor whose
+ * project does not resemble anything in the portfolio needs somewhere to
+ * recognise themselves, and a list of case studies is not it.
  *
- * Every chip names a technology GA Studio has actually shipped, traceable to a
- * project in `projects.ts`. That constraint is the whole point. A capability
- * grid listing everything a studio could theoretically do is a price list, not
- * evidence, and it is the single easiest thing on a site like this to inflate.
+ * Eight entries, up from six, and rewritten in the words a buyer uses rather
+ * than the words a studio uses. "Websites", not "web presence". "Internal
+ * tools", not "bespoke operational software". The previous set named things
+ * like "Backends and APIs", which is what we do, not what anyone arrives
+ * looking for; a founder searching for someone to build their MVP does not
+ * recognise themselves in a card about data modelling.
  *
- * `diagram` picks the drawn illustration:
- *   orbit  a central mark with satellites, for a toolset
- *   flow   nodes converging on an outcome, for a pipeline
+ * Two rules hold this honest, and they are the reason the section is worth
+ * anything at all:
+ *
+ *   1. Every chip names a technology we have ACTUALLY SHIPPED, traceable to a
+ *      project in `projects.ts`. Not one we could learn.
+ *   2. Every card that claims a capability links to where we used it. A card
+ *      with no `projectSlug` is a capability with no receipt, and it says so
+ *      by staying silent rather than borrowing another project's credibility.
+ *
+ * That link is the whole difference between this and a price list.
  */
-export const capabilities: Capability[] = [
+export const capabilities: RawCapability[] = [
   {
     id: "mobile",
-    name: "Mobile applications",
-    description:
-      "Cross-platform apps built from one Flutter codebase, shipped to both stores. Every project in our portfolio is one, so this is the thing we have done most and know best.",
-    diagram: "orbit",
+    name: l("Mobile apps", "Apps"),
+    description: l(
+      "One Flutter codebase, shipped to both stores. It is the thing we have done most: every product on the strip above is one.",
+      "Eine Flutter-Codebasis, ausgeliefert in beide Stores. Das haben wir am häufigsten gemacht: jedes Produkt im Streifen oben ist eines.",
+    ),
     icon: "smartphone",
-    /** The emphasised chip. One per card, the thing the diagram is about. */
-    focus: "Flutter",
-    chips: [
-      { label: "Dart" },
-      { label: "BLoC / Cubit" },
-      { label: "iOS" },
-      { label: "Android" },
-      { label: "Clean Architecture" },
-    ],
+    focus: l("Flutter", "Flutter"),
+    chips: [{ label: "Dart" }, { label: "iOS" }, { label: "Android" }],
+    projectSlug: "soulmate-society",
+  },
+  {
+    id: "websites",
+    name: l("Websites", "Websites"),
+    description: l(
+      "Marketing sites and landing pages that load fast, rank, and read well on a phone. Static where it can be, dynamic where it has to be.",
+      "Marketing-Seiten und Landingpages, die schnell laden, gefunden werden und auf dem Handy gut lesbar sind. Statisch wo möglich, dynamisch wo nötig.",
+    ),
+    icon: "globe",
+    focus: l("Next.js", "Next.js"),
+    chips: [{ label: "React" }, { label: "TypeScript" }, { label: "Tailwind" }],
+    projectSlug: null,
+  },
+  {
+    id: "saas",
+    name: l("SaaS platforms", "SaaS-Plattformen"),
+    description: l(
+      "Multi-role products with accounts, permissions and billing. OrthoTrack runs three separate roles against one data model.",
+      "Produkte mit mehreren Rollen, Konten, Rechten und Abrechnung. OrthoTrack betreibt drei getrennte Rollen auf einem Datenmodell.",
+    ),
+    icon: "layout-dashboard",
+    focus: l("Node.js", "Node.js"),
+    chips: [{ label: "PostgreSQL" }, { label: "MongoDB" }, { label: "Auth" }],
     projectSlug: "orthotrack",
   },
   {
-    id: "backend",
-    name: "Backends and APIs",
-    description:
-      "The part clients rarely see and always feel. Authentication, data modelling, payments, file storage and the integrations that have to keep working when a third party has an outage.",
-    diagram: "orbit",
-    icon: "server",
-    focus: "Node.js",
+    id: "ai",
+    name: l("AI-powered products", "KI-Produkte"),
+    description: l(
+      "Models put behind real constraints: your data, your permissions, and a human on anything that commits. Vision scoring and a coaching assistant, both shipped.",
+      "Modelle in echten Leitplanken: Ihre Daten, Ihre Rechte, und ein Mensch bei allem, was verbindlich ist. Bildbewertung und ein Coaching-Assistent, beides ausgeliefert.",
+    ),
+    icon: "sparkles",
+    focus: l("LLM integration", "LLM-Integration"),
     chips: [
-      { label: "Express" },
-      { label: "MongoDB" },
-      { label: "PostgreSQL" },
-      { label: "Stripe" },
-      { label: "OAuth" },
+      { label: "Vision models" },
+      { label: "Prompt design" },
+      { label: "Guardrails" },
+    ],
+    projectSlug: "zyuela",
+  },
+  {
+    id: "payments",
+    name: l("Payments and e-commerce", "Zahlungen und E-Commerce"),
+    description: l(
+      "Checkout, subscriptions and donations, with the reconciliation and failure paths designed rather than discovered in production.",
+      "Checkout, Abos und Spenden, mit durchdachter Abstimmung und Fehlerbehandlung statt Entdeckungen im Livebetrieb.",
+    ),
+    icon: "credit-card",
+    focus: l("Stripe", "Stripe"),
+    chips: [
+      { label: "Subscriptions" },
+      { label: "Webhooks" },
+      { label: "Refunds" },
     ],
     projectSlug: "our-ummah",
   },
   {
-    id: "ai",
-    name: "AI that does a job",
-    description:
-      "Models put behind real constraints: your data, your permissions, an audit trail, and a human on anything that commits. We have shipped both a vision pipeline and a coaching assistant.",
-    diagram: "flow",
-    icon: "sparkles",
-    focus: "Scored, then reviewed",
+    id: "internal",
+    name: l("Internal tools", "Interne Tools"),
+    description: l(
+      "The admin side nobody demos and everybody uses: dashboards, moderation queues, role management and reporting.",
+      "Die Verwaltungsseite, die niemand vorführt und alle benutzen: Dashboards, Moderationslisten, Rollenverwaltung und Auswertungen.",
+    ),
+    icon: "wrench",
+    focus: l("React", "React"),
     chips: [
-      { label: "Vision models" },
-      { label: "LLM integration" },
-      { label: "Background jobs" },
-      { label: "Threshold alerts" },
+      { label: "Dashboards" },
+      { label: "Role management" },
+      { label: "Reporting" },
     ],
     projectSlug: "orthotrack",
   },
   {
-    id: "web",
-    name: "Web applications",
-    description:
-      "Server-rendered, typed end to end, and fast on the devices your users actually carry. This site is one of them, and so is the CLI that scaffolded it.",
-    diagram: "orbit",
-    icon: "monitor",
-    focus: "Next.js",
+    id: "mvp",
+    name: l("MVPs", "MVPs"),
+    description: l(
+      "A first release narrow enough to ship and real enough to learn from, built so the second version is not a rewrite.",
+      "Ein erstes Release, schmal genug zum Ausliefern und echt genug zum Lernen, so gebaut, dass die zweite Version kein Neuanfang ist.",
+    ),
+    icon: "rocket",
+    focus: l("8–12 weeks", "8–12 Wochen"),
     chips: [
-      { label: "React" },
-      { label: "TypeScript" },
-      { label: "Tailwind" },
-      { label: "Zod" },
-      { label: "Playwright" },
-    ],
-    projectSlug: null,
-  },
-  {
-    id: "realtime",
-    name: "Real-time and location",
-    description:
-      "Chat, presence, live updates and maps. Hard to retrofit and easy to get subtly wrong, so we put them behind clean boundaries from the first commit.",
-    diagram: "flow",
-    icon: "radio",
-    focus: "Live, and it stays live",
-    chips: [
-      { label: "GetStream" },
-      { label: "Mapbox" },
-      { label: "Firebase Cloud Messaging" },
-      { label: "Offline sync" },
-    ],
-    projectSlug: "soulmate-society",
-  },
-  {
-    id: "design",
-    name: "Product design",
-    description:
-      "Flows, then screens, then a system. We design every state including the ones that get discovered late: loading, empty, error, and far too much data.",
-    diagram: "orbit",
-    icon: "palette",
-    focus: "Design systems",
-    chips: [
-      { label: "UX research" },
-      { label: "Prototyping" },
-      { label: "Design tokens" },
-      { label: "Accessibility" },
+      { label: "Scoped fixed" },
+      { label: "Store-ready" },
+      { label: "Built to extend" },
     ],
     projectSlug: "zyuela",
   },
-] satisfies Capability[];
+  {
+    id: "rescue",
+    name: l("Fixing what exists", "Bestehendes reparieren"),
+    description: l(
+      "Inheriting someone else's codebase: making it fast, making it safe to change, and shipping again without a rewrite.",
+      "Eine fremde Codebasis übernehmen: schnell machen, sicher änderbar machen, und wieder ausliefern, ohne alles neu zu schreiben.",
+    ),
+    icon: "shield",
+    focus: l("Audit first", "Erst prüfen"),
+    chips: [
+      { label: "Performance" },
+      { label: "Refactoring" },
+      { label: "Test coverage" },
+    ],
+    projectSlug: null,
+  },
+];
 
 /**
  * HOW WE ARE DIFFERENT.
  *
- * A side-by-side of what a client is usually worried about against what we
- * actually do. It earns its place only because every right-hand claim is
- * checkable somewhere else on this site, which is the test each line had to
- * pass to be here.
+ * Side by side: the thing a client is usually worried about, against what we
+ * actually do about it. It is about US on both sides and never about a named
+ * competitor, because "other agencies do X" is unfalsifiable and reads as
+ * insecurity rather than confidence.
  *
- * Deliberately about US, never about a named competitor. "Other agencies do X"
- * is unfalsifiable and reads as insecurity.
+ * Every right-hand claim is checkable elsewhere on this site. That was the
+ * test each line had to pass to be here.
  */
-export const differences: { concern: string; answer: string }[] = [
+export const differences: { concern: Localized; answer: Localized }[] = [
   {
-    concern: "You get a sales team, then a different team builds it",
-    answer: "The people who scope your project are the people who write it",
+    concern: l(
+      "You send an enquiry and wait days for a reply.",
+      "Sie schicken eine Anfrage und warten Tage auf eine Antwort.",
+    ),
+    answer: l(
+      "You book a time on our calendar and speak to us this week.",
+      "Sie buchen eine Zeit in unserem Kalender und sprechen diese Woche mit uns.",
+    ),
   },
   {
-    concern: "An estimate with no assumptions attached",
-    answer: "Estimates state what they assume, so a change to one is visible",
+    concern: l(
+      "The estimate arrives with no working shown.",
+      "Die Schätzung kommt ohne nachvollziehbaren Rechenweg.",
+    ),
+    answer: l(
+      "Every estimate lists its assumptions, so a change to one is visible.",
+      "Jede Schätzung nennt ihre Annahmen, damit eine Änderung daran sichtbar wird.",
+    ),
   },
   {
-    concern: "The happy path is designed, the rest is improvised",
-    answer: "Loading, empty, error and too-much-data are designed up front",
+    concern: l(
+      "Nothing runs until the end, then everything is a surprise.",
+      "Bis zum Schluss läuft nichts, dann ist alles eine Überraschung.",
+    ),
+    answer: l(
+      "You get a running build every second week, from the first cycle.",
+      "Sie bekommen alle zwei Wochen einen lauffähigen Stand, ab dem ersten Zyklus.",
+    ),
   },
   {
-    concern: "You find out it is late at the end",
-    answer: "A deployed environment updated every iteration, not a demo build",
+    concern: l(
+      "A sales team scopes it, a different team builds it.",
+      "Ein Vertriebsteam schneidet es zu, ein anderes Team baut es.",
+    ),
+    answer: l(
+      "The people who scope your project are the people who write it.",
+      "Wer Ihr Projekt zuschneidet, schreibt es auch.",
+    ),
   },
   {
-    concern: "Handover is a zip file and a phone number",
-    answer:
-      "Your repository from day one, plus docs someone else can onboard from",
+    concern: l(
+      "The team disappears the week after launch.",
+      "Das Team verschwindet in der Woche nach dem Launch.",
+    ),
+    answer: l(
+      "We plan for the weeks after go-live and stay on them.",
+      "Wir planen die Wochen nach dem Go-live ein und bleiben dran.",
+    ),
   },
   {
-    concern: "After launch, everyone disappears",
-    answer:
-      "A post-launch review against the measures agreed before we started",
+    concern: l(
+      "Handover is a zip file and a phone number.",
+      "Die Übergabe ist eine ZIP-Datei und eine Telefonnummer.",
+    ),
+    answer: l(
+      "Your repository from day one, plus docs someone can onboard from.",
+      "Ihr Repository ab Tag eins, plus Doku, mit der sich jemand einarbeiten kann.",
+    ),
   },
 ];
 

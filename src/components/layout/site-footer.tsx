@@ -1,16 +1,15 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { APP_ROUTES, NAV_ITEMS, caseStudyPath } from "@/constants";
 import { Container } from "@/components/marketing";
-import { projects, serviceGroups } from "@/content";
+import { getContent } from "@/content";
 import {
   publishedLegal,
   publishedLocations,
   publishedSocials,
   siteConfig,
 } from "@/config/site";
-import { InquiryTrigger } from "@/features/inquiry";
-import { SOURCE_LOCALE } from "@/i18n/locales";
-import { translate } from "@/i18n/translate";
+import { BookCallButton } from "@/features/booking";
+import { getLocale, getTranslations } from "@/i18n/server";
 import type { MessageKey } from "@/i18n/types";
 import { Logo } from "./logo";
 
@@ -22,12 +21,14 @@ import { Logo } from "./logo";
  * only when they're real, an empty "Follow us" row or a placeholder office
  * address is worse than their absence.
  *
- * A Server Component: nothing here needs the client except the inquiry trigger.
- * Labels resolve through `translate(SOURCE_LOCALE, …)` rather than the client
- * `useTranslations` hook, a server component renders the source locale, and
- * the catalog is the single source of truth for the string either way.
+ * Labels resolve through `getTranslations()` rather than the client hook, so
+ * the footer stays a Server Component: it is on every page, it renders a
+ * navigation tree derived from content, and dragging it across the client
+ * boundary for a handful of strings would ship all of that to the browser.
  */
-export function SiteFooter() {
+export async function SiteFooter() {
+  const t = await getTranslations();
+  const { projects, serviceGroups } = getContent(await getLocale());
   const year = new Date().getFullYear();
   const socials = publishedSocials();
   const locations = publishedLocations();
@@ -42,10 +43,14 @@ export function SiteFooter() {
             <div className="flex max-w-sm flex-col gap-5">
               <Logo />
               <p className="text-muted-foreground text-[0.9375rem] leading-relaxed">
-                {siteConfig.tagline}
+                {t("site.description")}
               </p>
               <div className="flex flex-col gap-3 pt-1">
-                <InquiryTrigger origin="footer" className="self-start" />
+                <BookCallButton
+                  origin="footer"
+                  size="md"
+                  className="self-start"
+                />
                 <a
                   href={`mailto:${siteConfig.contact.email}`}
                   className="tap-target text-mono-label text-muted-foreground hover:text-foreground w-fit transition-colors"
@@ -64,15 +69,15 @@ export function SiteFooter() {
             </div>
 
             <div className="grid gap-8 sm:grid-cols-3">
-              <FooterColumn title="Navigation">
+              <FooterColumn title={t("site.footer.navigation")}>
                 {NAV_ITEMS.map((item) => (
                   <FooterLink key={item.href} href={item.href}>
-                    {translate(SOURCE_LOCALE, item.labelKey as MessageKey)}
+                    {t(item.labelKey as MessageKey)}
                   </FooterLink>
                 ))}
               </FooterColumn>
 
-              <FooterColumn title="Capabilities">
+              <FooterColumn title={t("site.footer.capabilities")}>
                 {serviceGroups.map((group) => (
                   <FooterLink
                     key={group.id}
@@ -83,7 +88,7 @@ export function SiteFooter() {
                 ))}
               </FooterColumn>
 
-              <FooterColumn title="Selected work">
+              <FooterColumn title={t("site.footer.selectedWork")}>
                 {selectedWork.map((project) => (
                   <FooterLink
                     key={project.slug}
@@ -92,7 +97,9 @@ export function SiteFooter() {
                     {project.name}
                   </FooterLink>
                 ))}
-                <FooterLink href={APP_ROUTES.work}>All work</FooterLink>
+                <FooterLink href={APP_ROUTES.work}>
+                  {t("site.allWork")}
+                </FooterLink>
               </FooterColumn>
             </div>
           </div>
@@ -136,7 +143,7 @@ export function SiteFooter() {
 
           <div className="border-hairline flex flex-col gap-4 border-t pt-8 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-mono-label text-muted-foreground">
-              © {year} {siteConfig.legalName}. All rights reserved.
+              © {year} {siteConfig.legalName}. {t("site.footer.rights")}
             </p>
             <ul className="flex flex-wrap gap-6">
               {legal.map((item) => (

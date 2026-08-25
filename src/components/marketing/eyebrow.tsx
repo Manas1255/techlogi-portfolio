@@ -24,20 +24,26 @@ export function Eyebrow({
   return (
     <p
       className={cn(
-        "text-eyebrow text-muted-foreground border-hairline bg-raised inline-flex w-fit items-center gap-2.5 rounded-full border py-2 pr-4 pl-3",
+        "text-eyebrow text-muted-foreground border-hairline bg-raised inline-flex w-fit items-center gap-2.5 rounded-full border py-2 pr-4",
+        index === undefined ? "pl-4" : "pl-3",
         className,
       )}
       {...props}
     >
+      {/* The divider separates the index from the label, so with no index
+          there is nothing to separate and it was rendering as a stray tick
+          floating before the first word. */}
       {index !== undefined && (
-        <span className="text-primary tabular-nums">
-          {String(index).padStart(2, "0")}
-        </span>
+        <>
+          <span className="text-primary tabular-nums">
+            {String(index).padStart(2, "0")}
+          </span>
+          <span
+            className="bg-hairline-strong h-3 w-px shrink-0"
+            aria-hidden="true"
+          />
+        </>
       )}
-      <span
-        className="bg-hairline-strong h-3 w-px shrink-0"
-        aria-hidden="true"
-      />
       {children}
     </p>
   );

@@ -1,7 +1,8 @@
 "use client";
 
 import { Languages } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from "next/navigation";
+import { swapLocale } from "@/constants";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,41 +12,80 @@ import {
 import {
   LOCALE_NAMES,
   SUPPORTED_LOCALES,
-  useLocale,
-  useSetLocale,
-  useTranslations,
-} from "@/i18n";
+  toLocale,
+  type Locale,
+} from "@/i18n/locales";
+import { useTranslations } from "@/i18n";
+import { cn } from "@/lib/utils";
 
 /**
- * Language switcher. Hidden entirely when the app ships a single locale, so a
- * one-language deployment doesn't show a pointless control.
+ * The language switcher.
  *
- * Language names are shown in their OWN language (Deutsch, not German), that's
- * the one string a user who can't read the current UI language must recognize.
+ * It NAVIGATES rather than setting state, because the URL is the source of
+ * truth: `/de/work` is a different document from `/work`, server-rendered in
+ * German, and flipping a store while staying on the English URL would leave a
+ * German interface on a page a crawler still reads as English.
+ *
+ * It also keeps the reader where they are. Someone three quarters of the way
+ * down the OrthoTrack case study who picks Deutsch wants the German OrthoTrack
+ * case study, not the German home page; dropping them at `/de` is the
+ * commonest bug in a language switcher and the most annoying one.
+ *
+ * The choice is written to a cookie so `proxy.ts` honours it on the next
+ * visit, when the browser's `Accept-Language` will still say English. An
+ * explicit choice has to outrank a header, or the switcher appears not to have
+ * worked.
+ *
+ * Language names are shown in their OWN language (Deutsch, not German): that
+ * is the one string a reader who cannot read the current interface must be
+ * able to recognise.
  */
-export function LanguageSwitcher() {
+/**
+ * Remembers the choice for `proxy.ts`, at module scope rather than inside the
+ * component. `document.cookie` is a global write, and the React compiler
+ * rightly refuses to see one in a render-adjacent closure; hoisting it makes
+ * it what it actually is, a side effect on the document rather than on
+ * anything React owns.
+ */
+function rememberLocale(locale: Locale): void {
+  // A year, path-wide, and `lax` so it survives an inbound link from search.
+  document.cookie = `locale=${locale};path=/;max-age=31536000;samesite=lax`;
+}
+
+export function LanguageSwitcher({ className }: { className?: string }) {
   const t = useTranslations();
-  const locale = useLocale();
-  const setLocale = useSetLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const active = toLocale(pathname.split("/").filter(Boolean)[0]);
 
   if (SUPPORTED_LOCALES.length < 2) return null;
 
+  const choose = (locale: Locale) => {
+    rememberLocale(locale);
+    router.push(swapLocale(pathname, locale));
+  };
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" aria-label={t("common.language")}>
-          <Languages className="size-4" aria-hidden="true" />
-        </Button>
+      <DropdownMenuTrigger
+        aria-label={t("common.language")}
+        className={cn(
+          "tap-target text-muted-foreground hover:text-foreground focus-visible:outline-ring inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+          className,
+        )}
+      >
+        <Languages className="size-4" aria-hidden="true" />
+        <span className="uppercase">{active}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {SUPPORTED_LOCALES.map((code) => (
+        {SUPPORTED_LOCALES.map((locale) => (
           <DropdownMenuItem
-            key={code}
-            onSelect={() => setLocale(code)}
-            aria-current={code === locale ? "true" : undefined}
-            className={code === locale ? "font-medium" : undefined}
+            key={locale}
+            onSelect={() => choose(locale)}
+            aria-current={locale === active ? "true" : undefined}
+            className={locale === active ? "font-medium" : undefined}
           >
-            {LOCALE_NAMES[code]}
+            {LOCALE_NAMES[locale]}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { cn } from "@/lib/utils";
 
 export interface ArrowLinkProps extends Omit<

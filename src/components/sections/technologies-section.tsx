@@ -1,5 +1,6 @@
 import { Section, SectionIntro } from "@/components/marketing";
-import { techGroups } from "@/content";
+import { getContent } from "@/content";
+import { getLocale, getTranslations } from "@/i18n/server";
 
 /**
  * TECHNOLOGY, grouped and argued, never a logo wall.
@@ -10,14 +11,17 @@ import { techGroups } from "@/content";
  * for six parallel, equal-weight groups, and using it exactly once is what
  * keeps it from being the site's default answer.
  */
-export function TechnologiesSection() {
+export async function TechnologiesSection() {
+  const t = await getTranslations();
+  const { techGroups } = getContent(await getLocale());
+
   return (
     <Section rhythm="base" divided>
       <SectionIntro
         index={5}
-        eyebrow="Stack"
-        title="Chosen for the problem, not the résumé."
-        lead="We are opinionated but not religious. Where a client's team already runs something well, we work in it rather than around it."
+        eyebrow={t("stack.eyebrow")}
+        title={t("stack.title")}
+        lead={t("stack.lead")}
       />
 
       <ul className="mt-12 grid gap-px sm:grid-cols-2 lg:grid-cols-3">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/layout/app-link";
 import { ArrowUpRight } from "lucide-react";
 import { MediaFrame } from "@/components/media";
 import { caseStudyPath } from "@/constants";
@@ -37,16 +37,32 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         className,
       )}
     >
-      {/* One ratio and one frame for every card, whatever its media is.
-          Portfolio media ranges from 4:3 composites to 9:16 phone captures, so
-          letting each card size itself leaves the grid ragged. The frame
-          override matters just as much: a device-framed project keeps the
-          phone shell's own max width and renders at half the card's, which is
-          what made rows differ by 191px. */}
+      {/*
+        One ratio and one frame for every card, whatever its media is.
+        Portfolio media ranges from 4:3 composites to 9:16 phone captures, so
+        letting each card size itself leaves the grid ragged. The frame
+        override matters just as much: a device-framed project keeps the phone
+        shell's own max width and renders at half the card's, which is what
+        made rows differ by 191px.
+
+        4:3 AND `cover`, which between them mean nothing is ever cropped and
+        nothing is ever letterboxed. That only works because every hero IS 4:3:
+        a content test enforces it, and the alternative was worse in both
+        directions. `cover` on a mismatched ratio sliced the wordmark off
+        Zyuela and the top band off OurUmmah, because these are composed
+        frames where the logo sits in one corner and the device in the other,
+        so any crop takes something placed deliberately. `contain` avoided that
+        and left pale letterbox bars down the sides instead, which read as a
+        rendering fault rather than as a margin.
+
+        So the ratio moved to the media rather than the media to the ratio:
+        Zyuela's frame was cropped to 4:3 once, at the source, where a human
+        could see what was being lost.
+      */}
       <div className="bg-sunken overflow-hidden">
         <MediaFrame
           media={project.heroMedia}
-          aspectOverride="16/10"
+          aspectOverride="4/3"
           frameOverride="bare"
           sizes="(min-width: 1024px) 44vw, 92vw"
         />

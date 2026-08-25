@@ -1,87 +1,97 @@
-import type { ProcessStage } from "./schemas";
+import { l } from "./localized";
+import type { RawProcessStage } from "./schemas";
 
 /**
- * DEVELOPMENT PROCESS.
+ * HOW IT WORKS.
  *
- * Each stage says what happens and, the part a buyer is actually evaluating,
- * what they receive at the end of it. A stage with no deliverable is a meeting.
+ * Five stages, rewritten down from seven. The seven-stage version was accurate
+ * and unreadable: it described the engagement from the inside, at the length
+ * the people running it would want, and a visitor deciding whether to book a
+ * call has to scroll past all of it. The stages that went were the ones a
+ * buyer cannot act on before signing (Discover and Define collapsed into
+ * "Scope", Engineer and Test into "Build"), not the ones that were untrue.
+ *
+ * Two constraints hold the shape:
+ *
+ *   · `what` is ONE sentence. These render in a compact row of cards, and the
+ *     moment a card takes two sentences the row becomes a wall.
+ *   · `receives` is one concrete artefact. A stage with no deliverable is a
+ *     meeting, and a process section that lists meetings is describing its own
+ *     overheads to someone who is buying an outcome.
+ *
+ * Stage one is a booked call rather than a form, which is the point of the
+ * whole redesign: the first step in working with us is something the visitor
+ * can complete in the next thirty seconds.
  */
-export const processStages: ProcessStage[] = [
+export const processStages: RawProcessStage[] = [
   {
-    id: "discover",
-    name: "Discover",
-    what: "We learn the domain from the people in it: interviews, current-state mapping, and time watching the work happen. We also find out what will make this hard.",
-    receives: [
-      "A written summary of the problem, in your vocabulary",
-      "An itemised list of risks, integrations and unknowns",
-      "A recommendation on whether to proceed, and how",
-    ],
-    duration: "1–2 weeks",
+    id: "call",
+    name: l("Book a call", "Gespräch buchen"),
+    what: l(
+      "Thirty minutes on what you're building. If we're not the right team for it, we say so on the call.",
+      "Dreißig Minuten über das, was Sie bauen. Wenn wir nicht das richtige Team sind, sagen wir das im Gespräch.",
+    ),
+    receives: l(
+      "A straight answer on fit, scope and rough budget",
+      "Eine klare Antwort zu Passung, Umfang und grobem Budget",
+    ),
+    duration: l("30 min", "30 Min."),
+    icon: "message-circle",
   },
   {
-    id: "define",
-    name: "Define",
-    what: "Scope becomes concrete. We agree what the first release contains, what it deliberately excludes, and how we will know it worked.",
-    receives: [
-      "A prioritised scope with a shippable first release",
-      "Architecture and data model decisions, with the trade-offs recorded",
-      "An estimate with its assumptions attached, so a change to one is visible",
-    ],
-    duration: "1–2 weeks",
+    id: "scope",
+    name: l("Scope it", "Umfang festlegen"),
+    what: l(
+      "We turn the conversation into a written plan: what the first release contains, what it deliberately leaves out.",
+      "Wir machen aus dem Gespräch einen schriftlichen Plan: was das erste Release enthält und was es bewusst weglässt.",
+    ),
+    receives: l(
+      "A scoped plan and an estimate with its assumptions attached",
+      "Ein festgelegter Umfang und eine Schätzung mit ihren Annahmen",
+    ),
+    duration: l("1–2 weeks", "1–2 Wochen"),
+    icon: "compass",
   },
   {
     id: "design",
-    name: "Design",
-    what: "Flows, then screens, then a system. We design every state: loading, empty, error, and too much data. This is because those are the ones that get discovered late.",
-    receives: [
-      "A design system: tokens, components and the rules for extending it",
-      "High-fidelity designs for the full flow, all states included",
-      "A clickable prototype of anything genuinely uncertain",
-    ],
-    duration: "2–4 weeks",
+    name: l("Design", "Design"),
+    what: l(
+      "Flows, then screens, then a system, with the loading, empty and error states drawn before anything is built.",
+      "Erst Abläufe, dann Screens, dann ein System, mit Lade-, Leer- und Fehlerzuständen, bevor irgendetwas gebaut wird.",
+    ),
+    receives: l(
+      "A clickable prototype and a design system to extend",
+      "Ein klickbarer Prototyp und ein Design-System zum Weiterbauen",
+    ),
+    duration: l("2–4 weeks", "2–4 Wochen"),
+    icon: "pen-tool",
   },
   {
-    id: "engineer",
-    name: "Engineer",
-    what: "Two-week iterations against a working deployment. Typed end to end, tested where the cost of being wrong is high, reviewed before it merges.",
-    receives: [
-      "A deployed environment updated every iteration, not a demo build",
-      "Iteration notes: what shipped, what moved, what we learned",
-      "Access to the repository from day one, it is yours",
-    ],
-    duration: "6–16 weeks, typically",
-  },
-  {
-    id: "validate",
-    name: "Validate",
-    what: "We test the product against reality: real data volumes, real devices, keyboard-only paths, screen readers, and the failure modes we can force.",
-    receives: [
-      "Accessibility and performance reports with the fixes applied",
-      "Load and failure testing against expected volumes",
-      "A known-issues list, the honest one, not the empty one",
-    ],
-    duration: "1–2 weeks",
+    id: "build",
+    name: l("Build and review", "Bauen und prüfen"),
+    what: l(
+      "Two-week cycles, typed end to end. You get a running build at the end of every one, not a status update.",
+      "Zwei-Wochen-Zyklen, durchgehend typisiert. Am Ende jedes Zyklus steht ein lauffähiger Stand, kein Statusbericht.",
+    ),
+    receives: l(
+      "Working software you can use, every second week",
+      "Software, die Sie benutzen können, alle zwei Wochen",
+    ),
+    duration: l("6–16 weeks", "6–16 Wochen"),
+    icon: "code",
   },
   {
     id: "launch",
-    name: "Launch",
-    what: "A rehearsed release. Migration dry-run, monitoring in place, rollback tested rather than assumed, and someone on hand who wrote the code.",
-    receives: [
-      "A release runbook and a rehearsed rollback",
-      "Monitoring, alerting and error reporting wired to your channels",
-      "Handover documentation and a working session with your team",
-    ],
-    duration: "1 week",
-  },
-  {
-    id: "evolve",
-    name: "Evolve",
-    what: "What happens after launch is where most software is won or lost. We measure real usage, fix what the first weeks reveal, and keep dependencies current.",
-    receives: [
-      "A post-launch review against the success measures agreed in Define",
-      "A prioritised backlog from real usage, not from the original plan",
-      "Retained capacity, or a clean handover, decided up front, not at the end",
-    ],
-    duration: "Ongoing, or handover",
+    name: l("Launch and support", "Launch und Betreuung"),
+    what: l(
+      "We ship it, watch it under real usage, and stay on. The weeks after go-live tell you more than the months before.",
+      "Wir bringen es live, beobachten es unter echter Nutzung und bleiben dran. Die Wochen nach dem Go-live sagen mehr als die Monate davor.",
+    ),
+    receives: l(
+      "A live product, a full handover, and a team still on it",
+      "Ein Live-Produkt, eine vollständige Übergabe, und ein Team, das dranbleibt",
+    ),
+    duration: l("Ongoing", "Laufend"),
+    icon: "rocket",
   },
 ];
