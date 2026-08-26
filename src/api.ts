@@ -5,7 +5,7 @@
  * so there is still exactly one source of truth per endpoint, while this file
  * answers "what does this app call?" in one place.
  *
- * GA Studio's site is almost entirely static: the only thing it sends anywhere
+ * GA Code's site is almost entirely static: the only thing it sends anywhere
  * is a project inquiry.
  */
 

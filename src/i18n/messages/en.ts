@@ -168,6 +168,14 @@ const en = {
     validation: {
       descriptionShort:
         "A sentence or two more, so we can give you a useful reply",
+      /*
+        buildType was the ONE field in `inquiry.schema.ts` with no message
+        key, so a visitor who submitted without picking got Zod's own default:
+        `Invalid option: expected one of "web-app"|"mobile-app"|…`. Raw enum
+        ids, in English, on the German page.
+      */
+      buildTypeRequired:
+        "Pick the closest one, we'll sort the detail out on the call",
     },
   },
 
@@ -295,18 +303,18 @@ const en = {
   seo: {
     workTitle: "Work",
     workDescription:
-      "Selected work by GA Studio: mobile apps, SaaS platforms, websites and AI products, with the problem and the approach behind each one.",
+      "Selected work by GA Code: mobile apps, SaaS platforms, websites and AI products, with the problem and the approach behind each one.",
     servicesTitle: "Services",
     servicesDescription:
-      "What GA Studio builds: websites, mobile apps, SaaS platforms, AI products, payments, internal tools and MVPs, and what you receive from each.",
+      "What GA Code builds: websites, mobile apps, SaaS platforms, AI products, payments, internal tools and MVPs, and what you receive from each.",
     aboutTitle: "About",
     aboutDescription:
-      "How GA Studio works: written plans, validation at every boundary, every UI state designed, and a team that stays on after launch.",
+      "How GA Code works: written plans, validation at every boundary, every UI state designed, and a team that stays on after launch.",
     contactTitle: "Book a call",
     contactDescription:
       "Book a 30-minute call with the people who would build it, or send a project brief. A straight answer on scope, cost and fit.",
     homeDescription:
-      "GA Studio builds websites, mobile apps, SaaS platforms and AI products. Book a 30-minute call and get a straight answer on scope and cost.",
+      "GA Code builds websites, mobile apps, SaaS platforms and AI products. Book a 30-minute call and get a straight answer on scope and cost.",
   },
 
   contact: {
@@ -342,7 +350,7 @@ const en = {
         "That's most of what the first call is for. Bring the problem, not a specification, and we'll work out the shape of it together.",
     },
     about: {
-      eyebrow: "About GA Studio",
+      eyebrow: "About GA Code",
       title: "A product company that takes contracts.",
       lead: "We work the way a good internal team works, with the difference that we have done it across a lot of domains, and we leave you the codebase, the documentation and the ability to carry on without us.",
       principlesEyebrow: "How we work",
@@ -443,7 +451,7 @@ const en = {
   site: {
     role: "Software house",
     description:
-      "GA Studio builds websites, mobile apps, SaaS platforms and AI products, from an idea to something real people use. Book a 30-minute call and get a straight answer on scope and cost.",
+      "GA Code builds websites, mobile apps, SaaS platforms and AI products, from an idea to something real people use. Book a 30-minute call and get a straight answer on scope and cost.",
     keywords:
       "software development|web development|mobile app development|SaaS development|AI development|custom software|software house",
     startProject: "Start a Project",

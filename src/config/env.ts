@@ -25,7 +25,7 @@ const clientSchema = z.object({
   /** Where the browser sends data API calls (the external backend). */
   NEXT_PUBLIC_API_URL: z.string().min(1).default("http://localhost:4000/api"),
   /** Display name, used in metadata and the app shell. */
-  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("GA Studio"),
+  NEXT_PUBLIC_APP_NAME: z.string().min(1).default("GA Code"),
   /**
    * Canonical origin, used for canonical URLs, Open Graph and the sitemap.
    * No trailing slash.

@@ -10,7 +10,7 @@ import { l } from "./localized";
  * by a wide margin, and most studio sites withhold it entirely. So it is first,
  * and it is answered with real numbers rather than "it depends".
  *
- * Every answer here is either a fact about how GA Studio works or an honest
+ * Every answer here is either a fact about how GA Code works or an honest
  * "here is how we would find out". Nothing claims a result.
  */
 export interface RawFaq {

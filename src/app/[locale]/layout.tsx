@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Familjen_Grotesk, Figtree, JetBrains_Mono } from "next/font/google";
 import { notFound } from "next/navigation";
+import Script from "next/script";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { AppProviders } from "@/components/providers/app-providers";
@@ -158,7 +159,9 @@ export default async function RootLayout({
           hidden and the page reads normally. Inline and synchronous on purpose:
           a deferred script would let the un-revealed state paint first.
         */}
-        <script
+        <Script
+          id="enable-motion"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `document.documentElement.dataset.motion="on"`,
           }}

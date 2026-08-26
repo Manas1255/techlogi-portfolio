@@ -9,6 +9,7 @@ import {
 } from "@/components/marketing/cta-button";
 import { siteConfig } from "@/config/site";
 import { useInquiryStore } from "@/features/inquiry/inquiry-store";
+import { CAL_UI_CONFIG } from "@/features/booking/cal-theme";
 import { useTranslations } from "@/i18n";
 import { reportError } from "@/lib/reporting";
 import { useOfferStore } from "@/features/booking/offer-store";
@@ -69,7 +70,9 @@ export function BookCallButton({
     getCalApi({ namespace: "book" })
       .then((cal) => {
         if (!isActive) return;
-        cal("ui", { hideEventTypeDetails: false, layout: "month_view" });
+        // The SAME config the inline scheduler uses. A `ui` call reaches only
+        // the namespace it names, so the overlay needs its own copy of it.
+        cal("ui", { ...CAL_UI_CONFIG });
       })
       // Never swallowed: if the embed script fails to load, the click handler
       // below still opens the brief, but we want to know it happened.

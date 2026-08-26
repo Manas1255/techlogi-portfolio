@@ -83,7 +83,7 @@ export function ProductMarquee({
                     className="size-full object-cover"
                   />
                 </span>
-                <span className="flex flex-col gap-0.5 whitespace-nowrap">
+                <span className="flex flex-col items-center gap-0.5 text-center whitespace-nowrap">
                   <span className="text-[0.875rem] leading-tight font-medium">
                     {product.name}
                   </span>

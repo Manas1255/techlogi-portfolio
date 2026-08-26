@@ -186,6 +186,8 @@ const de = {
     validation: {
       descriptionShort:
         "Ein, zwei Sätze mehr, damit wir sinnvoll antworten können",
+      buildTypeRequired:
+        "Wählen Sie das Naheliegendste, den Rest klären wir im Gespräch",
     },
   },
 
@@ -308,18 +310,18 @@ const de = {
   seo: {
     workTitle: "Projekte",
     workDescription:
-      "Ausgewählte Arbeiten von GA Studio: Apps, SaaS-Plattformen, Websites und KI-Produkte, mit dem Problem und dem Weg dahinter.",
+      "Ausgewählte Arbeiten von GA Code: Apps, SaaS-Plattformen, Websites und KI-Produkte, mit dem Problem und dem Weg dahinter.",
     servicesTitle: "Leistungen",
     servicesDescription:
-      "Was GA Studio baut: Websites, Apps, SaaS-Plattformen, KI-Produkte, Zahlungen, interne Tools und MVPs, und was Sie jeweils bekommen.",
+      "Was GA Code baut: Websites, Apps, SaaS-Plattformen, KI-Produkte, Zahlungen, interne Tools und MVPs, und was Sie jeweils bekommen.",
     aboutTitle: "Über uns",
     aboutDescription:
-      "Wie GA Studio arbeitet: schriftliche Pläne, Validierung an jeder Grenze, jeder Zustand entworfen, und ein Team, das nach dem Launch bleibt.",
+      "Wie GA Code arbeitet: schriftliche Pläne, Validierung an jeder Grenze, jeder Zustand entworfen, und ein Team, das nach dem Launch bleibt.",
     contactTitle: "Gespräch buchen",
     contactDescription:
       "Buchen Sie 30 Minuten mit den Menschen, die es bauen würden, oder beschreiben Sie Ihr Projekt. Klare Antworten zu Umfang, Kosten und Passung.",
     homeDescription:
-      "GA Studio baut Websites, Apps, SaaS-Plattformen und KI-Produkte. Buchen Sie ein 30-minütiges Gespräch und bekommen Sie klare Antworten zu Umfang und Kosten.",
+      "GA Code baut Websites, Apps, SaaS-Plattformen und KI-Produkte. Buchen Sie ein 30-minütiges Gespräch und bekommen Sie klare Antworten zu Umfang und Kosten.",
   },
 
   contact: {
@@ -356,7 +358,7 @@ const de = {
         "Genau dafür ist das erste Gespräch da. Bringen Sie das Problem mit, kein Lastenheft, und wir finden gemeinsam die Form.",
     },
     about: {
-      eyebrow: "Über GA Studio",
+      eyebrow: "Über GA Code",
       title: "Ein Produktunternehmen, das Aufträge annimmt.",
       lead: "Wir arbeiten, wie ein gutes internes Team arbeitet, mit dem Unterschied, dass wir es in vielen Domänen getan haben und Ihnen die Codebasis, die Dokumentation und die Fähigkeit hinterlassen, ohne uns weiterzumachen.",
       principlesEyebrow: "Wie wir arbeiten",
@@ -462,7 +464,7 @@ const de = {
   site: {
     role: "Software-Haus",
     description:
-      "GA Studio baut Websites, Apps, SaaS-Plattformen und KI-Produkte, von der Idee bis zu etwas, das Menschen wirklich nutzen. Buchen Sie ein 30-minütiges Gespräch und bekommen Sie klare Antworten zu Umfang und Kosten.",
+      "GA Code baut Websites, Apps, SaaS-Plattformen und KI-Produkte, von der Idee bis zu etwas, das Menschen wirklich nutzen. Buchen Sie ein 30-minütiges Gespräch und bekommen Sie klare Antworten zu Umfang und Kosten.",
     keywords:
       "Softwareentwicklung|Webentwicklung|App-Entwicklung|SaaS-Entwicklung|KI-Entwicklung|Individualsoftware|Software-Haus",
     startProject: "Projekt starten",

@@ -34,7 +34,7 @@ export interface SiteSocial {
 export const siteConfig = {
   name: clientEnv.NEXT_PUBLIC_APP_NAME,
   /** Legal entity, used in the copyright line. */
-  legalName: "GA Studio", // TODO: replace with the registered company name.
+  legalName: "GA Code", // TODO: replace with the registered company name.
   url: clientEnv.NEXT_PUBLIC_SITE_URL,
 
   /**
@@ -47,7 +47,7 @@ export const siteConfig = {
 
   /** ~155 characters. This is the default meta description. */
   description:
-    "GA Studio builds websites, mobile apps, SaaS platforms and AI products, from an idea to something real people use. Book a 30-minute call and get a straight answer on scope and cost.",
+    "GA Code builds websites, mobile apps, SaaS platforms and AI products, from an idea to something real people use. Book a 30-minute call and get a straight answer on scope and cost.",
 
   /**
    * BOOKING. The primary conversion action on this site.
@@ -63,7 +63,9 @@ export const siteConfig = {
    * is the whole redesign. The project brief still exists, as the secondary
    * path for someone who would rather write than talk.
    *
-   * ⚠️ TODO: SET `calLink` AND EVERYTHING TURNS ON.
+   * `calLink` is SET, so booking is live. Setting it back to null is the kill
+   * switch: every control degrades to the project brief and the embed renders
+   * an honest "scheduling opens shortly" panel. Nothing 404s and nothing lies.
    *
    * Format is Cal.com's own `username/event-slug`, NOT a full URL: the embed
    * SDK and the fallback link both build what they need from it. Until it is
@@ -72,26 +74,36 @@ export const siteConfig = {
    * pointed at nothing. Nothing 404s and nothing lies.
    */
   booking: {
-    calLink: null as string | null, // TODO: e.g. "ga-studio/intro".
-    /** Shown on the control, so the commitment is bounded before the click. */
-    label: "Book a call",
-    /** Reinforces that bound next to the label. Keep it honest. */
-    duration: "30 minutes",
+    calLink: "muhammad-anas-dmzvgq/erstgesprach" as string | null,
+    /*
+      The button label and the "30 minutes" bound used to live here and were
+      read straight into the embed's loading line, which printed "Freie Zeiten
+      werden geladen, 30 minutes" the moment the link went live. They are copy,
+      so they live in the catalogs under `booking.label` / `booking.duration`.
+      Nothing but the link belongs in this object.
+    */
   },
 
   /**
-   * THE FIVE-MINUTE OFFER.
+   * THE OPENING-WINDOW OFFER.
    *
-   * A visible countdown offering 25% off to anyone who books inside five
-   * minutes. It is real: the discount applies to anyone who books in the
-   * window, and the code below is the one they quote.
+   * A visible countdown offering 25% off to anyone who books inside the
+   * window. It is real: the discount applies to anyone who books in it, and
+   * the code below is the one they quote.
+   *
+   * The window is THIRTY minutes, widened from five. Five is long enough to
+   * read one section, not long enough to read the case studies and then
+   * decide, so it expired under most of the people it was meant to persuade
+   * and the section spent the rest of the visit saying they had missed it.
    *
    * The design constraints exist because this pattern is usually a lie, and a
    * visitor has met the lying version many times:
    *
    *   · The clock starts ONCE, on the first visit, and is persisted. It does
    *     not restart on a reload, on a route change, or on a second visit. A
-   *     timer that resets is the tell that the offer is theatre.
+   *     timer that resets is the tell that the offer is theatre. Widening the
+   *     window does NOT re-open it for someone whose five minutes already
+   *     ran out: the stored start time is what it is, so they stay expired.
    *   · When it runs out it says so, and the offer is gone. It does not
    *     quietly begin again at 05:00.
    *   · No flashing, no red, no "HURRY". It is set in the same brass and the
@@ -105,7 +117,7 @@ export const siteConfig = {
     enabled: true,
     /** Percent off. Shown as written; keep it a whole number. */
     discountPercent: 25,
-    windowSeconds: 5 * 60,
+    windowSeconds: 30 * 60,
     /** Quoted by the visitor on the call, so it has to be sayable. */
     code: "EARLY25",
     /*

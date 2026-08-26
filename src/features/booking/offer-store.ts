@@ -8,7 +8,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
  *
  * It is written ONCE, the first time a visitor reaches a booking surface, and
  * never rewritten. Not on a reload, not on a route change, not on a second
- * visit tomorrow. That is the entire design: a five-minute timer that restarts
+ * visit tomorrow. That is the entire design: a countdown that restarts
  * whenever it would otherwise expire is the single most recognisable dark
  * pattern on the web, and a visitor who catches it stops believing the case
  * studies too. The cost of doing it honestly is that some visitors see an
@@ -17,7 +17,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
  * **localStorage, not sessionStorage.** The inquiry draft is session-scoped so
  * a shared machine doesn't leak it next week, but this has to outlive the tab
  * for the opposite reason: session scope would silently hand every returning
- * visitor a fresh five minutes, which is the restart this exists to prevent.
+ * visitor a fresh window, which is the restart this exists to prevent.
  * The stored value is a timestamp and nothing else.
  *
  * Nothing here reads the clock during render. `startedAt` is state; the

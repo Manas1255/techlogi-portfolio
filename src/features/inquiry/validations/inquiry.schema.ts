@@ -43,7 +43,15 @@ export const BUDGETS = [
 ] as const;
 
 export const inquirySchema = z.object({
-  buildType: buildTypeSchema.shape.id,
+  /*
+    The message is NOT optional here. Every other field in this object passes
+    an i18n key, and this one did not: submitting without a choice surfaced
+    Zod's own default, which prints the enum's ids, in English, whatever the
+    page language. An unmessaged enum is a raw internal shown to a visitor.
+  */
+  buildType: z.enum(buildTypeSchema.shape.id.options, {
+    message: "inquiry.validation.buildTypeRequired",
+  }),
   description: z
     .string()
     .min(12, "inquiry.validation.descriptionShort")

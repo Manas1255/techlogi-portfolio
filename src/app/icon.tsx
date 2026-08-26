@@ -1,16 +1,25 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 /**
- * The browser-tab mark, generated rather than shipped as a file, so it can
- * never drift from the wordmark, and there is no binary in the repo to
- * re-export when the brand colour changes.
+ * The browser-tab mark: the GA monogram on the ink ground.
+ *
+ * Generated rather than shipped as a binary, so the ground stays a token
+ * decision in one place. It used to draw the letters "GA" on `#e24a1e`, an
+ * orange left over from a palette this site no longer has: nothing referenced
+ * it, nothing failed, and the tab was simply the wrong brand colour.
  *
  * A tab icon is read at 16px, which is smaller than any letterform stays
- * legible at: the mark is the monogram on the brand colour, and nothing else.
- * The scaffold's default favicon (the Next.js logo) shipped until now.
+ * legible at, so it is the monogram and nothing else. Read from disk at build
+ * time and inlined, because `ImageResponse` fetches nothing off the origin.
  */
 export const size = { width: 64, height: 64 };
 export const contentType = "image/png";
+
+const mark = readFileSync(
+  join(process.cwd(), "public/media/brand/ga-code-mark.png"),
+).toString("base64");
 
 export default function Icon() {
   return new ImageResponse(
@@ -21,15 +30,17 @@ export default function Icon() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#e24a1e",
-        color: "#ffffff",
-        fontSize: 26,
-        fontWeight: 700,
-        letterSpacing: "-0.05em",
+        background: "#0d1117",
         borderRadius: 14,
       }}
     >
-      GA
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`data:image/png;base64,${mark}`}
+        alt=""
+        width={52}
+        height={52}
+      />
     </div>,
     size,
   );

@@ -74,7 +74,7 @@ export const shippedProducts: RawShippedProduct[] = [
   {
     id: "sma",
     name: "SMA",
-    kind: l("Sports management", "Sportverwaltung"),
+    kind: l("Security management", "Sicherheitsmanagement"),
     width: 256,
     height: 256,
     hasOwnGround: true,

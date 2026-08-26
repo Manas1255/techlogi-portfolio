@@ -74,27 +74,36 @@ export async function BookACall({
       id="book"
     >
       <Container>
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,24rem)_1fr] lg:gap-16">
-          {/*
-            The left column is deliberately SHORT and sticky: the offer, and
-            nothing else. Everything that answers "what happens if I press it"
-            moved right, into the card, because it all belongs to the same
-            question and splitting it across two columns is what left the
-            band with a tall stack on one side and a dead quadrant on the
-            other.
-          */}
-          <div className="flex flex-col gap-6 lg:sticky lg:top-28 lg:self-start">
+        {/*
+          THE COPY SITS ABOVE THE CARD, not beside it, and that is a constraint
+          Cal.com imposes rather than a taste call.
+
+          Cal's booker lays itself out from the width it is GIVEN, and it has
+          two thresholds: under ~768px it collapses to the mobile stack, which
+          puts a six-week month grid on top of the time list and ran the card
+          to 1022px, taller than a laptop viewport. Above ~1024px it opens into
+          the three-column form (event details, month, times) that everything
+          about this section wants.
+
+          The container caps at 1280, so ANY sibling column steals the width
+          that third pane needs: the previous 24rem column plus a 4rem gap left
+          exactly 750px and the embed never once laid out horizontally on any
+          desktop. Stacking gives the scheduler the whole 1200 and costs only
+          the heading's position.
+        */}
+        <div className="flex flex-col gap-12">
+          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
             <Reveal className="flex flex-col gap-5">
               <Eyebrow index={6}>{t("bookACall.eyebrow")}</Eyebrow>
-              <h2 className="text-display-1 text-balance">
+              <h2 className="text-display-1 max-w-3xl text-balance">
                 {title ?? t("bookACall.title")}
               </h2>
-              <p className="text-lead text-muted-foreground">
+              <p className="text-lead text-muted-foreground max-w-xl">
                 {lead ?? t("bookACall.lead")}
               </p>
             </Reveal>
 
-            <Reveal variant="fade" delay={60}>
+            <Reveal variant="fade" delay={60} className="lg:w-[22rem]">
               {/* Not `autoStart`: by the time someone reaches the bottom of the
                   page their window began long ago, in the hero. Starting it
                   again here is exactly the reset the whole design refuses. */}

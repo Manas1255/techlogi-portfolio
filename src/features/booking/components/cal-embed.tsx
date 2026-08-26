@@ -1,12 +1,43 @@
 "use client";
 
-import Cal from "@calcom/embed-react";
+import Cal, { getCalApi } from "@calcom/embed-react";
 import { CalendarClock, Mail } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
+import { CAL_UI_CONFIG } from "@/features/booking/cal-theme";
 import { InquiryTrigger } from "@/features/inquiry";
 import { useTranslations } from "@/i18n";
+import { reportError } from "@/lib/reporting";
 import { cn } from "@/lib/utils";
+
+/** Shared by the element and the `ui` call, which must address the same embed. */
+const CAL_NAMESPACE = "closing";
+
+/*
+  THE HEIGHT THE EMBED WILL TURN OUT TO BE, reserved before it loads.
+
+  Cal resizes its own iframe to fit its content, so this is not a constraint on
+  the embed: it is a guess at the outcome, and a wrong guess drags the footer
+  out from under whoever is reading it. The previous 26/30rem was off by up to
+  46rem.
+
+  Measured against the live booker, iframe width against rendered height:
+
+      390px ->  57rem      900px -> 34rem
+      640px ->  69rem     1024px -> 35rem
+      768px ->  76rem     1280px -> 36rem
+
+  The cliff is Cal's own: at roughly 768px of IFRAME width it opens from the
+  mobile stack into the three-pane view, which is a third of the height. That
+  lands at ~840px of viewport once the container's gutters are taken off, and
+  no Tailwind breakpoint sits there, hence the arbitrary one. `md` (768) is on
+  the wrong side of it and would reserve 36rem for a 76rem stack.
+
+  The stacked heights can only ever be close: below the cliff the height is
+  driven by the number of slots that day, which is availability, not layout.
+*/
+const CAL_RESERVED_HEIGHT =
+  "h-[58rem] sm:h-[70rem] md:h-[76rem] min-[840px]:h-[36rem]";
 
 /**
  * THE SCHEDULER, embedded in the closing section.
@@ -44,7 +75,7 @@ export interface CalEmbedProps {
 
 export function CalEmbed({ className, bare = false }: CalEmbedProps) {
   const t = useTranslations();
-  const { calLink, duration } = siteConfig.booking;
+  const { calLink } = siteConfig.booking;
   const [isNear, setIsNear] = useState(false);
 
   /*
@@ -75,6 +106,29 @@ export function CalEmbed({ className, bare = false }: CalEmbedProps) {
     },
     [calLink],
   );
+
+  /*
+    Cal's own UI config, applied once the embed is actually mounting. It is
+    deliberately NOT applied earlier: `getCalApi` injects Cal's script, so
+    calling it on render would load the third party for every visitor and undo
+    the lazy mount above.
+  */
+  useEffect(() => {
+    if (!isNear || calLink === null) return;
+    let isStale = false;
+    getCalApi({ namespace: CAL_NAMESPACE })
+      .then((cal) => {
+        if (isStale) return;
+        cal("ui", { ...CAL_UI_CONFIG });
+      })
+      .catch((error: unknown) => {
+        // The embed still renders, in Cal's default skin. Worth knowing about.
+        reportError(error, { scope: "cal-embed-ui" });
+      });
+    return () => {
+      isStale = true;
+    };
+  }, [isNear, calLink]);
 
   if (calLink === null) {
     return (
@@ -123,21 +177,26 @@ export function CalEmbed({ className, bare = false }: CalEmbedProps) {
     >
       {isNear ? (
         <Cal
-          namespace="closing"
+          namespace={CAL_NAMESPACE}
           calLink={calLink}
-          config={{ layout: "month_view" }}
+          config={{ layout: "month_view", theme: "dark" }}
           // Cal's own element needs a definite height; a percentage here
           // collapses because the parent is content-sized.
           style={{ width: "100%", height: "100%", overflow: "scroll" }}
-          className="h-[38rem] w-full md:h-[42rem]"
+          className={cn(CAL_RESERVED_HEIGHT, "w-full")}
         />
       ) : (
         <div
           aria-hidden="true"
-          className="text-muted-foreground flex h-[38rem] w-full items-center justify-center gap-2.5 text-sm md:h-[42rem]"
+          className={cn(
+            CAL_RESERVED_HEIGHT,
+            "text-muted-foreground flex w-full items-center justify-center gap-2.5 text-sm",
+          )}
         >
           <CalendarClock className="size-4" />
-          {t("bookACall.scheduler.loading", { duration })}
+          {t("bookACall.scheduler.loading", {
+            duration: t("booking.duration"),
+          })}
         </div>
       )}
     </div>

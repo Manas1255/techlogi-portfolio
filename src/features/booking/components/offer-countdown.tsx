@@ -21,9 +21,9 @@ export interface OfferCountdownProps {
 }
 
 /**
- * THE FIVE-MINUTE OFFER.
+ * THE OPENING-WINDOW OFFER.
  *
- * 25% off if you book inside five minutes, and it is real: anyone who books in
+ * 25% off if you book inside the window, and it is real: anyone who books in
  * the window gets it, quoting the code shown.
  *
  * This pattern is nearly always a lie, so the design is mostly a list of

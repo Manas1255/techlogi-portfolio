@@ -3,7 +3,7 @@ import type { Localized } from "./localized";
 import type { RawMedia, RawProject } from "./schemas";
 
 /**
- * PORTFOLIO CONTENT, real GA Studio work.
+ * PORTFOLIO CONTENT, real GA Code work.
  *
  * Every feature, stack entry and date below comes from the engineer who built
  * these, via their own written project descriptions, not inferred from the

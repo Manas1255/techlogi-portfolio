@@ -207,7 +207,7 @@ export const projectSchema = z.object({
   summary: localizedSchema,
   industry: localizedSchema,
   productType: localizedSchema,
-  /** What GA Studio actually did, in one sentence. */
+  /** What GA Code actually did, in one sentence. */
   whatWeDid: localizedSchema,
   /** Qualitative and placeholder-safe, no numbers here. */
   outcome: localizedSchema,
@@ -345,7 +345,7 @@ export type ProcessStage = Resolved<RawProcessStage>;
 /* ─── Shipped products (the logo strip) ──────────────────────────────────── */
 
 /**
- * A product GA Studio has shipped, for the proof strip under the hero.
+ * A product GA Code has shipped, for the proof strip under the hero.
  *
  * Every `logo` here is the REAL app icon, lifted from that product's own
  * Flutter repository (`ios/…/AppIcon.appiconset`, `assets/images/app_icon`, or
