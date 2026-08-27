@@ -8,14 +8,14 @@ import { ProductMarquee } from "./product-marquee";
  *
  * Directly under the hero, because it is the only section on the page a
  * visitor believes without reading. Everything above it is a claim; this is
- * seven marks they can recognise, three of which they can click into a written
+ * eight marks they can recognise, six of which they can click into a written
  * case study.
  *
  * These are the REAL app icons, taken from each product's own Flutter
  * repository at the size the stores publish. That constraint is the section:
  * a fabricated mark is indistinguishable from a real one to a visitor and
  * instantly obvious to anyone who knows the client, and one invented logo
- * makes the other six worthless. See `content/products.ts`.
+ * makes the other seven worthless. See `content/products.ts`.
  *
  * Drawn as APP ICONS rather than as a greyscale logo wall, which is the usual
  * treatment and the wrong one here. A logo wall says "these companies are our

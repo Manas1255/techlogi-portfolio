@@ -55,13 +55,30 @@ export async function ProjectPanel({
       href={caseStudyPath(project.slug)}
       tabIndex={-1}
       aria-hidden="true"
-      className="rounded-frame block"
+      className={cn(
+        "rounded-frame block",
+        /*
+          The emphasis panel used to take the whole measure. That was drawn
+          when heroes were 16:9; every hero is now a 4:3 composite, enforced by
+          a content test, and 4:3 across 1240px is a 930px-tall picture, taller
+          than the viewport it lands in. The reader met one project and had to
+          scroll past it to learn its name.
+
+          So the emphasis is capped rather than removed: still visibly wider
+          than the two-column panels around it (about 900px against 655px),
+          but a height a screen can hold. Do NOT fix this by cropping the
+          composite to a wider ratio instead: the wordmark sits in one corner
+          of these frames and the device in the other, and a 16:9 crop takes
+          one of them off.
+        */
+        fullBleed && "mx-auto w-full max-w-[900px]",
+      )}
     >
       <MediaFrame
         media={frameMedia}
         sizes={
           fullBleed
-            ? "(min-width: 1280px) 1240px, 92vw"
+            ? "(min-width: 1024px) 900px, 92vw"
             : "(min-width: 1024px) 56vw, 92vw"
         }
       />

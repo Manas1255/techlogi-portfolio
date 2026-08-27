@@ -1023,4 +1023,548 @@ export const projects: RawProject[] = [
     featured: true,
     isDraft: false,
   },
+  {
+    slug: "threadwise",
+    name: "Threadwise",
+    tagline: l(
+      "Outfit suggestions composed from the wardrobe you already own",
+      "Outfit-Vorschläge aus dem Kleiderschrank, den Sie bereits besitzen",
+    ),
+    summary: l(
+      "Styling apps mostly end up selling something new. Threadwise starts from the clothes already hanging in the wardrobe: each piece is photographed and tagged once, and the app composes outfits from that collection against the weather, the occasion and how the colours actually behave together. The recommendation comes from a rule engine that can be inspected, not from a model asked to guess.",
+      "Styling-Apps verkaufen am Ende meistens etwas Neues. Threadwise beginnt bei der Kleidung, die schon im Schrank hängt: Jedes Stück wird einmal fotografiert und erfasst, und die App stellt daraus Outfits zusammen, abgestimmt auf Wetter, Anlass und darauf, wie die Farben tatsächlich zusammenwirken. Die Empfehlung stammt aus einem nachvollziehbaren Regelwerk, nicht aus einem Modell, das raten soll.",
+    ),
+    industry: l("Fashion", "Mode"),
+    productType: l("Mobile application and API", "App und API"),
+    whatWeDid: l(
+      "Built the Flutter application and the Node.js API behind it, including the rule engine that composes and scores outfits and the language model layer that explains them.",
+      "Die Flutter-App und die Node.js-API dahinter gebaut, samt dem Regelwerk, das Outfits zusammenstellt und bewertet, und der Sprachmodell-Schicht, die sie erklärt.",
+    ),
+    outcome: l(
+      "Recommendations a wearer can argue with. Every suggestion traces back to a stated rule about colour, weather or formality, and the wear log turns the wardrobe into a record of what actually gets worn rather than what was bought.",
+      "Empfehlungen, denen man widersprechen kann. Jeder Vorschlag lässt sich auf eine benannte Regel zu Farbe, Wetter oder Anlass zurückführen, und das Trageprotokoll macht aus dem Kleiderschrank einen Nachweis dessen, was tatsächlich getragen wird, statt dessen, was gekauft wurde.",
+    ),
+    metrics: [],
+    services: [
+      l("Product Strategy", "Produktstrategie"),
+      l("UX Design", "UX-Design"),
+      l("Cross-platform Applications", "Plattformübergreifende Apps"),
+      l("AI Integration", "KI-Integration"),
+      l("Backend Systems", "Backend-Systeme"),
+      l("APIs", "APIs"),
+    ],
+    platforms: ["iOS", "Android", "API"],
+    technologies: [
+      "Flutter",
+      "Dart",
+      "BLoC/Cubit",
+      "Node.js",
+      "Express",
+      "MongoDB",
+      "Gemini",
+      "AWS S3",
+      "Hive",
+      "Dio",
+      "GetIt",
+    ],
+    categories: ["mobile", "ai"],
+    period: l("Aug 2026", "Aug. 2026"),
+    heroMedia: shot(
+      "/media/projects/threadwise/01-brand.jpg",
+      1448,
+      1086,
+      l(
+        "The Threadwise identity beside its onboarding screen, with the Flutter, Node.js and MongoDB marks it is built on.",
+        "Die Marke Threadwise neben ihrem Onboarding-Screen, mit den Zeichen von Flutter, Node.js und MongoDB, auf denen sie aufbaut.",
+      ),
+      "(min-width: 1024px) 46vw, 92vw",
+      true,
+    ),
+    galleryMedia: [
+      shot(
+        "/media/projects/threadwise/02-wardrobe.jpg",
+        1448,
+        1086,
+        l(
+          "The Threadwise wardrobe, the outfit builder and the daily edit, side by side.",
+          "Der Kleiderschrank von Threadwise, der Outfit-Baukasten und die Tagesauswahl, nebeneinander.",
+        ),
+        "(min-width: 1024px) 46vw, 92vw",
+      ),
+      shot(
+        "/media/projects/threadwise/03-stylist.jpg",
+        1448,
+        1086,
+        l(
+          "Today's Edit in Threadwise: ranked outfit suggestions with a match label and a wear-today action.",
+          "Die Tagesauswahl in Threadwise: bewertete Outfit-Vorschläge mit Übereinstimmungsangabe und der Aktion, es heute zu tragen.",
+        ),
+        "(min-width: 1024px) 46vw, 92vw",
+      ),
+      shot(
+        "/media/projects/threadwise/04-add-item.jpg",
+        1448,
+        1086,
+        l(
+          "Adding a garment in Threadwise: photo, category, silhouette and the colour picked from the picture itself.",
+          "Ein Kleidungsstück in Threadwise erfassen: Foto, Kategorie, Silhouette und die Farbe, direkt aus dem Bild entnommen.",
+        ),
+        "(min-width: 1024px) 46vw, 92vw",
+      ),
+    ],
+    video: null,
+    testimonial: null,
+    caseStudySections: [
+      {
+        kind: "problem",
+        title: l(
+          "The wardrobe is already there, and nothing can read it",
+          "Der Kleiderschrank ist längst da, und nichts kann ihn lesen",
+        ),
+        body: [
+          l(
+            "People own far more than they wear. The reason is not taste, it is retrieval: at the moment of getting dressed nobody can hold a whole wardrobe in their head, so the same few items surface and everything else quietly stops existing.",
+            "Menschen besitzen weit mehr, als sie tragen. Der Grund ist nicht der Geschmack, sondern der Zugriff: Im Moment des Anziehens hat niemand den ganzen Schrank im Kopf, also tauchen dieselben paar Stücke auf und alles andere hört still auf zu existieren.",
+          ),
+          l(
+            "Every product in the category answers this with a shop. The brief here was the opposite: work only with what someone already owns, which means the app has to actually know the collection rather than infer a taste profile from purchases.",
+            "Jedes Produkt der Kategorie beantwortet das mit einem Shop. Der Auftrag lautete hier umgekehrt: nur mit dem arbeiten, was jemand bereits besitzt. Das heißt, die App muss die Sammlung wirklich kennen, statt aus Einkäufen ein Geschmacksprofil abzuleiten.",
+          ),
+        ],
+        points: [],
+        media: null,
+      },
+      {
+        kind: "approach",
+        title: l(
+          "Capture each piece once, then never ask again",
+          "Jedes Stück einmal erfassen, dann nie wieder fragen",
+        ),
+        body: [
+          l(
+            "Everything downstream depends on the wardrobe being complete, so the cost of adding an item had to be close to nothing. A photo, a category, a silhouette, and the colour lifted from the picture by tapping it. Fabric, formality, occasion and season are there for anyone who wants the suggestions sharper, and skippable for everyone else.",
+            "Alles Weitere hängt daran, dass der Kleiderschrank vollständig ist. Deshalb musste das Erfassen eines Stücks fast nichts kosten. Ein Foto, eine Kategorie, eine Silhouette, und die Farbe wird durch Antippen aus dem Bild übernommen. Stoff, Anlass, Formalität und Saison stehen bereit für alle, die schärfere Vorschläge wollen, und lassen sich sonst überspringen.",
+          ),
+          l(
+            "From there the app has four surfaces over one collection: the wardrobe itself, outfits a person composes by hand, the suggestions the engine composes for them, and a day plan that puts either against a date.",
+            "Von dort aus hat die App vier Bereiche über einer Sammlung: den Kleiderschrank selbst, von Hand zusammengestellte Outfits, die Vorschläge, die das System zusammenstellt, und einen Tagesplan, der beides an ein Datum knüpft.",
+          ),
+        ],
+        points: [
+          l(
+            "A guided add-item flow: photo, category, silhouette, colour sampled from the image",
+            "Ein geführter Erfassungsablauf: Foto, Kategorie, Silhouette, Farbe aus dem Bild entnommen",
+          ),
+          l(
+            "Hand-built outfits and generated suggestions living in the same list",
+            "Von Hand gebaute Outfits und erzeugte Vorschläge in derselben Liste",
+          ),
+          l(
+            "A wear log, so the wardrobe records what is used rather than what is owned",
+            "Ein Trageprotokoll, damit der Schrank festhält, was genutzt wird, statt was vorhanden ist",
+          ),
+          l(
+            "A day plan that ties an outfit to a date and the forecast for it",
+            "Ein Tagesplan, der ein Outfit an ein Datum und die zugehörige Vorhersage bindet",
+          ),
+        ],
+        media: shot(
+          "/media/projects/threadwise/04-add-item.jpg",
+          1448,
+          1086,
+          l(
+            "The Threadwise add-item flow and the item detail it produces.",
+            "Der Erfassungsablauf von Threadwise und die Detailansicht, die daraus entsteht.",
+          ),
+          "(min-width: 1024px) 42vw, 92vw",
+        ),
+      },
+      {
+        kind: "design",
+        title: l(
+          "Clothes are the colour, so the interface is not",
+          "Die Kleidung ist die Farbe, also ist es die Oberfläche nicht",
+        ),
+        body: [
+          l(
+            "A wardrobe grid is dozens of photographs at once, every one of them a different colour. An interface with opinions of its own would fight all of them, so the chrome stays a single crimson against near-white, and the garments carry the page.",
+            "Ein Kleiderschrank-Raster zeigt Dutzende Fotos gleichzeitig, jedes in einer anderen Farbe. Eine Oberfläche mit eigenen Ansichten würde mit allen streiten, also bleibt der Rahmen ein einziges Karmesinrot auf nahezu Weiß, und die Kleidungsstücke tragen die Seite.",
+          ),
+          l(
+            "The onboarding makes one promise and stops. It says what the app does with the wardrobe rather than what it will do for a person's life, which is the claim the product can actually keep on day one, when the wardrobe is still empty.",
+            "Das Onboarding gibt ein Versprechen und hört dann auf. Es sagt, was die App mit dem Kleiderschrank macht, nicht was sie für ein Leben tun wird. Das ist die Zusage, die das Produkt am ersten Tag wirklich halten kann, wenn der Schrank noch leer ist.",
+          ),
+        ],
+        points: [
+          l(
+            "A single accent on a near-white ground, so photography sets the palette",
+            "Ein einziger Akzent auf nahezu weißem Grund, damit die Fotos die Palette bestimmen",
+          ),
+          l(
+            "A serif display face, so a styling product does not read as a utility",
+            "Eine Serifen-Displayschrift, damit ein Styling-Produkt nicht wie ein Werkzeug wirkt",
+          ),
+          l(
+            "Match strength shown as a plain label on the suggestion, not a score out of ten",
+            "Die Passgenauigkeit steht als schlichte Angabe am Vorschlag, nicht als Note von zehn",
+          ),
+        ],
+        media: shot(
+          "/media/projects/threadwise/05-onboarding.jpg",
+          1448,
+          1086,
+          l(
+            "Threadwise onboarding: one promise about tracking, rediscovering and building a wardrobe that works.",
+            "Das Onboarding von Threadwise: ein Versprechen zum Festhalten, Wiederentdecken und Aufbauen eines Schranks, der funktioniert.",
+          ),
+          "(min-width: 1024px) 42vw, 92vw",
+        ),
+      },
+      {
+        kind: "build",
+        title: l(
+          "The rules choose the outfit, the model only narrates it",
+          "Die Regeln wählen das Outfit, das Modell erzählt es nur",
+        ),
+        body: [
+          l(
+            "The suggestion engine is a deterministic expert system, not a prompt. It builds valid outfits slot by slot, then scores each one through three independent rule sets: colour, using the Sanzo Wada harmony tables; weather, against the live forecast for the wearer's location; and occasion, against the formality the day calls for. A rule can also block an outfit outright, which is what keeps a linen shirt out of a suggestion for a cold morning.",
+            "Das Vorschlagssystem ist ein deterministisches Expertensystem, kein Prompt. Es baut gültige Outfits Platz für Platz auf und bewertet jedes über drei unabhängige Regelwerke: Farbe, anhand der Harmonietafeln von Sanzo Wada; Wetter, gegen die aktuelle Vorhersage am Ort der Person; und Anlass, gegen die Formalität, die der Tag verlangt. Eine Regel kann ein Outfit auch ganz ausschließen, und genau das hält das Leinenhemd aus einem Vorschlag für einen kalten Morgen heraus.",
+          ),
+          l(
+            "A language model enters only after the decision is made, to turn the winning outfit into a sentence a person would say. It never reorders the results and never overrules a rule. That boundary is the whole design: the recommendation stays explainable and reproducible, and the interesting part of the product does not disappear behind a provider's API.",
+            "Ein Sprachmodell kommt erst ins Spiel, nachdem die Entscheidung gefallen ist, um aus dem Siegeroutfit einen Satz zu machen, den auch ein Mensch sagen würde. Es sortiert die Ergebnisse nie um und überstimmt nie eine Regel. Diese Grenze ist der ganze Entwurf: Die Empfehlung bleibt erklärbar und reproduzierbar, und der interessante Teil des Produkts verschwindet nicht hinter der API eines Anbieters.",
+          ),
+          l(
+            "The narration sits behind a swappable provider and a two-tier cache, in memory and in MongoDB, keyed by the outfit fingerprint and the prompt version. If the provider is slow or down, the request falls back to deterministic prose and the suggestion still arrives. Nothing in the feature can fail in a way the wearer sees.",
+            "Die Erzählung liegt hinter einem austauschbaren Anbieter und einem zweistufigen Zwischenspeicher, im Arbeitsspeicher und in MongoDB, adressiert über den Fingerabdruck des Outfits und die Version des Prompts. Ist der Anbieter langsam oder ausgefallen, greift der Aufruf auf festen Text zurück, und der Vorschlag kommt trotzdem an. Nichts an dieser Funktion kann so ausfallen, dass die Person es merkt.",
+          ),
+        ],
+        points: [
+          l(
+            "A rule engine scoring colour, weather and occasion, with hard blocking rules",
+            "Ein Regelwerk, das Farbe, Wetter und Anlass bewertet, mit harten Ausschlussregeln",
+          ),
+          l(
+            "Sanzo Wada colour harmony as the knowledge base behind the colour rules",
+            "Die Farbharmonien von Sanzo Wada als Wissensbasis hinter den Farbregeln",
+          ),
+          l(
+            "A swappable model provider, cached in memory and in MongoDB, with a text fallback",
+            "Ein austauschbarer Modellanbieter, zwischengespeichert im Arbeitsspeicher und in MongoDB, mit Textrückfall",
+          ),
+          l(
+            "Node.js and Express over MongoDB, with garment photography on S3",
+            "Node.js und Express über MongoDB, mit den Kleidungsfotos auf S3",
+          ),
+          l(
+            "One Flutter codebase on Clean Architecture with BLoC and Cubit",
+            "Eine Flutter-Codebasis auf Clean Architecture mit BLoC und Cubit",
+          ),
+        ],
+        media: shot(
+          "/media/projects/threadwise/03-stylist.jpg",
+          1448,
+          1086,
+          l(
+            "A generated daily edit in Threadwise, with the match label the rule engine produced.",
+            "Eine erzeugte Tagesauswahl in Threadwise, mit der Übereinstimmungsangabe aus dem Regelwerk.",
+          ),
+          "(min-width: 1024px) 42vw, 92vw",
+        ),
+      },
+      {
+        kind: "result",
+        title: l(
+          "A recommendation with its reasoning still attached",
+          "Eine Empfehlung, an der die Begründung noch hängt",
+        ),
+        body: [
+          l(
+            "Because the rules decide, every suggestion can be traced to the reason it was made, and a wearer who disagrees is disagreeing with something specific. That is a different relationship with a styling product than being handed a look and asked to trust it.",
+            "Weil die Regeln entscheiden, lässt sich jeder Vorschlag auf seinen Grund zurückführen, und wer widerspricht, widerspricht etwas Konkretem. Das ist ein anderes Verhältnis zu einem Styling-Produkt, als einen Look vorgesetzt zu bekommen und ihm vertrauen zu sollen.",
+          ),
+          l(
+            "It is also the cheaper architecture. The model is called once per unseen outfit and never on the hot path, so the running cost of the feature stays flat as the wardrobe grows.",
+            "Es ist zudem die günstigere Bauweise. Das Modell wird einmal pro unbekanntem Outfit aufgerufen und nie im laufenden Betrieb, sodass die Betriebskosten der Funktion gleich bleiben, während der Schrank wächst.",
+          ),
+        ],
+        points: [],
+        media: null,
+      },
+    ],
+    featured: false,
+    isDraft: false,
+  },
+  {
+    slug: "tatunow",
+    name: "TatuNow",
+    tagline: l(
+      "One booking record for the three sides of a tattoo",
+      "Ein Buchungsvorgang für die drei Seiten eines Tattoos",
+    ),
+    summary: l(
+      "Tattoo booking runs on direct messages. A client finds an artist through a social feed, describes the idea in a chat thread, and both sides lose the placement, the reference art and the deposit somewhere in the scroll. TatuNow gives each side of that transaction its own product: clients open a project and follow it, artists work a request queue attached to their portfolio, and studios manage the artists under their roof.",
+      "Tattoo-Buchungen laufen über Direktnachrichten. Der Kunde findet den Artist über einen Social Feed, beschreibt die Idee im Chat, und beide Seiten verlieren Platzierung, Referenzbilder und Anzahlung irgendwo im Verlauf. TatuNow gibt jeder Seite dieses Geschäfts ein eigenes Produkt: Kunden eröffnen ein Projekt und verfolgen es, Artists arbeiten eine Anfrageliste an ihrem Portfolio ab, und Studios verwalten die Artists unter ihrem Dach.",
+    ),
+    industry: l("Creative services", "Kreativdienstleistungen"),
+    productType: l(
+      "Multi-sided mobile platform",
+      "Mehrseitige mobile Plattform",
+    ),
+    whatWeDid: l(
+      "Built the cross-platform application covering all three roles, on Firebase for authentication, data, media and notifications.",
+      "Die plattformübergreifende App für alle drei Rollen gebaut, auf Firebase für Anmeldung, Daten, Medien und Benachrichtigungen.",
+    ),
+    outcome: l(
+      "A booking that survives leaving the chat window. A request carries its style, its reference art and its history in one place, and an artist's portfolio becomes the thing being browsed rather than a public grid that happens to contain work.",
+      "Eine Buchung, die es übersteht, den Chat zu verlassen. Eine Anfrage trägt Stil, Referenzbilder und Verlauf an einem Ort, und das Portfolio eines Artists wird zu dem, was durchgesehen wird, statt zu einem öffentlichen Raster, in dem zufällig Arbeiten liegen.",
+    ),
+    metrics: [],
+    services: [
+      l("Product Strategy", "Produktstrategie"),
+      l("UX Design", "UX-Design"),
+      l("UI Design", "UI-Design"),
+      l("Cross-platform Applications", "Plattformübergreifende Apps"),
+      l("Backend Systems", "Backend-Systeme"),
+    ],
+    platforms: ["iOS", "Android"],
+    technologies: [
+      "Flutter",
+      "Dart",
+      "BLoC/Cubit",
+      "Firebase Auth",
+      "Cloud Firestore",
+      "Firebase Storage",
+      "Firebase Cloud Messaging",
+      "GoRouter",
+      "Hive",
+      "Dio",
+      "GetIt",
+    ],
+    categories: ["mobile", "commerce"],
+    period: l("Aug 2026", "Aug. 2026"),
+    heroMedia: shot(
+      "/media/projects/tatunow/01-brand.jpg",
+      1448,
+      1086,
+      l(
+        "The TatuNow identity beside its artist discovery, request queue and portfolio screens.",
+        "Die Marke TatuNow neben den Screens für Artist-Suche, Anfrageliste und Portfolio.",
+      ),
+      "(min-width: 1024px) 46vw, 92vw",
+      true,
+    ),
+    galleryMedia: [
+      shot(
+        "/media/projects/tatunow/02-discovery.jpg",
+        1672,
+        941,
+        l(
+          "Browsing TatuNow artists by style, and opening one artist's profile and portfolio.",
+          "Artists bei TatuNow nach Stil durchsehen und das Profil samt Portfolio eines Artists öffnen.",
+        ),
+        "(min-width: 1024px) 46vw, 92vw",
+      ),
+      shot(
+        "/media/projects/tatunow/03-journey.jpg",
+        1672,
+        941,
+        l(
+          "The TatuNow booking path: find an artist, open a project, follow it through.",
+          "Der Buchungsweg bei TatuNow: einen Artist finden, ein Projekt eröffnen, es begleiten.",
+        ),
+        "(min-width: 1024px) 46vw, 92vw",
+      ),
+      shot(
+        "/media/projects/tatunow/04-dashboard.jpg",
+        1672,
+        941,
+        l(
+          "The TatuNow artist dashboard, with pending requests and completed sessions.",
+          "Das Artist-Dashboard von TatuNow, mit offenen Anfragen und abgeschlossenen Sitzungen.",
+        ),
+        "(min-width: 1024px) 46vw, 92vw",
+      ),
+    ],
+    video: null,
+    testimonial: null,
+    caseStudySections: [
+      {
+        kind: "problem",
+        title: l(
+          "A booking that lives in a chat thread is not a record",
+          "Eine Buchung im Chatverlauf ist kein Vorgang",
+        ),
+        body: [
+          l(
+            "The whole trade already happens on phones, but on tools built for something else. An enquiry, the reference images, the placement, the size, the quoted price and the deposit all arrive as messages, and a message is the one format none of them can be looked up in later.",
+            "Das gesamte Gewerbe läuft bereits über Telefone, aber mit Werkzeugen, die für etwas anderes gebaut sind. Anfrage, Referenzbilder, Platzierung, Größe, Preis und Anzahlung kommen alle als Nachrichten an, und eine Nachricht ist genau das Format, in dem sich später nichts davon nachschlagen lässt.",
+          ),
+          l(
+            "The three sides also want opposite things from the same screen. A client is deciding whom to trust with permanent work. An artist is triaging a queue. A studio is looking at a roster. Serving all three from one feed is what makes the existing tools feel wrong to everyone at once.",
+            "Die drei Seiten wollen außerdem Gegensätzliches vom selben Bildschirm. Ein Kunde entscheidet, wem er dauerhafte Arbeit anvertraut. Ein Artist sichtet eine Warteschlange. Ein Studio schaut auf eine Besetzung. Alle drei aus einem Feed zu bedienen ist der Grund, warum sich die vorhandenen Werkzeuge für alle gleichzeitig falsch anfühlen.",
+          ),
+        ],
+        points: [],
+        media: null,
+      },
+      {
+        kind: "approach",
+        title: l(
+          "Three products, one account system",
+          "Drei Produkte, ein Kontosystem",
+        ),
+        body: [
+          l(
+            "The role is chosen at sign-up and decides the entire application: its navigation, its home screen and what a person can do at all. A client gets discovery and projects. An artist gets a dashboard, a request queue and a portfolio to keep. A studio gets those plus the artists it represents.",
+            "Die Rolle wird bei der Anmeldung gewählt und bestimmt die ganze Anwendung: Navigation, Startbildschirm und überhaupt den Handlungsspielraum. Ein Kunde bekommt Suche und Projekte. Ein Artist bekommt ein Dashboard, eine Anfrageliste und ein Portfolio. Ein Studio bekommt beides plus die Artists, die es vertritt.",
+          ),
+          l(
+            "The enquiry becomes a project: a named thing with a style, a description, reference art and a state, which both sides open rather than scroll back through. Chat stays, because the conversation is real, but it sits beside the record instead of being the record.",
+            "Aus der Anfrage wird ein Projekt: eine benannte Sache mit Stil, Beschreibung, Referenzbildern und einem Zustand, die beide Seiten öffnen, statt zurückzuscrollen. Der Chat bleibt, denn das Gespräch ist echt, aber er steht neben dem Vorgang, statt der Vorgang zu sein.",
+          ),
+        ],
+        points: [
+          l(
+            "Role chosen at sign-up, driving navigation and permissions throughout",
+            "Rolle bei der Anmeldung gewählt, sie steuert Navigation und Rechte durchgehend",
+          ),
+          l(
+            "Discovery filtered by tattoo style, across both artists and studios",
+            "Suche gefiltert nach Tattoo-Stil, über Artists und Studios hinweg",
+          ),
+          l(
+            "A project record carrying style, description, reference art and state",
+            "Ein Projektvorgang mit Stil, Beschreibung, Referenzbildern und Zustand",
+          ),
+          l(
+            "Portfolios an artist builds and keeps, rather than a public grid",
+            "Portfolios, die ein Artist aufbaut und behält, statt eines öffentlichen Rasters",
+          ),
+        ],
+        media: shot(
+          "/media/projects/tatunow/02-discovery.jpg",
+          1672,
+          941,
+          l(
+            "Style-filtered discovery in TatuNow, and the artist profile it opens into.",
+            "Die nach Stil gefilterte Suche in TatuNow und das Artist-Profil, das sich daraus öffnet.",
+          ),
+          "(min-width: 1024px) 42vw, 92vw",
+        ),
+      },
+      {
+        kind: "design",
+        title: l(
+          "Dark, because the work is the only thing with colour in it",
+          "Dunkel, weil allein die Arbeit Farbe hat",
+        ),
+        body: [
+          l(
+            "Tattoo photography is high-contrast skin and ink, and it dies on a white page. The application is near-black with a single brass accent, which lets a portfolio grid read as a portfolio rather than as a product listing.",
+            "Tattoo-Fotografie ist kontraststarke Haut und Tinte, und auf weißer Seite stirbt sie. Die Anwendung ist nahezu schwarz mit einem einzigen Messingakzent, wodurch ein Portfolio-Raster wie ein Portfolio wirkt und nicht wie eine Produktliste.",
+          ),
+          l(
+            "The one thing the interface asserts is the artist. A profile leads with the person, their studio address, their social links and the styles they name themselves, because that is the evidence a client is actually weighing before they commit to something permanent.",
+            "Das Einzige, was die Oberfläche behauptet, ist der Artist. Ein Profil führt mit der Person, der Studioadresse, den sozialen Verweisen und den Stilen, die sie selbst nennt, denn das ist der Beleg, den ein Kunde tatsächlich abwägt, bevor er sich auf etwas Dauerhaftes einlässt.",
+          ),
+        ],
+        points: [
+          l(
+            "A near-black ground with one brass accent, so ink photography carries the screen",
+            "Ein nahezu schwarzer Grund mit einem Messingakzent, damit die Tattoo-Fotos den Bildschirm tragen",
+          ),
+          l(
+            "Style chips as the primary filter, the vocabulary the trade already uses",
+            "Stil-Chips als wichtigster Filter, das Vokabular, das die Branche ohnehin nutzt",
+          ),
+          l(
+            "An artist dashboard that opens on the two numbers that matter, then the queue",
+            "Ein Artist-Dashboard, das mit den zwei entscheidenden Zahlen öffnet, dann die Warteschlange",
+          ),
+        ],
+        media: shot(
+          "/media/projects/tatunow/05-welcome.jpg",
+          1448,
+          1086,
+          l(
+            "The TatuNow welcome screen, with the mark and the language switch.",
+            "Der Willkommensbildschirm von TatuNow, mit Zeichen und Sprachumschalter.",
+          ),
+          "(min-width: 1024px) 42vw, 92vw",
+        ),
+      },
+      {
+        kind: "build",
+        title: l(
+          "One codebase, three applications, no forked build",
+          "Eine Codebasis, drei Anwendungen, kein aufgespaltener Build",
+        ),
+        body: [
+          l(
+            "Three roles usually become three apps, or one app with conditionals scattered through every screen. Here each role owns its own feature tree with its own navigation shell, and the router picks the shell once, at sign-in. Anything genuinely common, chat, portfolio creation, the search surface, lives in a shared layer both sides import.",
+            "Drei Rollen werden sonst zu drei Apps oder zu einer App mit Fallunterscheidungen in jedem Screen. Hier besitzt jede Rolle ihren eigenen Funktionsbaum mit eigener Navigationshülle, und der Router wählt die Hülle einmal, bei der Anmeldung. Was wirklich gemeinsam ist, also Chat, Portfolio-Erstellung und die Suche, liegt in einer geteilten Schicht, die beide Seiten einbinden.",
+          ),
+          l(
+            "The backend is Firebase throughout: authentication with Google and Apple sign-in, Firestore for projects and profiles, Storage for portfolio images, and Cloud Messaging for the notification an artist needs when a request arrives. For a marketplace at this stage that is the right trade, the whole team's effort goes into the three products rather than into operating a server.",
+            "Das Backend ist durchgehend Firebase: Anmeldung mit Google und Apple, Firestore für Projekte und Profile, Storage für Portfolio-Bilder und Cloud Messaging für die Benachrichtigung, die ein Artist bei einer neuen Anfrage braucht. Für einen Marktplatz in dieser Phase ist das der richtige Tausch: Die Arbeit des Teams fließt in die drei Produkte statt in den Betrieb eines Servers.",
+          ),
+        ],
+        points: [
+          l(
+            "A feature tree per role, with the navigation shell resolved once at sign-in",
+            "Ein Funktionsbaum je Rolle, die Navigationshülle wird einmal bei der Anmeldung bestimmt",
+          ),
+          l(
+            "A shared layer for chat, portfolio creation and search, imported by every role",
+            "Eine geteilte Schicht für Chat, Portfolio-Erstellung und Suche, von jeder Rolle eingebunden",
+          ),
+          l(
+            "Firebase for authentication, Firestore, Storage and Cloud Messaging",
+            "Firebase für Anmeldung, Firestore, Storage und Cloud Messaging",
+          ),
+          l(
+            "Clean Architecture with BLoC and Cubit; GoRouter for routing, GetIt for injection",
+            "Clean Architecture mit BLoC und Cubit; GoRouter für das Routing, GetIt für die Injection",
+          ),
+          l(
+            "Localised from the first screen, with the language switch on the welcome view",
+            "Von der ersten Ansicht an lokalisiert, mit dem Sprachumschalter im Willkommensbildschirm",
+          ),
+        ],
+        media: shot(
+          "/media/projects/tatunow/04-dashboard.jpg",
+          1672,
+          941,
+          l(
+            "The artist side of TatuNow: pending requests, completed sessions and the marketplace panel.",
+            "Die Artist-Seite von TatuNow: offene Anfragen, abgeschlossene Sitzungen und der Marktplatz-Bereich.",
+          ),
+          "(min-width: 1024px) 42vw, 92vw",
+        ),
+      },
+      {
+        kind: "result",
+        title: l(
+          "The trade's own workflow, in something built for it",
+          "Der Arbeitsablauf der Branche, in etwas, das dafür gebaut ist",
+        ),
+        body: [
+          l(
+            "Nothing here asks an artist to work differently. It takes the sequence they already run, being found by style, agreeing a piece, booking it, and gives each step somewhere to live that is not a message thread.",
+            "Nichts hier verlangt von einem Artist, anders zu arbeiten. Es nimmt die Abfolge, die ohnehin läuft, also nach Stil gefunden werden, ein Motiv abstimmen, es buchen, und gibt jedem Schritt einen Ort, der kein Nachrichtenverlauf ist.",
+          ),
+          l(
+            "Splitting by role early is what makes the third side possible. Studios were added as a full participant rather than as an artist account with extra fields, which is the version that would have had to be unpicked later.",
+            "Die frühe Trennung nach Rollen macht die dritte Seite überhaupt möglich. Studios kamen als vollwertige Teilnehmer hinzu und nicht als Artist-Konto mit Zusatzfeldern, also in der Variante, die man später hätte auseinandernehmen müssen.",
+          ),
+        ],
+        points: [],
+        media: null,
+      },
+    ],
+    featured: false,
+    isDraft: false,
+  },
 ];
