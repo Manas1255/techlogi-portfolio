@@ -289,6 +289,9 @@ const de = {
   },
 
   hero: {
+    /* Die Zeile über dem Showcase. Sie benennt, WAS das Bild ist, denn ein
+       Produktfoto ohne Bildunterschrift wirkt wie ein Stockfoto. */
+    showcase: "Zuletzt ausgeliefert",
     line1: "Wir machen aus Ihrer Idee",
     line2: "eine App, die",
     accent: "Geld verdient",

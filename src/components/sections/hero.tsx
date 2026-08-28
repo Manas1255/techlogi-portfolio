@@ -1,8 +1,14 @@
 import { Clock3, MessageSquareText, Repeat2 } from "lucide-react";
-import { Container, Reveal } from "@/components/marketing";
+import { AppLink as Link } from "@/components/layout/app-link";
+import { ArrowLink, Container, Reveal } from "@/components/marketing";
+import { MediaFrame } from "@/components/media";
+import { caseStudyPath } from "@/constants";
+import { findProject } from "@/content";
 import { BookCallButton, OfferCountdown } from "@/features/booking";
-import { QuickBriefForm } from "@/features/inquiry";
-import { getTranslations } from "@/i18n/server";
+import { getLocale, getTranslations } from "@/i18n/server";
+
+/** The product the hero leads with. A data edit, not a layout one. */
+const SHOWCASE_SLUG = "tatunow";
 
 /**
  * THE HERO.
@@ -21,10 +27,19 @@ import { getTranslations } from "@/i18n/server";
  *   · Three sentences of subhead, down to one. The previous lead listed four
  *     product types and two guarantees before the first full stop, which is
  *     the paragraph you write when you have not decided what matters.
- *   · The inline form is still HERE, in the right-hand column, because the
- *     people who will write but will not commit to a slot at first contact
- *     are worth keeping. What changed is that it is four fields on one screen
- *     rather than the entrance to a three-step wizard.
+ *   · THE FORM, which used to sit in the right-hand column. A form in the
+ *     first screen answers a question nobody has asked yet. Before a visitor
+ *     knows what we make, a row of empty fields reads as "we want something
+ *     from you", and the three seconds it takes to decide that are the three
+ *     seconds available. The brief still exists and is still one click away
+ *     behind every booking control; it is just no longer the first thing on
+ *     the page.
+ *
+ *     What took its place is the work itself. Shipped product, on a phone, in
+ *     the same instant the headline claims we build them: the claim and its
+ *     evidence in one glance, which is the fastest thing a page can do. It
+ *     links into the case study, so curiosity has somewhere to go that is not
+ *     a form.
  *   · The lead project frame, a full-measure shot of one case study sitting
  *     under the copy. It was doing the product strip's job one band early and
  *     doing it worse: the strip below shows six real products in a fifth of
@@ -50,6 +65,14 @@ const ANSWERS = [
 
 export async function Hero() {
   const t = await getTranslations();
+  const locale = await getLocale();
+  /*
+    Resolved rather than assumed, and `undefined` is handled rather than
+    asserted away. If the slug above is ever renamed or the project retired,
+    the column simply collapses and the hero keeps working, instead of the
+    home page throwing on a missing case study.
+  */
+  const showcase = findProject(SHOWCASE_SLUG, locale);
 
   return (
     <section
@@ -91,22 +114,71 @@ export async function Hero() {
           </div>
 
           {/*
-            THE BRIEF, back above the fold and back on one screen.
+            THE WORK, where the form used to be.
 
-            It was removed in favour of a booking-only hero, and that lost the
-            people who will type but will not commit to a slot at first
-            contact. It came back as four fields rather than the wizard,
-            because the wizard is what made the written path feel like the
-            long way round. Booking is still the primary action, in brass,
-            first in the reading order; this is the alternative sitting beside
-            it rather than a step behind a button.
+            TatuNow deliberately, and not only because it is recent: its own
+            brand is black and brass, which is this site's palette, so it
+            lands on the graphite band looking placed rather than pasted. A
+            composite whose colours fought the ground would read as a
+            screenshot dropped into a design; this one reads as the design.
 
-            Sticky on desktop so it stays with the reader as the copy column
-            settles beside it.
+            The whole thing is one link into the case study. Someone who has
+            just been told we build apps and is looking at one has exactly one
+            question, and the answer is a case study, not a text field.
           */}
-          <Reveal variant="lift" delay={100} className="lg:sticky lg:top-28">
-            <QuickBriefForm origin="hero" />
-          </Reveal>
+          {showcase !== undefined && (
+            <Reveal variant="lift" delay={100} className="flex flex-col gap-4">
+              {/*
+                `aria-hidden` and out of the tab order, with the named link
+                below carrying the destination. Both go to the same case
+                study, and the site's convention (see `ProjectPanel`) is that a
+                picture and its title never announce the same href twice. A
+                link wrapping only an image is also how you end up with a
+                control whose accessible name is nothing at all, which is what
+                the sweep caught here.
+              */}
+              <Link
+                href={caseStudyPath(showcase.slug)}
+                tabIndex={-1}
+                aria-hidden="true"
+                className="group/showcase focus-visible:outline-ring rounded-frame block focus-visible:outline-2 focus-visible:outline-offset-4"
+              >
+                {/*
+                  A brass wash behind the frame, so a light composite on a dark
+                  band has something to sit in rather than floating as a bright
+                  rectangle. `-z-10`, so it never intercepts the click that
+                  belongs to the link.
+
+                  `inset-0`, NOT a negative inset. A box bleeding 24px past its
+                  parent is 48px of layout the hero's `overflow-hidden` then
+                  clips, which the sweep correctly reports as content with no
+                  way to reveal it. The blur spreads the glow outward on its
+                  own without the box ever leaving the frame.
+                */}
+                <div className="relative">
+                  <div
+                    aria-hidden="true"
+                    className="bg-primary/25 absolute inset-0 -z-10 rounded-[3rem] blur-3xl"
+                  />
+                  <MediaFrame
+                    media={showcase.heroMedia}
+                    sizes="(min-width: 1024px) 44vw, 92vw"
+                    priority
+                    className="transition-transform duration-[var(--dur-slow)] ease-[var(--ease-out-expo)] group-hover/showcase:-translate-y-1 motion-reduce:transition-none motion-reduce:group-hover/showcase:translate-y-0"
+                  />
+                </div>
+              </Link>
+
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <p className="text-mono-label text-muted-foreground">
+                  {t("hero.showcase")}
+                </p>
+                <ArrowLink href={caseStudyPath(showcase.slug)} size="sm">
+                  {showcase.name}
+                </ArrowLink>
+              </div>
+            </Reveal>
+          )}
         </div>
 
         <Reveal

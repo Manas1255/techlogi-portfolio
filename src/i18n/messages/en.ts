@@ -277,6 +277,9 @@ const en = {
 
   /** THE HERO. The headline is three lines, each masked and revealed. */
   hero: {
+    /* The label over the showcase frame. Names what the picture IS, because a
+       product shot with no caption reads as stock art. */
+    showcase: "Recently shipped",
     line1: "We turn your idea into",
     line2: "an app that makes",
     /** Set in brass inside line 2. */

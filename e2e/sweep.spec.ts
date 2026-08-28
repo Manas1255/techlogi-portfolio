@@ -281,13 +281,25 @@ test.describe("project brief", () => {
     controls are addressed through their accessible names.
   */
 
-  /** The one form shared by the hero and the dialog. */
-  const briefForm = (page: import("@playwright/test").Page) =>
-    page.locator("form").filter({ has: page.locator("[data-step-panel]") });
+  /*
+    The brief LIVES IN THE DIALOG NOW. It used to sit inline in the hero as
+    well, and that was removed on the argument that a form in the first screen
+    reads as "we want something from you" before a visitor knows what we make.
+    So every test opens it the way a visitor does.
+  */
+  const openBrief = async (page: import("@playwright/test").Page) => {
+    await page.goto("/en");
+    await page
+      .getByRole("button", { name: /book a call/i })
+      .first()
+      .click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    return page.getByRole("dialog");
+  };
 
   /** Step one is a single tap, and choosing it advances the flow. */
-  const chooseStage = async (page: import("@playwright/test").Page) => {
-    await briefForm(page).getByRole("radio").first().click();
+  const chooseStage = async (form: import("@playwright/test").Locator) => {
+    await form.getByRole("radio").first().click();
   };
 
   test("opens on a step that needs no typing", async ({ page }) => {
@@ -296,8 +308,7 @@ test.describe("project brief", () => {
       whether to commit, which is the entire reason the flow opens here rather
       than on "what is your name".
     */
-    await page.goto("/en");
-    const form = briefForm(page);
+    const form = await openBrief(page);
     await expect(form.getByRole("radio").first()).toBeVisible();
     expect(
       await form.locator("input[type='text'], textarea").count(),
@@ -308,21 +319,19 @@ test.describe("project brief", () => {
   test("choosing on the first step advances without a second click", async ({
     page,
   }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
+    const form = await openBrief(page);
     await expect(form.getByLabel(/describe your idea/i)).toBeHidden();
-    await chooseStage(page);
+    await chooseStage(form);
     await expect(form.getByLabel(/describe your idea/i)).toBeVisible();
   });
 
   test("shows how much is left, and back returns the answer intact", async ({
     page,
   }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
+    const form = await openBrief(page);
 
     await expect(form.getByText(/step 1 of 4/i)).toBeVisible();
-    await chooseStage(page);
+    await chooseStage(form);
     await expect(form.getByText(/step 2 of 4/i)).toBeVisible();
 
     await form.getByRole("button", { name: /back/i }).click();
@@ -336,9 +345,8 @@ test.describe("project brief", () => {
   test("a step will not advance past an unanswered required field", async ({
     page,
   }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
-    await chooseStage(page);
+    const form = await openBrief(page);
+    await chooseStage(form);
 
     // Step two is the description, and it is required.
     await form.getByRole("button", { name: /^continue$/i }).click();
@@ -350,9 +358,8 @@ test.describe("project brief", () => {
   });
 
   test("the optional step can be skipped in one click", async ({ page }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
-    await chooseStage(page);
+    const form = await openBrief(page);
+    await chooseStage(form);
     await form
       .getByLabel(/describe your idea/i)
       .fill("A portal our field engineers can use with one hand, offline.");
@@ -370,9 +377,8 @@ test.describe("project brief", () => {
       through `aria-describedby`, so it also proves the hint is announced
       rather than merely printed.
     */
-    await page.goto("/en");
-    const form = briefForm(page);
-    await chooseStage(page);
+    const form = await openBrief(page);
+    await chooseStage(form);
     await form
       .getByLabel(/describe your idea/i)
       .fill("A portal our field engineers can use with one hand, offline.");
@@ -396,10 +402,9 @@ test.describe("project brief", () => {
   test("completing the flow reaches a designed success state", async ({
     page,
   }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
+    const form = await openBrief(page);
 
-    await chooseStage(page);
+    await chooseStage(form);
     await form
       .getByLabel(/describe your idea/i)
       .fill("A portal our field engineers can use with one hand, offline.");
@@ -482,9 +487,8 @@ test.describe("project brief", () => {
   test("survives pathological input without breaking the layout", async ({
     page,
   }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
-    await chooseStage(page);
+    const form = await openBrief(page);
+    await chooseStage(form);
     await form
       .getByLabel(/describe your idea/i)
       .fill(`${PATHOLOGICAL_TEXT} ${PATHOLOGICAL_TOKEN}`);
