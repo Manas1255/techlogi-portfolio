@@ -6,6 +6,7 @@ import {
   CalendarCheck,
   CircleAlert,
   CircleCheck,
+  Paperclip,
 } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
@@ -425,8 +426,6 @@ export function QuickBriefForm({
                 control={form.control}
                 name="budget"
                 label={t("inquiry.fields.budget.label")}
-                optional
-                optionalLabel={t("inquiry.flow.optional")}
                 description={t("inquiry.fields.budget.hint")}
                 placeholder={t("inquiry.fields.budget.placeholder")}
                 options={BUDGETS.map((option) => ({
@@ -440,9 +439,13 @@ export function QuickBriefForm({
                 control={form.control}
                 name="timeline"
                 label={t("inquiry.fields.timeline.label")}
-                optional
-                optionalLabel={t("inquiry.flow.optional")}
-                description={t("inquiry.fields.timeline.hint")}
+                /*
+                  No hint. Budget's already says "not a quote, not a
+                  commitment" one column away, and a second paragraph making
+                  the same promise about the same pair of questions is what
+                  turned this screen into four blocks of grey reassurance. One
+                  says it; two is noise.
+                */
                 placeholder={t("inquiry.fields.timeline.placeholder")}
                 options={TIMELINES.map((option) => ({
                   value: option.id,
@@ -456,18 +459,44 @@ export function QuickBriefForm({
               control={form.control}
               name="anythingElse"
               label={t("inquiry.fields.anythingElse.label")}
-              optional
-              optionalLabel={t("inquiry.flow.optional")}
-              description={t("inquiry.fields.anythingElse.hint")}
+              /*
+                No hint. It opened with "Optional", which the screen's own lead
+                and its skip button already say twice over, and the rest of it
+                listed examples, which is exactly what the placeholder inside
+                the field is doing one line below. Two versions of the same
+                sentence stacked on top of each other is what made this screen
+                read as dense.
+              */
               placeholder={t("inquiry.fields.anythingElse.placeholder")}
               rows={2}
               disabled={mutation.isPending}
             />
-            <AttachmentField
-              files={attachments}
-              onChange={setAttachments}
-              disabled={mutation.isPending}
-            />
+            {/*
+              FOLDED AWAY, because almost nobody attaches anything.
+
+              Expanded it costs a label, a drop zone, a button and a size note:
+              four elements and two paragraphs of grey, permanently, for a
+              control most visitors never touch. Collapsed it is one line that
+              still says what it is, and the people who do have a spec to send
+              open it.
+
+              `<details>` rather than a hand-rolled toggle, so keyboard
+              operation, the right announcement and find-in-page on the
+              collapsed content all come for free.
+            */}
+            <details className="group/files border-hairline rounded-xl border">
+              <summary className="focus-visible:outline-ring text-muted-foreground hover:text-foreground flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 text-[0.8125rem] transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
+                {t("inquiry.attachment.toggle")}
+                <Paperclip aria-hidden="true" className="size-4 shrink-0" />
+              </summary>
+              <div className="border-hairline border-t p-4">
+                <AttachmentField
+                  files={attachments}
+                  onChange={setAttachments}
+                  disabled={mutation.isPending}
+                />
+              </div>
+            </details>
           </div>
         )}
 

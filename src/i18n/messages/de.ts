@@ -240,9 +240,12 @@ const de = {
     },
     attachment: {
       label: "Hängen Sie an, was hilft (optional)",
+      /* Die eingeklappte Zusammenfassung. Bewusst nicht `label`, das das
+         Feld darin wiederholt. */
+      toggle: "Datei anhängen",
       choose: "Dateien wählen",
       drop: "oder hier ablegen",
-      hint: "Ein Briefing, ein Konzept, ein PDF, Screenshots, Designs, ein Export von dem, was Sie schon haben. Jedes Format, bis zu {max} pro Datei.",
+      hint: "Jedes Format, bis zu {max} pro Datei.",
       remove: "{name} entfernen",
       count: "{count} angehängt",
       tooLarge:

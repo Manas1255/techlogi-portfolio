@@ -222,9 +222,12 @@ const en = {
     },
     attachment: {
       label: "Attach anything useful (optional)",
+      /* The collapsed summary. Deliberately NOT `label`, which the field
+         inside repeats: the same sentence twice is what folding was for. */
+      toggle: "Attach a file",
       choose: "Choose files",
       drop: "or drop them here",
-      hint: "A brief, a spec, a PDF, screenshots, designs, an export of what you already have. Any format, up to {max} each.",
+      hint: "Any format, up to {max} each.",
       remove: "Remove {name}",
       count: "{count} attached",
       tooLarge:
