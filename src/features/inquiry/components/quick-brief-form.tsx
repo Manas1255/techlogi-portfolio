@@ -11,7 +11,12 @@ import {
 import { useCallback, useRef, useState } from "react";
 import { useForm, useWatch, type SubmitHandler } from "react-hook-form";
 import { ChoiceCards } from "@/components/marketing";
-import { SelectField, TextField, TextareaField } from "@/components/form";
+import {
+  PhoneField,
+  SelectField,
+  TextField,
+  TextareaField,
+} from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
 import { ConfidentialityNote, useBookingHandoff } from "@/features/booking";
@@ -522,17 +527,16 @@ export function QuickBriefForm({
               inputMode="email"
               disabled={mutation.isPending}
             />
-            <TextField
+            <PhoneField
               control={form.control}
               name="phone"
-              type="tel"
               label={t("inquiry.fields.phone.label")}
               optional
               optionalLabel={t("inquiry.flow.optional")}
               description={t("inquiry.fields.phone.hint")}
               placeholder={t("inquiry.fields.phone.placeholder")}
-              autoComplete="tel"
-              inputMode="tel"
+              countryLabel={t("inquiry.fields.phone.country")}
+              countrySearchPlaceholder={t("inquiry.fields.phone.countrySearch")}
               disabled={mutation.isPending}
             />
           </div>

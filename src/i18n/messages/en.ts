@@ -193,7 +193,11 @@ const en = {
       phone: {
         label: "Phone or WhatsApp (optional)",
         hint: "Only if you would rather we reached you there than by email.",
-        placeholder: "+49 151 23456789",
+        /* The NATIONAL part only: the country picker beside it carries the
+           dial code, so an example with a +49 on it would show it twice. */
+        placeholder: "151 23456789",
+        country: "Country calling code",
+        countrySearch: "Search countries",
       },
     },
     /* Option labels for the three selects. These were English literals in

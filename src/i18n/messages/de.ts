@@ -210,7 +210,11 @@ const de = {
       phone: {
         label: "Telefon oder WhatsApp (optional)",
         hint: "Nur, wenn wir Sie lieber dort erreichen sollen als per E-Mail.",
-        placeholder: "+49 151 23456789",
+        /* Nur der nationale Teil: die Länderauswahl daneben trägt die
+           Vorwahl, sonst stünde sie zweimal auf dem Schirm. */
+        placeholder: "151 23456789",
+        country: "Ländervorwahl",
+        countrySearch: "Land suchen",
       },
     },
     /* Optionsbeschriftungen der drei Auswahlfelder. Sie standen als englische

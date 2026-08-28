@@ -50,6 +50,13 @@ export interface ComboboxProps {
   className?: string;
   "aria-invalid"?: boolean;
   "aria-describedby"?: string;
+  /**
+   * Accessible name, for the cases where the trigger has no visible label of
+   * its own. The phone field's country picker is one: its label belongs to the
+   * number beside it, and a combobox announced as just "Germany" tells a
+   * screen-reader user the value but never the question.
+   */
+  "aria-label"?: string;
 }
 
 export function Combobox({
@@ -123,6 +130,17 @@ export function Combobox({
                     <CommandItem
                       key={option.value}
                       value={option.value}
+                      /*
+                        cmdk filters on `value`, which here is an ID: a country
+                        code, a record id, a slug. So typing what is actually on
+                        screen matched NOTHING, and the picker answered every
+                        search with "no results" while the option sat visible a
+                        moment earlier. `keywords` is what makes the label and
+                        its hint searchable without making the id ambiguous.
+                      */
+                      keywords={[option.label, option.hint].filter(
+                        (keyword): keyword is string => Boolean(keyword),
+                      )}
                       onSelect={() => {
                         onChange(option.value);
                         setOpen(false);
