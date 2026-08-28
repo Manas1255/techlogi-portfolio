@@ -81,9 +81,41 @@ export async function ProofSection() {
         </Reveal>
 
         <Reveal variant="fade" delay={80}>
+          {/*
+            TWO COLUMNS ON A PHONE IS ONE COLUMN, and that broke the argument.
+
+            This is a comparison: the left half is how it usually goes, the
+            right half is how we work, and the whole point is reading one
+            against the other. Below `sm` the grid collapsed to a single
+            column, which stacked the two HEADINGS at the top and then ran all
+            twelve cells underneath as one flat list. A reader on a phone saw
+            neither side as a side: the labels were detached from the items
+            they labelled, and an X and a tick alternated down the page with
+            nothing saying which was which.
+
+            So the mobile layout is a different layout, not a narrower one.
+            Each concern and its answer are GROUPED into one bordered pair, so
+            the contrast reads vertically, item by item, which is the same
+            argument turned ninety degrees. The two headings become a single
+            legend that maps each mark to its side once, rather than two
+            column headers with no columns under them.
+          */}
           <div className="border-hairline overflow-hidden rounded-2xl border">
-            <div className="border-hairline grid grid-cols-1 border-b sm:grid-cols-2">
-              <p className="text-eyebrow text-muted-foreground border-hairline px-5 py-3.5 max-sm:border-b sm:border-r">
+            {/* Phone: one legend line, because there are no columns to head. */}
+            <div className="border-hairline text-eyebrow flex flex-wrap items-center gap-x-4 gap-y-1.5 border-b px-5 py-3.5 sm:hidden">
+              <span className="text-muted-foreground flex items-center gap-2">
+                <X aria-hidden="true" className="size-3.5 shrink-0" />
+                {t("proof.usualExperience")}
+              </span>
+              <span className="text-primary flex items-center gap-2">
+                <Check aria-hidden="true" className="size-3.5 shrink-0" />
+                {t("proof.howWeWork")}
+              </span>
+            </div>
+
+            {/* Tablet and up: real column headers over real columns. */}
+            <div className="border-hairline hidden border-b sm:grid sm:grid-cols-2">
+              <p className="text-eyebrow text-muted-foreground border-hairline px-5 py-3.5 sm:border-r">
                 {t("proof.usualExperience")}
               </p>
               <p className="text-eyebrow text-primary px-5 py-3.5">
@@ -91,14 +123,24 @@ export async function ProofSection() {
               </p>
             </div>
 
-            <dl className="grid grid-cols-1 sm:grid-cols-2">
+            <dl className="sm:grid sm:grid-cols-2">
               {differences.map((item, index) => (
-                <div key={item.concern} className="contents">
+                <div
+                  key={item.concern}
+                  /*
+                    `contents` dissolves this wrapper so dt and dd land in the
+                    grid directly. On a phone there is no grid, so the wrapper
+                    stays a real box and becomes the thing that groups a pair.
+                  */
+                  className={[
+                    "border-hairline sm:contents",
+                    index < differences.length - 1 ? "max-sm:border-b" : "",
+                  ].join(" ")}
+                >
                   <dt
                     className={[
-                      "border-hairline text-muted-foreground flex items-start gap-2.5 px-5 py-4 text-[0.875rem] leading-snug sm:border-r",
-                      index < differences.length - 1 ? "border-b" : "",
-                      "max-sm:border-b",
+                      "border-hairline text-muted-foreground flex items-start gap-2.5 px-5 pt-4 text-[0.875rem] leading-snug max-sm:pb-2 sm:border-r sm:py-4",
+                      index < differences.length - 1 ? "sm:border-b" : "",
                     ].join(" ")}
                   >
                     <X
@@ -109,8 +151,8 @@ export async function ProofSection() {
                   </dt>
                   <dd
                     className={[
-                      "border-hairline flex items-start gap-2.5 px-5 py-4 text-[0.875rem] leading-snug",
-                      index < differences.length - 1 ? "border-b" : "",
+                      "border-hairline flex items-start gap-2.5 px-5 pb-4 text-[0.875rem] leading-snug max-sm:pt-0 sm:py-4",
+                      index < differences.length - 1 ? "sm:border-b" : "",
                     ].join(" ")}
                   >
                     <Check

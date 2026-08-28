@@ -80,6 +80,7 @@ const de = {
   },
 
   nav: {
+    home: "Start",
     work: "Projekte",
     services: "Leistungen",
     about: "Über uns",

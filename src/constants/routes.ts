@@ -1,3 +1,5 @@
+import { isLocale } from "@/i18n/locales";
+
 /**
  * Every route string in the site. Never hardcode a path in `<Link href>`,
  * `router.push`, or `redirect()`, import from here so a route rename is one
@@ -32,11 +34,41 @@ export function caseStudyPath(slug: string): string {
  * render site, a route table must not depend on the locale store.
  */
 export const NAV_ITEMS = [
+  { href: HOME_ROUTE, labelKey: "nav.home" },
   { href: APP_ROUTES.work, labelKey: "nav.work" },
   { href: APP_ROUTES.services, labelKey: "nav.services" },
   { href: APP_ROUTES.about, labelKey: "nav.about" },
   { href: APP_ROUTES.contact, labelKey: "nav.contact" },
 ] as const;
+
+/**
+ * Is `href` the route the reader is currently on?
+ *
+ * Both navs used to answer this with `pathname.startsWith(item.href)`, and it
+ * was ALWAYS FALSE. The hrefs here are unprefixed (`/work`), the pathname
+ * never is (`/de/work`), so nothing ever matched: no nav item has carried
+ * `aria-current` or its underline since the locale segment was introduced.
+ * Nothing failed, because a missing highlight looks exactly like being on a
+ * page that isn't in the nav.
+ *
+ * Adding the home tab is what makes this urgent rather than cosmetic: `"/de"`
+ * and `"/de/work"` both start with `"/"`, so the naive check would have marked
+ * Home as the current page on every route on the site.
+ *
+ * So: drop the locale segment, then match a WHOLE segment. `startsWith` alone
+ * would light up `/work` for a hypothetical `/workshops`, and prefix bugs of
+ * that shape are why this is one function rather than one expression repeated
+ * in the header, the mobile sheet and the footer.
+ */
+export function isRouteActive(pathname: string, href: string): boolean {
+  const [, first, ...rest] = pathname.split("/");
+  const unprefixed = isLocale(first) ? `/${rest.join("/")}` : pathname;
+  const path = unprefixed.replace(/\/+$/, "") || "/";
+
+  return href === HOME_ROUTE
+    ? path === HOME_ROUTE
+    : path === href || path.startsWith(`${href}/`);
+}
 
 /**
  * LOCALE PREFIXING. Every internal href on the site goes through here.

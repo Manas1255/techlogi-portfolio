@@ -11,7 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { NAV_ITEMS } from "@/constants";
+import { NAV_ITEMS, isRouteActive } from "@/constants";
 import { siteConfig } from "@/config/site";
 import { BookCallButton } from "@/features/booking";
 import { InquiryTrigger } from "@/features/inquiry";
@@ -41,7 +41,14 @@ export function MobileNav() {
       <Button
         variant="ghost"
         size="icon"
-        className="lg:hidden"
+        /*
+          44px on a phone, not the catalog's 32. `size="icon"` is sized for a
+          dense product UI driven by a mouse; this is the primary navigation
+          control of a marketing site and, below `lg`, the ONLY way to reach
+          four of the five pages. It measured 32x32, well under the 44px
+          target this site's own accessibility floor asks for.
+        */
+        className="size-11 lg:hidden"
         aria-expanded={isOpen}
         onClick={() => setIsOpen(true)}
       >
@@ -56,7 +63,12 @@ export function MobileNav() {
         <SheetHeader className="border-hairline flex-row items-center justify-between gap-4 border-b p-5">
           <SheetTitle className="sr-only">{t("nav.primary")}</SheetTitle>
           <Logo />
-          <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-11"
+            onClick={() => setIsOpen(false)}
+          >
             <X aria-hidden="true" className="size-5" />
             <span className="sr-only">{t("nav.closeMenu")}</span>
           </Button>
@@ -68,7 +80,7 @@ export function MobileNav() {
         >
           <ul className="flex flex-col">
             {NAV_ITEMS.map((item, index) => {
-              const isActive = pathname.startsWith(item.href);
+              const isActive = isRouteActive(pathname, item.href);
               return (
                 <li key={item.href} className="border-hairline border-b">
                   <Link

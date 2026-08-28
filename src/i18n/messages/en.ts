@@ -63,6 +63,7 @@ const en = {
   },
 
   nav: {
+    home: "Home",
     work: "Work",
     services: "Services",
     about: "About",

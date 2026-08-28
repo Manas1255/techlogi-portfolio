@@ -94,7 +94,16 @@ export function Logo({
   return (
     <Link
       href={HOME_ROUTE}
-      className="tap-target focus-visible:outline-ring rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
+      /*
+        `shrink-0` belongs HERE too, not only on the mark inside.
+
+        The mark already refused to wrap or shrink, so the squeeze moved up one
+        level: this anchor is the flex child, and it was being compressed to
+        65px around 88px of un-wrappable content, which simply cut the wordmark
+        off at 320px. `overflow-hidden` on the header meant it was clipped
+        rather than overflowing, so no horizontal-scroll test could see it.
+      */
+      className="tap-target focus-visible:outline-ring shrink-0 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4"
       aria-label={`${siteConfig.name}, home`}
     >
       {mark}

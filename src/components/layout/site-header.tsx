@@ -2,7 +2,7 @@
 
 import { AppLink as Link } from "@/components/layout/app-link";
 import { usePathname } from "next/navigation";
-import { NAV_ITEMS } from "@/constants";
+import { NAV_ITEMS, isRouteActive } from "@/constants";
 import { BookCallButton } from "@/features/booking";
 import { InquiryDialog } from "@/features/inquiry";
 import { useScrollPosition } from "@/hooks/use-scroll-position";
@@ -88,7 +88,7 @@ export function SiteHeader() {
               >
                 <ul className="flex items-center gap-1">
                   {NAV_ITEMS.map((item) => {
-                    const isActive = pathname.startsWith(item.href);
+                    const isActive = isRouteActive(pathname, item.href);
                     return (
                       <li key={item.href}>
                         <Link
