@@ -3,6 +3,7 @@ import {
   PATHOLOGICAL_TEXT,
   PATHOLOGICAL_TOKEN,
   expectNoHorizontalOverflow,
+  findContentPastViewport,
   findUnnamedControls,
   findUnreachableClipping,
 } from "./helpers";
@@ -49,6 +50,15 @@ test.describe("layout resilience", () => {
     test(`${route} never scrolls horizontally`, async ({ page }) => {
       await page.goto(route);
       await expectNoHorizontalOverflow(page);
+    });
+
+    test(`${route} keeps its content inside the viewport`, async ({ page }) => {
+      await page.goto(route);
+      const offenders = await findContentPastViewport(page);
+      expect(
+        offenders,
+        `content extends past the viewport and is clipped away by the root, with no scrollbar to reveal it: ${offenders.join(", ")}`,
+      ).toEqual([]);
     });
 
     test(`${route} has no unreachable truncated content`, async ({ page }) => {
@@ -117,7 +127,10 @@ test.describe("document structure", () => {
       if ((await trigger.count()) > 0) {
         await trigger.first().click();
       } else {
-        await page.getByRole("radio", { name: /A web platform/ }).first().click();
+        await page
+          .getByRole("radio", { name: /A web platform/ })
+          .first()
+          .click();
       }
       await expect(page.getByRole("dialog")).toBeVisible();
 
@@ -513,7 +526,9 @@ test.describe("product marquee", () => {
     */
     await page.goto("/en");
     await page.evaluate(() =>
-      document.querySelector("[data-marquee]")?.scrollIntoView({ block: "center" }),
+      document
+        .querySelector("[data-marquee]")
+        ?.scrollIntoView({ block: "center" }),
     );
     await page.waitForTimeout(600);
 
@@ -558,7 +573,9 @@ test.describe("product marquee", () => {
     */
     await page.goto("/en");
     await page.evaluate(() =>
-      document.querySelector("[data-marquee]")?.scrollIntoView({ block: "center" }),
+      document
+        .querySelector("[data-marquee]")
+        ?.scrollIntoView({ block: "center" }),
     );
     await page.waitForTimeout(600);
     expect(
@@ -583,7 +600,9 @@ test.describe("product marquee", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/en");
     await page.evaluate(() =>
-      document.querySelector("[data-marquee]")?.scrollIntoView({ block: "center" }),
+      document
+        .querySelector("[data-marquee]")
+        ?.scrollIntoView({ block: "center" }),
     );
     await page.waitForTimeout(600);
 
@@ -643,7 +662,9 @@ test.describe("localisation", () => {
 
       Server-rendered, not hydrated in: a crawler never runs the JS.
     */
-    const markers = html.match(/\b(und|Sie|Ihre|nicht|werden|einem?)\b|[äöüß]/g);
+    const markers = html.match(
+      /\b(und|Sie|Ihre|nicht|werden|einem?)\b|[äöüß]/g,
+    );
     expect(
       markers?.length ?? 0,
       "the served HTML reads as English, so the page is English to a crawler",
@@ -821,33 +842,35 @@ test.describe("section rhythm", () => {
   test("no two adjacent sections share a ground", async ({ page }) => {
     await page.goto("/en");
     const grounds = await page.evaluate(() =>
-      [...document.querySelectorAll("main > section, main > div > section")].map(
-        (section) => {
-          // Two things matter. A transparent section shows whatever is
-          // behind it, so resolve up the tree rather than comparing
-          // "transparent". And a gradient wash is a background-IMAGE over a
-          // colour, so a colour-only comparison would call the hero plain
-          // white and miss that it is visually its own ground.
-          let node: Element | null = section;
-          while (node && node !== document.documentElement) {
-            const style = getComputedStyle(node);
-            if (style.backgroundImage !== "none") {
-              return `image:${style.backgroundImage.slice(0, 60)}`;
-            }
-            const bg = style.backgroundColor;
-            if (bg && !bg.startsWith("rgba(0, 0, 0, 0)")) return bg;
-            node = node.parentElement;
+      [
+        ...document.querySelectorAll("main > section, main > div > section"),
+      ].map((section) => {
+        // Two things matter. A transparent section shows whatever is
+        // behind it, so resolve up the tree rather than comparing
+        // "transparent". And a gradient wash is a background-IMAGE over a
+        // colour, so a colour-only comparison would call the hero plain
+        // white and miss that it is visually its own ground.
+        let node: Element | null = section;
+        while (node && node !== document.documentElement) {
+          const style = getComputedStyle(node);
+          if (style.backgroundImage !== "none") {
+            return `image:${style.backgroundImage.slice(0, 60)}`;
           }
-          return "none";
-        },
-      ),
+          const bg = style.backgroundColor;
+          if (bg && !bg.startsWith("rgba(0, 0, 0, 0)")) return bg;
+          node = node.parentElement;
+        }
+        return "none";
+      }),
     );
     expect(grounds.length).toBeGreaterThan(4);
 
     const repeats: string[] = [];
     for (let index = 1; index < grounds.length; index++) {
       if (grounds[index] === grounds[index - 1]) {
-        repeats.push(`sections ${index} and ${index + 1} are both ${grounds[index]}`);
+        repeats.push(
+          `sections ${index} and ${index + 1} are both ${grounds[index]}`,
+        );
       }
     }
     expect(
@@ -903,13 +926,11 @@ test.describe("home page work cards", () => {
     // The editorial panels belong on /work. If they come back here the section
     // returns to four full screens, which is what readers called endless.
     const summaries = await page.evaluate(
-      () =>
-        document.querySelectorAll("#work .text-marketing-body").length,
+      () => document.querySelectorAll("#work .text-marketing-body").length,
     );
-    expect(
-      summaries,
-      "full project summaries are back on the home page",
-    ).toBe(0);
+    expect(summaries, "full project summaries are back on the home page").toBe(
+      0,
+    );
   });
 });
 
@@ -961,12 +982,11 @@ test.describe("shipped product strip", () => {
 
     const count = await page.evaluate(
       () =>
-        [
-          ...document.querySelectorAll("li:not([aria-hidden]) img"),
-        ].filter((image) =>
-          decodeURIComponent((image as HTMLImageElement).src).includes(
-            "/media/logos/",
-          ),
+        [...document.querySelectorAll("li:not([aria-hidden]) img")].filter(
+          (image) =>
+            decodeURIComponent((image as HTMLImageElement).src).includes(
+              "/media/logos/",
+            ),
         ).length,
     );
     expect(count, "the logo strip is empty").toBeGreaterThanOrEqual(4);
@@ -1002,10 +1022,11 @@ test.describe("motion preferences", () => {
   test("no content stays hidden when motion is reduced", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/en");
-    const hidden = await page.evaluate(() =>
-      [...document.querySelectorAll("[data-reveal]")].filter(
-        (element) => Number(getComputedStyle(element).opacity) < 0.99,
-      ).length,
+    const hidden = await page.evaluate(
+      () =>
+        [...document.querySelectorAll("[data-reveal]")].filter(
+          (element) => Number(getComputedStyle(element).opacity) < 0.99,
+        ).length,
     );
     expect(
       hidden,
@@ -1026,13 +1047,14 @@ test.describe("motion preferences", () => {
     */
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/en");
-    const invisible = await page.evaluate(() =>
-      [
-        ...document.querySelectorAll(
-          "#capabilities li, #process li, [aria-labelledby='shipped-products'] li",
-        ),
-      ].filter((element) => Number(getComputedStyle(element).opacity) < 0.99)
-        .length,
+    const invisible = await page.evaluate(
+      () =>
+        [
+          ...document.querySelectorAll(
+            "#capabilities li, #process li, [aria-labelledby='shipped-products'] li",
+          ),
+        ].filter((element) => Number(getComputedStyle(element).opacity) < 0.99)
+          .length,
     );
     expect(
       invisible,

@@ -58,7 +58,27 @@ export function MobileNav() {
 
       <SheetContent
         side="right"
-        className="border-hairline flex w-full flex-col gap-0 p-0 sm:max-w-full"
+        /*
+          The catalog's sheet ships its own close button, and this panel draws
+          one in its header, so the corner had TWO Xs a few pixels apart. The
+          catalog's is `icon-sm`, 32px, which also put a sub-target control on
+          top of the 44px one meant to be tapped.
+        */
+        showCloseButton={false}
+        /*
+          `data-[side=right]:w-full` rather than plain `w-full`, which is what
+          was here and did not work.
+
+          The catalog sizes a side sheet with `data-[side=right]:w-3/4`, an
+          ATTRIBUTE-qualified rule. `tailwind-merge` files that under a
+          different key from a bare `w-full`, so it de-duplicated nothing and
+          both survived, and the attribute selector then won on specificity.
+          The result was a menu covering three quarters of the screen with the
+          page showing down one side: a panel described as its own full-height
+          experience, rendered as a drawer over a still-visible page. Matching
+          the variant is what actually overrides it.
+        */
+        className="border-hairline flex w-full flex-col gap-0 p-0 data-[side=right]:w-full sm:max-w-full"
       >
         <SheetHeader className="border-hairline flex-row items-center justify-between gap-4 border-b p-5">
           <SheetTitle className="sr-only">{t("nav.primary")}</SheetTitle>

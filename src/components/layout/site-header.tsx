@@ -134,7 +134,17 @@ export function SiteHeader() {
                     language control plus the menu button do not fit, and the
                     arrow is the only one of those carrying no information.
                   */
-                  className="h-10 px-4 text-[0.875rem] max-sm:h-9 max-sm:px-3 max-sm:text-[0.78rem] max-sm:[&>svg:last-child]:hidden"
+                  /*
+                    HEIGHT IS NOT WHAT WAS TIGHT AT 320px, WIDTH WAS. This was
+                    shrinking to 36px tall on a phone, under the 44px floor the
+                    accessibility section commits to, to buy room it did not
+                    actually need: the label, the padding and the dropped arrow
+                    are what fit the row. So the pill keeps the narrower
+                    padding and smaller label on a small screen and goes back
+                    to a full 44px target, which is the one dimension a thumb
+                    cares about on the site's most-tapped control.
+                  */
+                  className="h-11 px-4 text-[0.875rem] max-sm:px-3 max-sm:text-[0.78rem] max-sm:[&>svg:last-child]:hidden"
                 />
                 <MobileNav />
               </div>

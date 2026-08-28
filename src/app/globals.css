@@ -975,9 +975,29 @@
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: color-mix(in oklab, var(--card) 82%, transparent);
-    backdrop-filter: blur(18px) saturate(1.7);
-    -webkit-backdrop-filter: blur(18px) saturate(1.7);
+    /*
+      92%, not 82%, and a heavier blur.
+
+      Glass has to obscure to work. At 82% over 18px of blur, a paragraph
+      passing underneath stayed READABLE through the bar: the header sat over
+      the proof section's lead and over the product strip's screenshots as a
+      grey wash with someone else's words inside it, and the wordmark and nav
+      competed with whatever happened to be scrolling behind them. That reads
+      as a rendering fault rather than as a material.
+
+      A phone is where it goes wrong first, because the capsule is narrow, the
+      type behind it is proportionally larger and there is no margin anywhere
+      for the eye to rest. The blur radius also has to be large relative to the
+      text it is hiding, and 18px is not large next to a 17px line.
+
+      This is still glass: the ground behind still tints it, `saturate` still
+      keeps that tint coloured rather than grey, and the value moves with
+      `--card` on both surfaces. It just no longer publishes the sentence
+      underneath it.
+    */
+    background: color-mix(in oklab, var(--card) 92%, transparent);
+    backdrop-filter: blur(28px) saturate(1.8);
+    -webkit-backdrop-filter: blur(28px) saturate(1.8);
     border: 1px solid
       color-mix(in oklab, var(--hairline-strong) 60%, transparent);
     box-shadow:
@@ -1082,6 +1102,61 @@
 
   .press {
     transition: transform var(--dur-fast) var(--ease-in-out-quart);
+  }
+
+  /*
+    ───────────────────────────────────────────────────────────────────────
+    DISCLOSURE — the FAQ answer opening and closing.
+
+    A native <details> snaps. The element is kept (it is what buys keyboard
+    operation, the correct expanded/collapsed announcement, and find-in-page
+    reaching collapsed answers, none of which a div accordion gives back), so
+    the animation has to come from `::details-content`, the pseudo wrapping
+    everything after the <summary>. There is no other handle: the content does
+    not exist in the layout at all while the element is closed, which is also
+    why the usual `grid-template-rows: 0fr -> 1fr` wrapper cannot animate the
+    CLOSING direction here without JavaScript holding the element open.
+
+    Three details make it work, and each one is silent if you miss it:
+
+    `interpolate-size: allow-keywords` is what makes `auto` an animatable
+    value. Without it the height jumps and only the fade plays, which looks
+    like a bug rather than a decision. It is inherited, so it is declared on
+    the element and reaches the pseudo. It is set HERE rather than on `:root`
+    because it changes how every `auto` size interpolates, and this is the one
+    place that is wanted.
+
+    `content-visibility` has to transition with `allow-discrete`, or the
+    browser flips the content visible at the START of the close and the answer
+    vanishes before the box finishes travelling.
+
+    `overflow: hidden` clips the answer to the box while it moves. Without it
+    the text sits at full height from the first frame and slides over the
+    question below it.
+
+    This animates BLOCK-SIZE, which the motion rules otherwise avoid, and the
+    exception is deliberate rather than an oversight: a disclosure has nothing
+    to animate except its height. It is affordable here because it is
+    one-shot, user-initiated and bounded to one open answer, which is the
+    opposite of the scroll-driven loops that rule exists to keep off the main
+    thread. `--dur-base` is the token already documented as "expand, collapse",
+    so reduced motion resolves it to 1ms and the answer simply appears.
+  */
+  .disclosure {
+    interpolate-size: allow-keywords;
+  }
+  .disclosure::details-content {
+    overflow: hidden;
+    block-size: 0;
+    opacity: 0;
+    transition:
+      block-size var(--dur-base) var(--ease-out-expo),
+      opacity var(--dur-base) var(--ease-out-expo),
+      content-visibility var(--dur-base) allow-discrete;
+  }
+  .disclosure[open]::details-content {
+    block-size: auto;
+    opacity: 1;
   }
 
   /*

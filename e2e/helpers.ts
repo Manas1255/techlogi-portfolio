@@ -27,6 +27,77 @@ export async function expectNoHorizontalOverflow(page: Page): Promise<void> {
 }
 
 /**
+ * Find content that runs past the RIGHT EDGE OF THE VIEWPORT.
+ *
+ * This exists because the two checks either side of it both missed a section
+ * that was cut in half on every phone, and they missed it for structural
+ * reasons rather than by bad luck.
+ *
+ * The proof section's mobile grid track blew out to 800px on a 375px screen: a
+ * grid item's automatic minimum size is its min-content, and the testimonial
+ * rail's fixed-width cards make that the whole rail laid end to end. The
+ * result was the second video card, the right half of every comparison row and
+ * the tail of every sentence rendered off-screen.
+ *
+ * `expectNoHorizontalOverflow` could not see it, because `html` carries
+ * `overflow-x: clip`: the page is PREVENTED from scrolling, so the symptom that
+ * check looks for is exactly the thing the clip suppresses. Silence there means
+ * "nothing overflowed OR something overflowed and was amputated", and those are
+ * opposite outcomes.
+ *
+ * `findUnreachableClipping` could not see it either, because it walks `body *`
+ * looking for an element that clips its own content. The clipper here is the
+ * root, which is not in that set, and every element in between had
+ * `overflow: visible` and was overflowing perfectly happily.
+ *
+ * So: measure against the viewport, and forgive anything living inside a
+ * scroll container, where running wide is the design (the product marquee and
+ * the testimonial rail both do it on purpose).
+ */
+export async function findContentPastViewport(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const offenders: string[] = [];
+    const limit = document.documentElement.clientWidth;
+
+    for (const element of document.querySelectorAll<HTMLElement>("body *")) {
+      if (element.getClientRects().length === 0) continue;
+      // A crop is a composition decision, and a rail is meant to run wide.
+      if (element.closest("[data-media-crop]") !== null) continue;
+
+      let scrollable = false;
+      for (
+        let node: HTMLElement | null = element;
+        node !== null;
+        node = node.parentElement
+      ) {
+        const overflowX = getComputedStyle(node).overflowX;
+        if (overflowX === "auto" || overflowX === "scroll") {
+          scrollable = true;
+          break;
+        }
+      }
+      if (scrollable) continue;
+
+      const box = element.getBoundingClientRect();
+      if (box.width === 0) continue;
+      // Report the element that BLEW OUT, not the hundred descendants carried
+      // along with it: if the parent is already too wide, this one is a
+      // passenger.
+      const parent = element.parentElement;
+      if (parent !== null && parent.getBoundingClientRect().width > limit + 1) {
+        continue;
+      }
+      if (box.right > limit + 1 || box.left < -1) {
+        const tag = element.tagName.toLowerCase();
+        const cls = element.className?.toString().slice(0, 60) ?? "";
+        offenders.push(`${tag}.${cls} (${Math.round(box.width)}px)`);
+      }
+    }
+    return offenders.slice(0, 10);
+  });
+}
+
+/**
  * Find elements that CLIP their content without any way to reveal it.
  *
  * Clipping is fine — that's what truncation is — but a clipped value with no

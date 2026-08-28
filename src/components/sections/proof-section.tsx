@@ -52,9 +52,25 @@ export async function ProofSection() {
       />
 
       <div className="mt-12 grid gap-10 md:mt-14 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-14">
+        {/*
+          `min-w-0` is load-bearing on a phone, and its absence was invisible
+          on every desktop width.
+
+          A grid item's automatic minimum size is its MIN-CONTENT, not zero. The
+          rail below holds fixed 16rem cards, so its min-content is the whole
+          track laid end to end: 800px. In the single-column mobile grid that
+          blew the one column out to 800px, and because `html` carries
+          `overflow-x: clip` the page did not gain a scrollbar to reveal it. It
+          just cut. On a 375px screen the second video card, the right half of
+          every comparison row and the end of every placeholder sentence were
+          rendered, clipped, and unreachable by any gesture.
+
+          Both children need it: they share the column, so either one forcing
+          the track wide takes the other with it.
+        */}
         <Reveal
           variant="lift"
-          className="flex flex-col gap-4 lg:sticky lg:top-28 lg:self-start"
+          className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-28 lg:self-start"
         >
           <h3 className="text-eyebrow text-muted-foreground">
             {t("proof.inTheirWords")}
@@ -80,7 +96,7 @@ export async function ProofSection() {
           )}
         </Reveal>
 
-        <Reveal variant="fade" delay={80}>
+        <Reveal variant="fade" delay={80} className="min-w-0">
           {/*
             TWO COLUMNS ON A PHONE IS ONE COLUMN, and that broke the argument.
 

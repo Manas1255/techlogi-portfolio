@@ -104,7 +104,15 @@ function FilterChip({
       scroll={false}
       aria-current={isActive ? "true" : undefined}
       className={cn(
-        "focus-visible:outline-ring inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors duration-[var(--dur-base)] focus-visible:outline-2 focus-visible:outline-offset-2",
+        /*
+          `pointer-coarse:min-h-11` rather than a flat `min-h-11`: these are
+          the only way to filter the portfolio on a phone, and they measured
+          38px against the 44px floor. Raising it everywhere would fatten a row
+          of pills a mouse hits perfectly well already, so the touch target
+          grows only where there is a thumb, the same reasoning the
+          `tap-target` utility and the coarse-pointer form control rule use.
+        */
+        "focus-visible:outline-ring inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors duration-[var(--dur-base)] focus-visible:outline-2 focus-visible:outline-offset-2 pointer-coarse:min-h-11",
         isActive
           ? "border-primary bg-accent text-foreground"
           : "border-hairline text-muted-foreground hover:border-hairline-strong hover:text-foreground",

@@ -192,7 +192,11 @@ export async function BookACall({
                       origin={`${origin}-brief`}
                       variant="link"
                       size="sm"
-                      className="text-foreground hover:text-primary h-auto p-0 text-[0.75rem] font-normal underline underline-offset-4"
+                      /* `tap-target`, like the mail link it sits beside in the
+                         same sentence: an inline control 20px tall is a miss
+                         on a phone, and the utility grows the hit area with a
+                         pseudo-element so the line of text does not reflow. */
+                      className="tap-target text-foreground hover:text-primary h-auto p-0 text-[0.75rem] font-normal underline underline-offset-4"
                     >
                       {t("inquiry.trigger")}
                     </InquiryTrigger>{" "}

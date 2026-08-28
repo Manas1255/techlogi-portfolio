@@ -61,7 +61,7 @@ export function FaqSection() {
           {faqs.map((faq, index) => (
             <details
               key={faq.question}
-              className="border-hairline group/faq border-b"
+              className="disclosure border-hairline group/faq border-b"
               onToggle={(event) => {
                 // Read the element BEFORE calling setOpen. A state updater runs
                 // during a later render, by which point React has cleared

@@ -70,7 +70,21 @@ export function LanguageSwitcher({ className }: { className?: string }) {
       <DropdownMenuTrigger
         aria-label={t("common.language")}
         className={cn(
-          "tap-target text-muted-foreground hover:text-foreground focus-visible:outline-ring inline-flex h-9 items-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+          /*
+            `tap-target` grows the hit area DOWN THE BLOCK AXIS ONLY: its
+            pseudo-element is `inset-inline: 0`, so it fixes height and leaves
+            width exactly as drawn. That is the right trade for an inline link
+            in a sentence, where widening the strip would swallow taps meant
+            for the words either side of it.
+
+            It is the wrong trade here. Below 380px the header hides this
+            control's label to make room, which leaves a bare icon measuring
+            36x36, under the floor in BOTH axes, and `tap-target` was only ever
+            covering one of them. `min-w-11` on a coarse pointer squares it off
+            to 44 without touching the mouse-driven layout, where the label is
+            present and the control is already wide enough.
+          */
+          "tap-target text-muted-foreground hover:text-foreground focus-visible:outline-ring inline-flex h-9 items-center justify-center gap-1.5 rounded-full px-2.5 text-[0.8125rem] font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 pointer-coarse:min-w-11",
           className,
         )}
       >

@@ -136,10 +136,36 @@ export function VideoTestimonialPlaceholder() {
       className="rail-snap -mx-5 flex gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0"
     >
       {[0, 1, 2].map((index) => (
-        <li key={index} className="w-[16rem] shrink-0 sm:w-[17.5rem]">
+        <li
+          key={index}
+          className={cn(
+            "shrink-0 sm:w-[17.5rem]",
+            /*
+              ONE PANEL ON A PHONE, NOT THREE.
+
+              The frames below are drawn at the exact 9:16 a real clip will
+              occupy, which is right on a desktop where the rail sits in a
+              narrow column beside the comparison. Translated literally to a
+              phone it became three 256x455 boxes, about 1,300px of dashed
+              nothing, and the reader had to scroll through a screen and a half
+              of it to reach the argument underneath. An empty state should
+              cost a glance, not a journey.
+
+              Nothing is being hidden or softened here: the panel says the same
+              sentence, and the note beneath it still states the publishing
+              rule out loud. It just stops spending a screen and a half saying
+              a thing there is currently none of.
+
+              The full-size rail is what a REAL clip gets, from `sm` up and on
+              a phone alike, so the day one lands it arrives at the size the
+              format deserves.
+            */
+            index === 0 ? "w-full" : "w-[16rem] max-sm:hidden",
+          )}
+        >
           <div
             className={cn(
-              "border-hairline bg-sunken flex aspect-[9/16] flex-col items-center justify-center gap-3 rounded-3xl border border-dashed",
+              "border-hairline bg-sunken flex flex-col items-center justify-center gap-3 rounded-3xl border border-dashed max-sm:aspect-[16/7] sm:aspect-[9/16]",
               index > 0 && "opacity-60",
               index > 1 && "opacity-35",
             )}
