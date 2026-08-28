@@ -30,17 +30,18 @@ export function useSubmitInquiry() {
 
 function toPayload(values: SubmitInquiryVariables): InquiryPayload {
   return {
-    buildType: values.buildType,
-    description: values.description,
-    services: values.services,
-    timeline: values.timeline,
-    budget: values.budget,
     name: values.name,
-    company: values.company,
     email: values.email,
     // An empty optional field is omitted rather than sent as "", the receiving
     // end shouldn't have to distinguish "not given" from "given as blank".
     phone: values.phone === "" ? undefined : values.phone,
+    description: values.description,
+    projectStage: values.projectStage,
+    budget: values.budget,
+    timeline: values.timeline,
+    anythingElse: values.anythingElse,
+    buildType: values.buildType,
+    services: values.services,
     attachments: values.attachments,
     submittedAt: new Date().toISOString(),
     source: `site:${siteConfig.url}`,

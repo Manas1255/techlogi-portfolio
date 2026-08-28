@@ -115,7 +115,7 @@ const en = {
         placeholder: "Pick whichever is closest",
       },
       description: {
-        label: "The project, in your words",
+        label: "Describe your idea, briefly",
         hint: "A few sentences is plenty. What happens today, and what should change?",
         placeholder:
           "We run scheduling for eleven clinics across three spreadsheets, and our coordinators waste hours on it every week…",
@@ -124,19 +124,59 @@ const en = {
         label: "Where do you need help?",
         hint: "Optional. Choose as many as apply, or none.",
       },
+      stage: {
+        label: "Where are you with it right now?",
+        placeholder: "Pick whichever is closest",
+      },
       timeline: {
         label: "When would you like to start?",
         placeholder: "No rush either way",
       },
       budget: {
-        label: "Rough budget",
+        label: "Roughly what budget do you have in mind?",
         placeholder: "A range is fine",
         hint: "Not a quote and not a commitment. It only tells us what size of team fits.",
       },
-      name: { label: "Your name" },
+      anythingElse: {
+        label: "Anything else we should know before the call?",
+        hint: "Optional. A constraint, a deadline, a question you want answered first.",
+        placeholder:
+          "We have to stay on our current payment provider, and the board wants to see something in March…",
+      },
+      name: {
+        label: "First and last name",
+        hint: "So we know who we are talking to on the call.",
+      },
       company: { label: "Company (optional)" },
-      email: { label: "Email" },
-      phone: { label: "Phone (optional)" },
+      email: {
+        label: "Email address",
+        hint: "Where the calendar invite and our reply go. We never add you to a list.",
+      },
+      phone: { label: "Phone or WhatsApp (optional)" },
+    },
+    /* Option labels for the three selects. These were English literals in
+       `inquiry.schema.ts` and rendered untranslated on the German site. */
+    options: {
+      stage: {
+        idea: "Just an idea so far",
+        concept: "The concept is worked out",
+        design: "Designs already exist",
+        existingApp: "An existing app needs improving",
+      },
+      timeline: {
+        asap: "As soon as we can",
+        months: "In the next few months",
+        later: "Later this year",
+        exploring: "Just exploring for now",
+      },
+      budget: {
+        under5k: "Under $5k",
+        from5to10k: "$5k - $10k",
+        from10to25k: "$10k - $25k",
+        over25k: "More than $25k",
+        unsure: "I'm not sure yet",
+        private: "I'd rather not say",
+      },
     },
     attachment: {
       label: "Attach anything useful (optional)",
@@ -154,11 +194,14 @@ const en = {
       next: "Continue",
       change: "Change",
       submit: "Send the brief",
+      continueToBooking: "Continue to pick a time",
       submitting: "Sending…",
     },
     success: {
       title: "Brief sent",
       heading: "Thanks, that's with us.",
+      bookingBody:
+        "Your brief is with us and the calendar is open. Pick a time that suits you and we will have read everything before we speak.",
       body: "A person reads every brief and replies within one business day. If you'd rather not wait, book a call and pick a time now.",
       close: "Close",
       another: "Send another",
@@ -175,6 +218,8 @@ const en = {
         `Invalid option: expected one of "web-app"|"mobile-app"|…`. Raw enum
         ids, in English, on the German page.
       */
+      stageRequired:
+        "Pick whichever is closest, we can sort out the detail on the call",
       buildTypeRequired:
         "Pick the closest one, we'll sort the detail out on the call",
     },

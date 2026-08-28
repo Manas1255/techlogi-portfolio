@@ -33,14 +33,23 @@ export interface BookCallButtonProps extends Omit<
  * with a meeting in both calendars. Everything else on the page is arranged to
  * get someone to this control.
  *
- * Two behaviours, one component:
+ * IT OPENS THE BRIEF, not the calendar, and that is the whole flow:
  *
- *   · `calLink` set → Cal.com's overlay opens in place. Not a new tab: sending
- *     someone to another origin at the exact moment they decided to act is how
- *     you lose the half who then get distracted by their inbox.
- *   · `calLink` unset → the project brief opens instead. This is the shipped
- *     default, and it is why the redesign is safe to deploy before the Cal.com
- *     account exists. The control is never dead and never points at a 404.
+ *     book a call → eight questions → Cal.com, prefilled → booked
+ *
+ * It used to bind Cal.com's overlay directly to this button, which worked and
+ * told us nothing. A slot arrived with a name, an email and no idea what the
+ * call was about, so the first ten minutes of every booked call went on
+ * finding out. One screen in front of the calendar buys that back, and it is
+ * the cheapest possible qualification: someone unwilling to answer eight
+ * questions was not going to be a fit for the call either.
+ *
+ * `QuickBriefForm` owns the hand-off (see `useBookingHandoff`), so the
+ * calendar opens from the same place whatever opened the brief: this button,
+ * the hero, a choice card, or the header. When `calLink` is unset the brief is
+ * simply the whole interaction and its success panel says we will reply. The
+ * control is never dead and never points at a 404, which is still what makes
+ * this safe to deploy independently of the Cal.com account.
  *
  * Mounting one of these also STARTS the offer window, because a button is the
  * first booking surface a visitor reaches. Starting it on page load instead
@@ -64,6 +73,14 @@ export function BookCallButton({
     startOffer();
   }, [startOffer]);
 
+  /*
+    PRELOAD ONLY. This button no longer opens the calendar, `QuickBriefForm`
+    does, but the form is inside a dialog that Radix does not mount until it is
+    opened. Warming the embed here, from a control that is already on the page,
+    means the script is in memory by the time the brief is submitted, so the
+    hand-off is instant rather than a network round trip at the exact moment a
+    visitor is deciding whether this was worth it.
+  */
   useEffect(() => {
     if (calLink === null) return;
     let isActive = true;
@@ -84,19 +101,17 @@ export function BookCallButton({
     };
   }, [calLink]);
 
-  const isLive = calLink !== null;
-
   return (
     <CtaButton
       variant={variant}
       size={size}
-      // Cal.com binds its overlay to these attributes once `getCalApi` has run.
-      data-cal-namespace={isLive ? "book" : undefined}
-      data-cal-link={isLive ? calLink : undefined}
-      data-cal-config={
-        isLive ? JSON.stringify({ layout: "month_view" }) : undefined
-      }
-      onClick={isLive ? undefined : () => openBrief({ origin })}
+      /*
+        No `data-cal-link` any more. Those attributes made Cal.com hijack the
+        click before React saw it, which is exactly the behaviour being
+        replaced: the brief has to come first, and the calendar opens from its
+        success path with the answers in hand.
+      */
+      onClick={() => openBrief({ origin })}
       {...props}
     >
       {withIcon && (

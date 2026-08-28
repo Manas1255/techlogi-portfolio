@@ -1013,6 +1013,38 @@
     }
   }
 
+  /*
+    FORM CONTROLS ARE 44px ON A TOUCH SCREEN.
+
+    `components/ui` is the shared catalog, sized for a dense product UI driven
+    by a mouse: a 32px input and a 32px select trigger are correct there and
+    wrong on the one form this marketing site exists to get filled in. On a
+    phone they measured 32px, the file picker 18px, which is a thumb-sized
+    problem on the primary conversion path.
+
+    Fixed HERE rather than by editing `ui/button.tsx` and `ui/input.tsx`, which
+    are shadcn output the whole catalog shares and this repo does not fork. A
+    coarse-pointer query is also the honest scope: it is touch that needs the
+    room, not a narrow window, so a laptop at 380px keeps the dense sizing and
+    a tablet at 1024px gets the roomy one. Same reasoning as `.tap-target`
+    directly above.
+
+    `min-block-size`, so a control that is already taller (a textarea) is left
+    alone rather than being squashed to 44.
+  */
+  @media (pointer: coarse) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    textarea,
+    select,
+    [data-slot="select-trigger"],
+    form button,
+    /* Outside the form, but the only way out of a full-screen dialog. */
+    [data-slot="dialog-close"] {
+      min-block-size: 44px;
+      min-inline-size: 44px;
+    }
+  }
+
   .press {
     transition: transform var(--dur-fast) var(--ease-in-out-quart);
   }

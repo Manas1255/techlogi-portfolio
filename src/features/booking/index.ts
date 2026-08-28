@@ -10,4 +10,8 @@ export { CalEmbed } from "./components/cal-embed";
 export { ConfidentialityNote } from "./components/confidentiality-note";
 export { OfferCountdown } from "./components/offer-countdown";
 export { useOfferCountdown } from "./hooks/use-offer-countdown";
+export {
+  useBookingHandoff,
+  type BookingPrefill,
+} from "./hooks/use-booking-handoff";
 export { useOfferStore } from "./offer-store";

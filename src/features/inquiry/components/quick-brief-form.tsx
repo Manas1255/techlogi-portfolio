@@ -1,21 +1,21 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronDown, CircleAlert, CircleCheck, Send } from "lucide-react";
+import { CalendarCheck, CircleAlert, CircleCheck } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { SelectField, TextField, TextareaField } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import { useContent } from "@/content/use-content";
-import type { BuildTypeId } from "@/content/schemas";
-import { ConfidentialityNote } from "@/features/booking";
+import { ConfidentialityNote, useBookingHandoff } from "@/features/booking";
 import { useTranslations } from "@/i18n";
+import type { MessageKey } from "@/i18n";
 import { errorMessage } from "@/lib/mutations";
 import { useInquiryStore } from "@/features/inquiry/inquiry-store";
 import { useSubmitInquiry } from "@/features/inquiry/services/use-submit-inquiry";
 import {
   BUDGETS,
+  PROJECT_STAGES,
   TIMELINES,
   inquirySchema,
   type InquiryFormValues,
@@ -34,29 +34,35 @@ export interface QuickBriefFormProps {
 }
 
 /**
- * THE PROJECT BRIEF, on one screen.
+ * THE BRIEF, and the step in front of the calendar.
  *
- * This replaces a three-step wizard, and the wizard was the problem. It asked
- * eight questions across three screens with a progress bar on top, which is a
- * good design for an application form and the wrong one for a first contact:
- * every screen is another place to stop, and a visitor who has decided to get
- * in touch is not looking for a process, they are looking for a send button.
+ * Every "book a call" control on the site opens this. It used to open Cal.com
+ * directly, which worked and told us nothing: a slot appeared with a name, an
+ * email, and no idea what the call was about, so the first ten minutes of
+ * every booked call were spent finding out. Now the same click asks eight
+ * questions, then hands off to the calendar with the answers attached and the
+ * name and email already filled in. The visitor ends in the same place; we get
+ * there having read the brief.
  *
- * Four fields, all visible at once, and nothing else is required:
+ * The eight, in the order a person can answer them:
  *
- *   what you're building · a couple of sentences · your name · your email
+ *   name · email · phone · the idea · where it has got to
+ *   · budget · when · anything else
  *
- * Budget, timeline and files are behind one optional disclosure. They are the
- * questions people abandon a form over, and they are genuinely useful, so they
- * are offered rather than demanded: someone who wants to be thorough opens it,
- * and everyone else never sees it. `<details>` rather than a hand-rolled
- * toggle, so it keeps keyboard operation, the correct announcement and
- * find-in-page on the collapsed content for free.
+ * Only five of those are required. Phone, budget, timeline and "anything else"
+ * are the questions people abandon a form over, so they are asked plainly and
+ * left optional, rather than being hidden behind a disclosure where nobody
+ * answers them at all. Attachments stay behind their own control because a
+ * file picker is a different kind of ask.
  *
- * The whole thing is one form instance shared by the hero and the dialog, so
- * there is a single implementation of validation, a single success state and a
- * single payload. Two forms would drift, and the one that drifts is never the
- * one you are reading.
+ * If the calendar cannot open, because `calLink` is unset or the embed script
+ * failed, the brief has still been sent and the success panel says so. The
+ * hand-off is an upgrade on a complete interaction, never a dependency of one.
+ *
+ * One form instance is shared by the hero and the dialog, so there is a single
+ * implementation of validation, a single success state and a single payload.
+ * Two forms would drift, and the one that drifts is never the one you are
+ * reading.
  */
 export function QuickBriefForm({
   origin,
@@ -65,30 +71,35 @@ export function QuickBriefForm({
   className,
 }: QuickBriefFormProps) {
   const t = useTranslations();
-  const { buildTypes } = useContent();
   const values = useInquiryStore((state) => state.values);
   const setValues = useInquiryStore((state) => state.setValues);
   const clearDraft = useInquiryStore((state) => state.clearDraft);
+  const booking = useBookingHandoff();
 
   // A File cannot be serialized, so attachments stay in component state rather
   // than the persisted draft. Losing them silently on rehydrate would be worse
   // than not persisting them.
   const [attachments, setAttachments] = useState<File[]>([]);
+  // True when the brief was sent AND the calendar took over, so the success
+  // panel can say "pick a time" rather than "we will reply".
+  const [didHandOff, setDidHandOff] = useState(false);
   const mutation = useSubmitInquiry();
 
   const form = useForm<InquiryFormValues, unknown, InquiryValues>({
     resolver: zodResolver(inquirySchema),
     mode: "onBlur",
     defaultValues: {
-      buildType: values.buildType ?? undefined,
-      description: values.description ?? "",
-      services: [],
-      timeline: values.timeline,
-      budget: values.budget,
       name: values.name ?? "",
-      company: "",
       email: values.email ?? "",
-      phone: "",
+      phone: values.phone ?? "",
+      description: values.description ?? "",
+      projectStage: values.projectStage,
+      budget: values.budget,
+      timeline: values.timeline,
+      anythingElse: values.anythingElse ?? "",
+      // Set by a choice card rather than asked for here; see the schema.
+      buildType: values.buildType ?? undefined,
+      services: [],
     },
   });
 
@@ -97,6 +108,18 @@ export function QuickBriefForm({
       { ...submitted, attachments },
       {
         onSuccess: () => {
+          /*
+            The calendar opens BEFORE the draft is cleared and the form reset,
+            because the prefill is read from what was just submitted rather
+            than from the form, and because a visitor who has pressed submit
+            should meet the next screen without an intervening blank one.
+          */
+          const opened = booking.open({
+            name: submitted.name,
+            email: submitted.email,
+            notes: briefNotes(submitted),
+          });
+          setDidHandOff(opened);
           clearDraft();
           setAttachments([]);
           form.reset();
@@ -122,11 +145,21 @@ export function QuickBriefForm({
         <div className="flex flex-col gap-2">
           <p className="text-display-3">{t("inquiry.success.heading")}</p>
           <p className="text-muted-foreground text-sm leading-relaxed">
-            {t("inquiry.success.body", { email: siteConfig.contact.email })}
+            {/*
+              Two different true things. If the calendar opened, the visitor is
+              mid-booking and the only useful sentence is about the times in
+              front of them. If it did not, we owe them a reply and say so.
+            */}
+            {didHandOff
+              ? t("inquiry.success.bookingBody")
+              : t("inquiry.success.body", { email: siteConfig.contact.email })}
           </p>
         </div>
         <Button
-          onClick={() => mutation.reset()}
+          onClick={() => {
+            setDidHandOff(false);
+            mutation.reset();
+          }}
           variant="ghost"
           className="w-fit rounded-full"
         >
@@ -165,40 +198,16 @@ export function QuickBriefForm({
         className,
       )}
     >
-      <SelectField
-        control={form.control}
-        name="buildType"
-        label={t("inquiry.fields.buildType.label")}
-        placeholder={t("inquiry.fields.buildType.placeholder")}
-        /*
-          Labels only. Every option carrying its hint made eight entries into
-          sixteen lines of prose, and a menu you have to READ is slower than
-          one you scan. The hints still exist and still earn their place in the
-          launcher on `/contact`, where the choices are cards with room for
-          them; here the labels were rewritten to stand on their own, which is
-          what "A website" and "A web platform" were for.
-        */
-        options={buildTypes.map((type) => ({
-          value: type.id satisfies BuildTypeId,
-          label: type.label,
-        }))}
-        disabled={mutation.isPending}
-      />
-
-      <TextareaField
-        control={form.control}
-        name="description"
-        label={t("inquiry.fields.description.label")}
-        placeholder={t("inquiry.fields.description.placeholder")}
-        rows={3}
-        disabled={mutation.isPending}
-      />
-
+      {/* 1 and 2. Paired on a wide card, stacked on a phone. Both carry a
+          hint, because these two are the ones a visitor hesitates over: they
+          are being asked for a name and an address before they know what
+          happens next, so each says what it is for. */}
       <div className="grid gap-4 sm:grid-cols-2">
         <TextField
           control={form.control}
           name="name"
           label={t("inquiry.fields.name.label")}
+          description={t("inquiry.fields.name.hint")}
           autoComplete="name"
           disabled={mutation.isPending}
         />
@@ -207,52 +216,91 @@ export function QuickBriefForm({
           name="email"
           type="email"
           label={t("inquiry.fields.email.label")}
+          description={t("inquiry.fields.email.hint")}
           autoComplete="email"
           inputMode="email"
           disabled={mutation.isPending}
         />
       </div>
 
-      <details className="group/more border-hairline rounded-xl border">
-        <summary className="focus-visible:outline-ring text-muted-foreground hover:text-foreground flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-[0.8125rem] transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 [&::-webkit-details-marker]:hidden">
-          {t("inquiry.more")}
-          <ChevronDown
-            aria-hidden="true"
-            className="size-4 shrink-0 transition-transform duration-[var(--dur-base)] group-open/more:rotate-180"
-          />
-        </summary>
-        <div className="border-hairline flex flex-col gap-4 border-t p-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <SelectField
-              control={form.control}
-              name="timeline"
-              label={t("inquiry.fields.timeline.label")}
-              placeholder={t("inquiry.fields.timeline.placeholder")}
-              options={TIMELINES.map((option) => ({
-                value: option.id,
-                label: option.label,
-              }))}
-              disabled={mutation.isPending}
-            />
-            <SelectField
-              control={form.control}
-              name="budget"
-              label={t("inquiry.fields.budget.label")}
-              placeholder={t("inquiry.fields.budget.placeholder")}
-              options={BUDGETS.map((option) => ({
-                value: option.id,
-                label: option.label,
-              }))}
-              disabled={mutation.isPending}
-            />
-          </div>
-          <AttachmentField
-            files={attachments}
-            onChange={setAttachments}
-            disabled={mutation.isPending}
-          />
-        </div>
-      </details>
+      {/* 3. */}
+      <TextField
+        control={form.control}
+        name="phone"
+        type="tel"
+        label={t("inquiry.fields.phone.label")}
+        autoComplete="tel"
+        inputMode="tel"
+        disabled={mutation.isPending}
+      />
+
+      {/* 4. */}
+      <TextareaField
+        control={form.control}
+        name="description"
+        label={t("inquiry.fields.description.label")}
+        description={t("inquiry.fields.description.hint")}
+        placeholder={t("inquiry.fields.description.placeholder")}
+        rows={3}
+        disabled={mutation.isPending}
+      />
+
+      {/* 5. The qualifying question, and the only required select. */}
+      <SelectField
+        control={form.control}
+        name="projectStage"
+        label={t("inquiry.fields.stage.label")}
+        placeholder={t("inquiry.fields.stage.placeholder")}
+        options={PROJECT_STAGES.map((option) => ({
+          value: option.id,
+          label: t(option.labelKey satisfies MessageKey),
+        }))}
+        disabled={mutation.isPending}
+      />
+
+      {/* 6 and 7. */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <SelectField
+          control={form.control}
+          name="budget"
+          label={t("inquiry.fields.budget.label")}
+          placeholder={t("inquiry.fields.budget.placeholder")}
+          description={t("inquiry.fields.budget.hint")}
+          options={BUDGETS.map((option) => ({
+            value: option.id,
+            label: t(option.labelKey satisfies MessageKey),
+          }))}
+          disabled={mutation.isPending}
+        />
+        <SelectField
+          control={form.control}
+          name="timeline"
+          label={t("inquiry.fields.timeline.label")}
+          placeholder={t("inquiry.fields.timeline.placeholder")}
+          options={TIMELINES.map((option) => ({
+            value: option.id,
+            label: t(option.labelKey satisfies MessageKey),
+          }))}
+          disabled={mutation.isPending}
+        />
+      </div>
+
+      {/* 8. */}
+      <TextareaField
+        control={form.control}
+        name="anythingElse"
+        label={t("inquiry.fields.anythingElse.label")}
+        description={t("inquiry.fields.anythingElse.hint")}
+        placeholder={t("inquiry.fields.anythingElse.placeholder")}
+        rows={2}
+        disabled={mutation.isPending}
+      />
+
+      <AttachmentField
+        files={attachments}
+        onChange={setAttachments}
+        disabled={mutation.isPending}
+      />
 
       {mutation.isError && (
         <p
@@ -274,13 +322,41 @@ export function QuickBriefForm({
           data-origin={origin}
           className="press w-full gap-2 rounded-full"
         >
-          <Send aria-hidden="true" className="size-4" />
+          <CalendarCheck aria-hidden="true" className="size-4" />
           {mutation.isPending
             ? t("inquiry.actions.submitting")
-            : t("inquiry.actions.submit")}
+            : /*
+                The label names the NEXT screen, not this one. "Send" would be
+                a lie about where the button goes when a calendar is about to
+                open, and a promise we cannot keep when it is not, so it tracks
+                whether the embed is actually ready.
+              */
+              booking.isReady
+              ? t("inquiry.actions.continueToBooking")
+              : t("inquiry.actions.submit")}
         </Button>
         <ConfidentialityNote />
       </div>
     </form>
   );
+}
+
+/**
+ * The brief, flattened into the booking's notes field.
+ *
+ * Cal.com takes one free-text field, so this is the only way the answers reach
+ * the calendar entry itself rather than only our own endpoint. Deliberately
+ * unlabelled by locale: it is read by us, not by the visitor.
+ */
+function briefNotes(values: InquiryValues): string {
+  return [
+    values.description,
+    `Stage: ${values.projectStage}`,
+    values.budget ? `Budget: ${values.budget}` : null,
+    values.timeline ? `Timeline: ${values.timeline}` : null,
+    values.phone ? `Phone: ${values.phone}` : null,
+    values.anythingElse ? `Also: ${values.anythingElse}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
 }

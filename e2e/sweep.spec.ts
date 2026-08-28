@@ -272,41 +272,68 @@ test.describe("work index", () => {
 
 test.describe("project brief", () => {
   /*
-    The brief was a three-step wizard and is now ONE screen with four required
-    fields, everything else behind an optional disclosure. These tests assert
-    the properties that survived the rewrite, not the steps that did not.
+    The brief was a three-step wizard, then one short screen, and is now the
+    STEP IN FRONT OF THE CALENDAR: eight questions, then a hand-off to Cal.com
+    with the answers attached. These tests assert the properties that have
+    survived all three shapes, not the fields of any one of them.
+
+    Deliberately not pinned to copy. Labels are addressed through their form
+    control, and the two that are matched by text are matched loosely, because
+    a guard that fails on an ordinary headline edit is a guard people delete.
   */
 
-  test("the whole brief is on one screen, with no wizard to walk", async ({
+  /** The one form shared by the hero and the dialog. */
+  const briefForm = (page: import("@playwright/test").Page) =>
+    page.locator("form").filter({ has: page.getByLabel(/email address/i) });
+
+  test("asks the whole brief on one screen, with no wizard to walk", async ({
     page,
   }) => {
     await page.goto("/en");
-    // Four fields, all present at once. If a step machine ever comes back,
-    // three of these are on screens the visitor has not reached.
-    const form = page.locator("form").filter({ has: page.getByLabel("Email") });
-    await expect(form.getByLabel("What are you building?")).toBeVisible();
-    await expect(form.getByLabel("The project, in your words")).toBeVisible();
-    await expect(form.getByLabel("Your name")).toBeVisible();
-    await expect(form.getByLabel("Email")).toBeVisible();
+    const form = briefForm(page);
 
-    // Budget and timeline are OFFERED, not demanded: they are the questions
-    // people abandon a form over, so they must start collapsed.
-    await expect(
-      page.getByLabel("Rough budget"),
-      "budget is visible by default, which is the friction this rewrite removed",
-    ).toBeHidden();
+    /*
+      Every question visible at once. A step machine would put most of these on
+      screens the visitor has not reached, which is the design this replaced.
+    */
+    for (const label of [
+      /first and last name/i,
+      /email address/i,
+      /phone or whatsapp/i,
+      /describe your idea/i,
+      /where are you with it/i,
+      /budget/i,
+      /when would you like to start/i,
+      /anything else/i,
+    ]) {
+      await expect(
+        form.getByLabel(label).first(),
+        `the brief is missing the field labelled ${label}`,
+      ).toBeVisible();
+    }
   });
 
-  test("the optional detail opens without leaving the screen", async ({
+  test("asks for nothing beyond a name, an email and the idea", async ({
     page,
   }) => {
+    /*
+      Four of the eight are optional, and staying optional is the point: they
+      are the questions people abandon a form over. Filling only the required
+      ones must reach the success state.
+    */
     await page.goto("/en");
-    await page
-      .getByText("Add budget, timeline or files (optional)")
-      .first()
-      .click();
-    await expect(page.getByLabel("Rough budget").first()).toBeVisible();
-    await expect(page.getByLabel("Your name").first()).toBeVisible();
+    const form = briefForm(page);
+
+    await form.getByLabel(/first and last name/i).fill("Ada Lovelace");
+    await form.getByLabel(/email address/i).fill("ada@example.com");
+    await form
+      .getByLabel(/describe your idea/i)
+      .fill("A portal our field engineers can use with one hand, offline.");
+    await form.getByLabel(/where are you with it/i).click();
+    await page.getByRole("option").first().click();
+    await form.getByRole("button", { name: /pick a time|send the brief/i }).click();
+
+    await expect(page.getByText(/thanks, that's with us/i)).toBeVisible();
   });
 
   test("the draft survives closing and reopening the dialog", async ({
@@ -314,14 +341,12 @@ test.describe("project brief", () => {
   }) => {
     await page.goto("/en");
     await page
-      .getByRole("button", { name: /send a project brief/i })
+      .getByRole("button", { name: /book a call|send a project brief/i })
       .first()
       .click();
     await expect(page.getByRole("dialog")).toBeVisible();
 
-    const field = page
-      .getByRole("dialog")
-      .getByLabel("The project, in your words");
+    const field = page.getByRole("dialog").getByLabel(/describe your idea/i);
     await field.fill(
       "An internal assistant over our own runbooks and incident history.",
     );
@@ -332,11 +357,11 @@ test.describe("project brief", () => {
     await expect(page.getByRole("dialog")).toBeHidden();
 
     await page
-      .getByRole("button", { name: /send a project brief/i })
+      .getByRole("button", { name: /book a call|send a project brief/i })
       .first()
       .click();
     await expect(
-      page.getByRole("dialog").getByLabel("The project, in your words"),
+      page.getByRole("dialog").getByLabel(/describe your idea/i),
     ).toHaveValue(/internal assistant/);
   });
 
@@ -344,26 +369,39 @@ test.describe("project brief", () => {
     page,
   }) => {
     await page.goto("/en");
-    const form = page.locator("form").filter({ has: page.getByLabel("Email") });
-    await form.getByRole("button", { name: "Send the brief" }).click();
+    const form = briefForm(page);
+    await form.getByRole("button", { name: /pick a time|send the brief/i }).click();
     await expect(page.locator("[aria-invalid='true']").first()).toBeVisible();
-    await expect(page.getByText("Thanks, that's with us.")).toBeHidden();
+    await expect(page.getByText(/thanks, that's with us/i)).toBeHidden();
   });
 
-  test("submitting reaches a designed success state", async ({ page }) => {
+  test("every booking control opens the brief before the calendar", async ({
+    page,
+  }) => {
+    /*
+      The flow is: book a call -> the brief -> Cal.com, prefilled. A booking
+      control that still bound Cal.com's overlay directly would skip the brief
+      entirely, and the symptom is silent: a slot arrives with no context, and
+      the site looks like it worked.
+
+      Cal.com binds its overlay through `data-cal-link`, and those attributes
+      hijack the click before React sees it, so their absence IS the assertion.
+    */
     await page.goto("/en");
-    const form = page.locator("form").filter({ has: page.getByLabel("Email") });
+    const bookingControls = page.locator("[data-cal-link]");
+    expect(
+      await bookingControls.count(),
+      "a booking control still opens Cal.com directly, skipping the brief",
+    ).toBe(0);
 
-    await form.getByLabel("What are you building?").click();
-    await page.getByRole("option", { name: /A website/ }).click();
-    await form
-      .getByLabel("The project, in your words")
-      .fill("A portal our field engineers can use with one hand, offline.");
-    await form.getByLabel("Your name").fill("Ada Lovelace");
-    await form.getByLabel("Email").fill("ada@example.com");
-    await form.getByRole("button", { name: "Send the brief" }).click();
-
-    await expect(page.getByText("Thanks, that's with us.")).toBeVisible();
+    await page
+      .getByRole("button", { name: /book a call/i })
+      .first()
+      .click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(
+      page.getByRole("dialog").getByLabel(/describe your idea/i),
+    ).toBeVisible();
   });
 
   test("survives pathological input without breaking the layout", async ({
@@ -371,7 +409,7 @@ test.describe("project brief", () => {
   }) => {
     await page.goto("/en");
     await page
-      .getByLabel("The project, in your words")
+      .getByLabel(/describe your idea/i)
       .first()
       .fill(`${PATHOLOGICAL_TEXT} ${PATHOLOGICAL_TOKEN}`);
     await expectNoHorizontalOverflow(page);

@@ -29,7 +29,18 @@ export function InquiryTrigger({
   const t = useTranslations();
   const open = useInquiryStore((state) => state.open);
   return (
-    <Button onClick={() => open({ origin })} className="press" {...props}>
+    <Button
+      onClick={() => open({ origin })}
+      /*
+        `tap-target` because this is usually rendered as a link-style button in
+        a run of prose, where it measured 20px tall on a phone. The utility
+        expands the HIT AREA with a transparent pseudo-element on a coarse
+        pointer only, so nothing moves in the layout and a mouse never gets an
+        invisible band swallowing clicks around it.
+      */
+      className="press tap-target"
+      {...props}
+    >
       {children ?? t("inquiry.trigger")}
     </Button>
   );

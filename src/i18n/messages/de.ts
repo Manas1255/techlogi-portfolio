@@ -132,7 +132,7 @@ const de = {
         placeholder: "Bitte wählen",
       },
       description: {
-        label: "Das Projekt, in Ihren Worten",
+        label: "Beschreiben Sie Ihre Idee kurz",
         hint: "Zwei, drei Sätze reichen völlig. Was passiert heute, und was soll sich ändern?",
         placeholder:
           "Wir planen die Termine für elf Praxen über drei Tabellen, und unsere Koordinatorinnen verlieren damit jede Woche Stunden…",
@@ -141,19 +141,60 @@ const de = {
         label: "Wobei brauchen Sie Unterstützung?",
         hint: "Optional. Wählen Sie so viel oder so wenig Sie möchten.",
       },
+      stage: {
+        label: "Wie ist Ihr aktueller Stand?",
+        placeholder: "Bitte wählen",
+      },
       timeline: {
         label: "Wann möchten Sie starten?",
         placeholder: "Noch offen",
       },
       budget: {
-        label: "Ungefähres Budget",
+        label: "Welches Budget haben Sie ungefähr eingeplant?",
         placeholder: "Spanne genügt",
         hint: "Kein Angebot und keine Zusage. Es sagt uns nur, welche Teamgröße passt.",
       },
-      name: { label: "Ihr Name" },
+      anythingElse: {
+        label: "Gibt es noch etwas, das wir vor dem Gespräch wissen sollten?",
+        hint: "Optional. Eine Rahmenbedingung, ein Termin, eine Frage, die Sie zuerst geklärt haben möchten.",
+        placeholder:
+          "Wir müssen bei unserem jetzigen Zahlungsanbieter bleiben, und die Geschäftsführung möchte im März etwas sehen…",
+      },
+      name: {
+        label: "Vor- und Nachname",
+        hint: "Damit wir wissen, mit wem wir im Gespräch sprechen.",
+      },
       company: { label: "Unternehmen (optional)" },
-      email: { label: "E-Mail" },
-      phone: { label: "Telefon (optional)" },
+      email: {
+        label: "E-Mail-Adresse",
+        hint: "Dorthin gehen die Termineinladung und unsere Antwort. Wir tragen Sie in keinen Verteiler ein.",
+      },
+      phone: { label: "Telefon oder WhatsApp (optional)" },
+    },
+    /* Optionsbeschriftungen der drei Auswahlfelder. Sie standen als englische
+       Literale in `inquiry.schema.ts` und erschienen auf der deutschen Seite
+       unübersetzt. */
+    options: {
+      stage: {
+        idea: "Bisher nur eine Idee",
+        concept: "Das Konzept steht bereits",
+        design: "Design ist vorhanden",
+        existingApp: "Bestehende App soll verbessert werden",
+      },
+      timeline: {
+        asap: "So schnell wie möglich",
+        months: "In den nächsten Monaten",
+        later: "Später in diesem Jahr",
+        exploring: "Wir schauen uns erst einmal um",
+      },
+      budget: {
+        under5k: "Unter 5.000 $",
+        from5to10k: "5.000 $ - 10.000 $",
+        from10to25k: "10.000 $ - 25.000 $",
+        over25k: "Mehr als 25.000 $",
+        unsure: "Noch nicht absehbar",
+        private: "Möchte ich nicht angeben",
+      },
     },
     attachment: {
       label: "Hängen Sie an, was hilft (optional)",
@@ -172,11 +213,14 @@ const de = {
       next: "Weiter",
       change: "Ändern",
       submit: "Absenden",
+      continueToBooking: "Weiter zur Terminwahl",
       submitting: "Wird gesendet…",
     },
     success: {
       title: "Beschreibung gesendet",
       heading: "Danke, das ist bei uns.",
+      bookingBody:
+        "Ihre Beschreibung ist bei uns, und der Kalender ist offen. Wählen Sie eine Zeit, die Ihnen passt, wir haben bis dahin alles gelesen.",
       body: "Ein Mensch liest jede Beschreibung und antwortet innerhalb eines Werktags. Wenn Sie nicht warten möchten, buchen Sie ein Gespräch und wählen Sie jetzt eine Zeit.",
       close: "Schließen",
       another: "Noch eine senden",
@@ -187,6 +231,8 @@ const de = {
     validation: {
       descriptionShort:
         "Ein, zwei Sätze mehr, damit wir sinnvoll antworten können",
+      stageRequired:
+        "Wählen Sie das Naheliegendste, die Details klären wir im Gespräch",
       buildTypeRequired:
         "Wählen Sie das Naheliegendste, den Rest klären wir im Gespräch",
     },

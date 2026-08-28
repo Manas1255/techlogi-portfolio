@@ -10,15 +10,16 @@ import type { BuildTypeId } from "@/content/schemas";
  *
  * ```jsonc
  * {
- *   "buildType":   "saas-platform",       // one of BuildTypeId, see content/schemas.ts
- *   "description": "…",                   // 20–1000 chars
- *   "services":    ["design", "ai"],      // service group ids, may be empty
- *   "timeline":    "1-3-months",          // TimelineId
- *   "budget":      "5-10k",             // BudgetId
- *   "name":        "…",
- *   "company":     "…",                   // may be empty
- *   "email":       "…",                   // normalized: trimmed, lowercased
- *   "phone":       "…",                   // optional, omitted when empty
+ *   "name":         "…",
+ *   "email":        "…",                  // normalized: trimmed, lowercased
+ *   "phone":        "…",                  // optional, omitted when empty
+ *   "description":  "…",                  // 12–1000 chars
+ *   "projectStage": "concept",            // ProjectStageId, required
+ *   "budget":       "5-10k",              // BudgetId, optional
+ *   "timeline":     "1-3-months",         // TimelineId, optional
+ *   "anythingElse": "…",                  // may be empty
+ *   "buildType":    "saas-platform",      // BuildTypeId, only from a choice card
+ *   "services":     ["design", "ai"],     // service group ids, may be empty
  *   "attachments": File[],                // optional, ≤5 files, ≤25MB each,
  *                                         // repeated `attachments[]` parts
  *   "submittedAt": "2026-01-01T00:00:00.000Z",
@@ -42,16 +43,23 @@ export type InquiryReceipt = z.infer<typeof inquiryReceiptSchema>;
 
 /** The submitted body, as the repository sends it. */
 export interface InquiryPayload {
-  buildType: BuildTypeId;
-  description: string;
-  services: string[];
-  /** Optional: a brief sent from a launcher may skip them. */
-  timeline?: string;
-  budget?: string;
   name: string;
-  company: string;
   email: string;
   phone?: string;
+  description: string;
+  /** Where the project has got to. The form's qualifying question. */
+  projectStage: string;
+  budget?: string;
+  timeline?: string;
+  /** Free text, "" when the visitor left it blank. */
+  anythingElse: string;
+  /**
+   * Only present when the brief was opened from a choice card, which records
+   * what was clicked rather than asking the same question twice. Undefined
+   * from every other entry point.
+   */
+  buildType?: BuildTypeId;
+  services: string[];
   /**
    * Any format. The site deliberately does not whitelist types client-side
    * (see `siteConfig.inquiry`), so WHATEVER RECEIVES THIS MUST VALIDATE the

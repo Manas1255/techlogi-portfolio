@@ -71,12 +71,13 @@ function toFormData(payload: InquiryPayload): FormData {
 /** Never log a visitor's message body or file contents: shape and size only. */
 function describeForLog(payload: InquiryPayload): Record<string, unknown> {
   return {
+    projectStage: payload.projectStage,
     buildType: payload.buildType,
     services: payload.services,
     timeline: payload.timeline,
     budget: payload.budget,
     descriptionLength: payload.description.length,
-    hasCompany: payload.company !== "",
+    anythingElseLength: payload.anythingElse.length,
     hasPhone: payload.phone !== undefined,
     attachmentCount: payload.attachments.length,
     attachmentBytes: payload.attachments.reduce(
