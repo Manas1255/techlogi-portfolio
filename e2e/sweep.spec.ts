@@ -272,66 +272,144 @@ test.describe("work index", () => {
 
 test.describe("project brief", () => {
   /*
-    The brief was a three-step wizard, then one short screen, and is now the
-    STEP IN FRONT OF THE CALENDAR: eight questions, then a hand-off to Cal.com
-    with the answers attached. These tests assert the properties that have
-    survived all three shapes, not the fields of any one of them.
+    The brief is FOUR SCREENS in front of the calendar. It asks eight
+    questions, which is more than fits on one screen without the length itself
+    becoming the thing a visitor evaluates, so it asks them a step at a time.
 
-    Deliberately not pinned to copy. Labels are addressed through their form
-    control, and the two that are matched by text are matched loosely, because
-    a guard that fails on an ordinary headline edit is a guard people delete.
+    These tests assert the properties of the flow, not the fields of any one
+    step, and never a sentence of copy: labels are matched loosely and
+    controls are addressed through their accessible names.
   */
 
   /** The one form shared by the hero and the dialog. */
   const briefForm = (page: import("@playwright/test").Page) =>
-    page.locator("form").filter({ has: page.getByLabel(/email address/i) });
+    page.locator("form").filter({ has: page.locator("[data-step-panel]") });
 
-  test("asks the whole brief on one screen, with no wizard to walk", async ({
-    page,
-  }) => {
+  /** Step one is a single tap, and choosing it advances the flow. */
+  const chooseStage = async (page: import("@playwright/test").Page) => {
+    await briefForm(page).getByRole("radio").first().click();
+  };
+
+  test("opens on a step that needs no typing", async ({ page }) => {
+    /*
+      The first screen is one tap. A visitor is a quarter done before deciding
+      whether to commit, which is the entire reason the flow opens here rather
+      than on "what is your name".
+    */
     await page.goto("/en");
     const form = briefForm(page);
-
-    /*
-      Every question visible at once. A step machine would put most of these on
-      screens the visitor has not reached, which is the design this replaced.
-    */
-    for (const label of [
-      /first and last name/i,
-      /email address/i,
-      /phone or whatsapp/i,
-      /describe your idea/i,
-      /where are you with it/i,
-      /budget/i,
-      /when would you like to start/i,
-      /anything else/i,
-    ]) {
-      await expect(
-        form.getByLabel(label).first(),
-        `the brief is missing the field labelled ${label}`,
-      ).toBeVisible();
-    }
+    await expect(form.getByRole("radio").first()).toBeVisible();
+    expect(
+      await form.locator("input[type='text'], textarea").count(),
+      "the first step asks for typing, which is the friction the flow removes",
+    ).toBe(0);
   });
 
-  test("asks for nothing beyond a name, an email and the idea", async ({
+  test("choosing on the first step advances without a second click", async ({
     page,
   }) => {
-    /*
-      Four of the eight are optional, and staying optional is the point: they
-      are the questions people abandon a form over. Filling only the required
-      ones must reach the success state.
-    */
+    await page.goto("/en");
+    const form = briefForm(page);
+    await expect(form.getByLabel(/describe your idea/i)).toBeHidden();
+    await chooseStage(page);
+    await expect(form.getByLabel(/describe your idea/i)).toBeVisible();
+  });
+
+  test("shows how much is left, and back returns the answer intact", async ({
+    page,
+  }) => {
     await page.goto("/en");
     const form = briefForm(page);
 
-    await form.getByLabel(/first and last name/i).fill("Ada Lovelace");
-    await form.getByLabel(/email address/i).fill("ada@example.com");
+    await expect(form.getByText(/step 1 of 4/i)).toBeVisible();
+    await chooseStage(page);
+    await expect(form.getByText(/step 2 of 4/i)).toBeVisible();
+
+    await form.getByRole("button", { name: /back/i }).click();
+    await expect(form.getByText(/step 1 of 4/i)).toBeVisible();
+    await expect(
+      form.getByRole("radio").first(),
+      "going back lost the answer, so back is a punishment rather than an undo",
+    ).toBeChecked();
+  });
+
+  test("a step will not advance past an unanswered required field", async ({
+    page,
+  }) => {
+    await page.goto("/en");
+    const form = briefForm(page);
+    await chooseStage(page);
+
+    // Step two is the description, and it is required.
+    await form.getByRole("button", { name: /^continue$/i }).click();
+    await expect(form.locator("[aria-invalid='true']").first()).toBeVisible();
+    await expect(
+      form.getByText(/step 2 of 4/i),
+      "an empty required field advanced the flow anyway",
+    ).toBeVisible();
+  });
+
+  test("the optional step can be skipped in one click", async ({ page }) => {
+    await page.goto("/en");
+    const form = briefForm(page);
+    await chooseStage(page);
     await form
       .getByLabel(/describe your idea/i)
       .fill("A portal our field engineers can use with one hand, offline.");
-    await form.getByLabel(/where are you with it/i).click();
-    await page.getByRole("option").first().click();
-    await form.getByRole("button", { name: /pick a time|send the brief/i }).click();
+    await form.getByRole("button", { name: /^continue$/i }).click();
+
+    await expect(form.getByText(/step 3 of 4/i)).toBeVisible();
+    await form.getByRole("button", { name: /skip/i }).click();
+    await expect(form.getByText(/step 4 of 4/i)).toBeVisible();
+  });
+
+  test("every field carries a hint, not just a label", async ({ page }) => {
+    /*
+      A label names a field; a hint says why it is being asked, which is the
+      question a person is actually holding when a form appears. Asserted
+      through `aria-describedby`, so it also proves the hint is announced
+      rather than merely printed.
+    */
+    await page.goto("/en");
+    const form = briefForm(page);
+    await chooseStage(page);
+    await form
+      .getByLabel(/describe your idea/i)
+      .fill("A portal our field engineers can use with one hand, offline.");
+    await form.getByRole("button", { name: /^continue$/i }).click();
+    await form.getByRole("button", { name: /skip/i }).click();
+
+    const undescribed = await page.evaluate(() => {
+      const scope = document.querySelector("form:has([data-step-panel])");
+      if (scope === null) return ["no brief form found"];
+      return [...scope.querySelectorAll("input, textarea")]
+        .filter((el) => el.getAttribute("type") !== "file")
+        .filter((el) => {
+          const ids = (el.getAttribute("aria-describedby") ?? "").split(" ");
+          return !ids.some((id) => document.getElementById(id)?.textContent);
+        })
+        .map((el) => el.getAttribute("name") ?? el.id);
+    });
+    expect(undescribed, "these fields have no hint text").toEqual([]);
+  });
+
+  test("completing the flow reaches a designed success state", async ({
+    page,
+  }) => {
+    await page.goto("/en");
+    const form = briefForm(page);
+
+    await chooseStage(page);
+    await form
+      .getByLabel(/describe your idea/i)
+      .fill("A portal our field engineers can use with one hand, offline.");
+    await form.getByRole("button", { name: /^continue$/i }).click();
+    await form.getByRole("button", { name: /skip/i }).click();
+    await form.getByLabel(/first and last name/i).fill("Ada Lovelace");
+    await form.getByLabel(/email address/i).fill("ada@example.com");
+    await form
+      .getByRole("button", { name: /pick a time|send the brief/i })
+      .click();
 
     await expect(page.getByText(/thanks, that's with us/i)).toBeVisible();
   });
@@ -341,12 +419,14 @@ test.describe("project brief", () => {
   }) => {
     await page.goto("/en");
     await page
-      .getByRole("button", { name: /book a call|send a project brief/i })
+      .getByRole("button", { name: /book a call/i })
       .first()
       .click();
     await expect(page.getByRole("dialog")).toBeVisible();
 
-    const field = page.getByRole("dialog").getByLabel(/describe your idea/i);
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("radio").first().click();
+    const field = dialog.getByLabel(/describe your idea/i);
     await field.fill(
       "An internal assistant over our own runbooks and incident history.",
     );
@@ -357,40 +437,35 @@ test.describe("project brief", () => {
     await expect(page.getByRole("dialog")).toBeHidden();
 
     await page
-      .getByRole("button", { name: /book a call|send a project brief/i })
+      .getByRole("button", { name: /book a call/i })
       .first()
       .click();
-    await expect(
-      page.getByRole("dialog").getByLabel(/describe your idea/i),
-    ).toHaveValue(/internal assistant/);
-  });
-
-  test("an empty required field blocks the send and is marked invalid", async ({
-    page,
-  }) => {
-    await page.goto("/en");
-    const form = briefForm(page);
-    await form.getByRole("button", { name: /pick a time|send the brief/i }).click();
-    await expect(page.locator("[aria-invalid='true']").first()).toBeVisible();
-    await expect(page.getByText(/thanks, that's with us/i)).toBeHidden();
+    /*
+      The saved answer comes back SELECTED, so tapping it again is not a
+      change and correctly does not advance: Continue is the way on. Tapping
+      your own answer and watching nothing happen was a real dead end here
+      before the flow grew this button.
+    */
+    await expect(dialog.getByRole("radio").first()).toBeChecked();
+    await dialog.getByRole("button", { name: /^continue$/i }).click();
+    await expect(dialog.getByLabel(/describe your idea/i)).toHaveValue(
+      /internal assistant/,
+    );
   });
 
   test("every booking control opens the brief before the calendar", async ({
     page,
   }) => {
     /*
-      The flow is: book a call -> the brief -> Cal.com, prefilled. A booking
-      control that still bound Cal.com's overlay directly would skip the brief
-      entirely, and the symptom is silent: a slot arrives with no context, and
-      the site looks like it worked.
-
-      Cal.com binds its overlay through `data-cal-link`, and those attributes
-      hijack the click before React sees it, so their absence IS the assertion.
+      The flow is: book a call -> four screens -> Cal.com, prefilled. A control
+      that still bound Cal.com's overlay directly would skip the brief, and the
+      symptom is silent: a slot arrives with no context and the site looks like
+      it worked. Cal binds through `data-cal-link`, and those attributes hijack
+      the click before React sees it, so their absence IS the assertion.
     */
     await page.goto("/en");
-    const bookingControls = page.locator("[data-cal-link]");
     expect(
-      await bookingControls.count(),
+      await page.locator("[data-cal-link]").count(),
       "a booking control still opens Cal.com directly, skipping the brief",
     ).toBe(0);
 
@@ -400,7 +475,7 @@ test.describe("project brief", () => {
       .click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(
-      page.getByRole("dialog").getByLabel(/describe your idea/i),
+      page.getByRole("dialog").getByRole("radio").first(),
     ).toBeVisible();
   });
 
@@ -408,9 +483,10 @@ test.describe("project brief", () => {
     page,
   }) => {
     await page.goto("/en");
-    await page
+    const form = briefForm(page);
+    await chooseStage(page);
+    await form
       .getByLabel(/describe your idea/i)
-      .first()
       .fill(`${PATHOLOGICAL_TEXT} ${PATHOLOGICAL_TOKEN}`);
     await expectNoHorizontalOverflow(page);
   });

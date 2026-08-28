@@ -1045,6 +1045,41 @@
     }
   }
 
+  /*
+    STEP TRANSITIONS for the brief's four screens.
+
+    Direction carries meaning: forward slides in from the right, back from the
+    left, so the flow has a spatial axis and "back" undoes rather than
+    advances. A CSS animation rather than an inline style, deliberately, and
+    the same trap as `[data-reveal]` applies: an animation always TERMINATES at
+    its final frame, so a step can never be left stranded at opacity 0 the way
+    a server-rendered `opacity: 0` can. Under reduced motion it resolves to a
+    plain cut, and the content is on screen either way.
+  */
+  @keyframes step-in-forward {
+    from {
+      opacity: 0;
+      transform: translate3d(1.25rem, 0, 0);
+    }
+  }
+  @keyframes step-in-back {
+    from {
+      opacity: 0;
+      transform: translate3d(-1.25rem, 0, 0);
+    }
+  }
+  [data-step-panel] {
+    animation: step-in-forward var(--dur-base) var(--ease-out-expo) both;
+  }
+  [data-step-panel="back"] {
+    animation-name: step-in-back;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-step-panel] {
+      animation: none;
+    }
+  }
+
   .press {
     transition: transform var(--dur-fast) var(--ease-in-out-quart);
   }

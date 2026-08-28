@@ -84,7 +84,7 @@ const en = {
     trigger: "Send a project brief",
     title: "Send a project brief",
     subtitle:
-      "Three short steps, and we keep what you typed if you close it. Prefer to talk? Book a call instead.",
+      "Four short steps, then you pick a time. We keep what you typed if you close it.",
     privacy:
       "We use your details to reply, and for nothing else. No mailing list, no follow-up sequence, and we never pass them on.",
     /* The short form, for the steps before any personal detail is asked for.
@@ -105,10 +105,44 @@ const en = {
     },
     step3: {
       title: "How should we reach you?",
-      lead: "One person reads your brief and replies within a business day, usually with times to talk.",
+      lead: "One person reads your brief and replies within 60 minutes, usually with times to talk.",
     },
     /** The optional disclosure that holds budget, timeline and files. */
     more: "Add budget, timeline or files (optional)",
+    /* The four screens. Each names what it wants in the visitor's words, and
+       the lead says why it is being asked, which is the question a person is
+       actually holding when a form appears. */
+    flow: {
+      progress: "Step {current} of {total}",
+      optional: "Optional",
+      stage: {
+        title: "Where are you with it?",
+        lead: "One tap. This is the whole first step.",
+      },
+      idea: {
+        title: "Tell us the idea",
+        lead: "A few sentences. We read every one of these ourselves.",
+      },
+      prepare: {
+        title: "Anything that helps us prepare",
+        lead: "Skip all of it if you would rather just talk.",
+      },
+      contact: {
+        title: "Where should the invite go?",
+        lead: "Last step, then you pick a time.",
+      },
+    },
+    /* Speak-instead-of-type, offered only on the idea step and only where the
+       browser actually has a recogniser. */
+    dictate: {
+      start: "Or say it out loud",
+      stop: "Stop",
+      hint: "We will type it out for you.",
+      listening: "Listening. Speak normally, and press stop when you are done.",
+      denied:
+        "Your browser is blocking the microphone. Allow it in the address bar, or just type instead.",
+      failed: "Dictation stopped working. Typing still works fine.",
+    },
     fields: {
       buildType: {
         label: "What are you building?",
@@ -126,10 +160,12 @@ const en = {
       },
       stage: {
         label: "Where are you with it right now?",
+        hint: "There is no wrong answer. It only tells us which conversation to have.",
         placeholder: "Pick whichever is closest",
       },
       timeline: {
         label: "When would you like to start?",
+        hint: "A rough answer is fine. Nothing here is a commitment.",
         placeholder: "No rush either way",
       },
       budget: {
@@ -146,13 +182,19 @@ const en = {
       name: {
         label: "First and last name",
         hint: "So we know who we are talking to on the call.",
+        placeholder: "Ada Lovelace",
       },
       company: { label: "Company (optional)" },
       email: {
         label: "Email address",
         hint: "Where the calendar invite and our reply go. We never add you to a list.",
+        placeholder: "ada@company.com",
       },
-      phone: { label: "Phone or WhatsApp (optional)" },
+      phone: {
+        label: "Phone or WhatsApp (optional)",
+        hint: "Only if you would rather we reached you there than by email.",
+        placeholder: "+49 151 23456789",
+      },
     },
     /* Option labels for the three selects. These were English literals in
        `inquiry.schema.ts` and rendered untranslated on the German site. */
@@ -195,6 +237,7 @@ const en = {
       change: "Change",
       submit: "Send the brief",
       continueToBooking: "Continue to pick a time",
+      skip: "Skip this",
       submitting: "Sending…",
     },
     success: {
@@ -202,7 +245,7 @@ const en = {
       heading: "Thanks, that's with us.",
       bookingBody:
         "Your brief is with us and the calendar is open. Pick a time that suits you and we will have read everything before we speak.",
-      body: "A person reads every brief and replies within one business day. If you'd rather not wait, book a call and pick a time now.",
+      body: "A person reads every brief and replies within 60 minutes. If you'd rather not wait, book a call and pick a time now.",
       close: "Close",
       another: "Send another",
     },
@@ -314,7 +357,7 @@ const en = {
     },
     scheduler: {
       title: "Live scheduling opens shortly",
-      body: "Self-serve booking is being switched on. Until it is, send the brief and we will come back with times inside one business day, or email us and we will reply to that.",
+      body: "Self-serve booking is being switched on. Until it is, send the brief and we will come back with times inside 60 minutes, or email us and we will reply to that.",
       loading: "Loading available times, {duration}",
     },
   },
@@ -364,7 +407,7 @@ const en = {
   },
 
   contact: {
-    responseTime: "We read every brief and reply within one business day.",
+    responseTime: "We read every brief and reply within 60 minutes.",
   },
 
   stack: {

@@ -8,13 +8,9 @@ import {
   type FieldValues,
   type UseControllerProps,
 } from "react-hook-form";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldDescription, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { FieldLabelRow } from "./field-label-row";
 import { useFieldError } from "./use-field-error";
 
 /**
@@ -32,6 +28,9 @@ export interface TextFieldProps<
   TName extends FieldPath<TFieldValues>,
 > extends UseControllerProps<TFieldValues, TName> {
   label: string;
+  /** Renders an "Optional" marker beside the label. */
+  optional?: boolean;
+  optionalLabel?: string;
   description?: string;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
@@ -47,6 +46,8 @@ export function TextField<
   TName extends FieldPath<TFieldValues>,
 >({
   label,
+  optional,
+  optionalLabel,
   description,
   placeholder,
   type = "text",
@@ -74,7 +75,12 @@ export function TextField<
 
   return (
     <Field data-invalid={!!error} className={className}>
-      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
+      <FieldLabelRow
+        htmlFor={fieldId}
+        label={label}
+        optional={optional}
+        optionalLabel={optionalLabel}
+      />
       <Input
         {...field}
         id={fieldId}

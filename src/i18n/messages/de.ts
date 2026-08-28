@@ -101,7 +101,7 @@ const de = {
     trigger: "Projekt beschreiben",
     title: "Projekt beschreiben",
     subtitle:
-      "Vier Felder, und was Sie getippt haben bleibt erhalten, wenn Sie schließen. Lieber sprechen? Buchen Sie ein Gespräch.",
+      "Vier kurze Schritte, dann wählen Sie eine Zeit. Was Sie getippt haben, bleibt erhalten, wenn Sie schließen.",
     privacy:
       "Wir nutzen Ihre Angaben, um zu antworten, und für sonst nichts. Kein Newsletter, keine Follow-up-Serie, und wir geben sie nicht weiter.",
     privacyShort:
@@ -121,9 +121,43 @@ const de = {
     },
     step3: {
       title: "Wie erreichen wir Sie?",
-      lead: "Ein Mensch liest Ihre Beschreibung und antwortet innerhalb eines Werktags, meist gleich mit Terminvorschlägen.",
+      lead: "Ein Mensch liest Ihre Beschreibung und antwortet innerhalb von 60 Minuten, meist gleich mit Terminvorschlägen.",
     },
     more: "Budget, Zeitrahmen oder Dateien ergänzen (optional)",
+    /* Die vier Schritte. Jeder benennt in der Sprache der Besucherin, was er
+       will, und die Zeile darunter sagt, warum gefragt wird. */
+    flow: {
+      progress: "Schritt {current} von {total}",
+      optional: "Optional",
+      stage: {
+        title: "Wo stehen Sie gerade?",
+        lead: "Ein Tipp genügt. Das ist der ganze erste Schritt.",
+      },
+      idea: {
+        title: "Erzählen Sie uns die Idee",
+        lead: "Ein paar Sätze. Wir lesen jeden davon selbst.",
+      },
+      prepare: {
+        title: "Was uns hilft, uns vorzubereiten",
+        lead: "Überspringen Sie alles, wenn Sie lieber gleich sprechen.",
+      },
+      contact: {
+        title: "Wohin soll die Einladung?",
+        lead: "Letzter Schritt, dann wählen Sie eine Zeit.",
+      },
+    },
+    /* Diktieren statt Tippen, nur im Ideen-Schritt und nur dort, wo der
+       Browser wirklich eine Spracherkennung hat. */
+    dictate: {
+      start: "Oder sprechen Sie es einfach",
+      stop: "Stopp",
+      hint: "Wir tippen es für Sie mit.",
+      listening:
+        "Wir hören zu. Sprechen Sie ganz normal und drücken Sie Stopp, wenn Sie fertig sind.",
+      denied:
+        "Ihr Browser blockiert das Mikrofon. Erlauben Sie es in der Adressleiste, oder tippen Sie einfach.",
+      failed: "Das Diktieren funktioniert gerade nicht. Tippen geht weiterhin.",
+    },
     fields: {
       buildType: {
         label: "Was möchten Sie bauen?",
@@ -143,10 +177,12 @@ const de = {
       },
       stage: {
         label: "Wie ist Ihr aktueller Stand?",
+        hint: "Es gibt keine falsche Antwort. Sie sagt uns nur, welches Gespräch das richtige ist.",
         placeholder: "Bitte wählen",
       },
       timeline: {
         label: "Wann möchten Sie starten?",
+        hint: "Eine grobe Antwort genügt. Nichts davon ist verbindlich.",
         placeholder: "Noch offen",
       },
       budget: {
@@ -163,13 +199,19 @@ const de = {
       name: {
         label: "Vor- und Nachname",
         hint: "Damit wir wissen, mit wem wir im Gespräch sprechen.",
+        placeholder: "Anna Schmidt",
       },
       company: { label: "Unternehmen (optional)" },
       email: {
         label: "E-Mail-Adresse",
         hint: "Dorthin gehen die Termineinladung und unsere Antwort. Wir tragen Sie in keinen Verteiler ein.",
+        placeholder: "anna@firma.de",
       },
-      phone: { label: "Telefon oder WhatsApp (optional)" },
+      phone: {
+        label: "Telefon oder WhatsApp (optional)",
+        hint: "Nur, wenn wir Sie lieber dort erreichen sollen als per E-Mail.",
+        placeholder: "+49 151 23456789",
+      },
     },
     /* Optionsbeschriftungen der drei Auswahlfelder. Sie standen als englische
        Literale in `inquiry.schema.ts` und erschienen auf der deutschen Seite
@@ -214,6 +256,7 @@ const de = {
       change: "Ändern",
       submit: "Absenden",
       continueToBooking: "Weiter zur Terminwahl",
+      skip: "Überspringen",
       submitting: "Wird gesendet…",
     },
     success: {
@@ -221,7 +264,7 @@ const de = {
       heading: "Danke, das ist bei uns.",
       bookingBody:
         "Ihre Beschreibung ist bei uns, und der Kalender ist offen. Wählen Sie eine Zeit, die Ihnen passt, wir haben bis dahin alles gelesen.",
-      body: "Ein Mensch liest jede Beschreibung und antwortet innerhalb eines Werktags. Wenn Sie nicht warten möchten, buchen Sie ein Gespräch und wählen Sie jetzt eine Zeit.",
+      body: "Ein Mensch liest jede Beschreibung und antwortet innerhalb von 60 Minuten. Wenn Sie nicht warten möchten, buchen Sie ein Gespräch und wählen Sie jetzt eine Zeit.",
       close: "Schließen",
       another: "Noch eine senden",
     },
@@ -328,7 +371,7 @@ const de = {
     },
     scheduler: {
       title: "Die Terminbuchung kommt in Kürze",
-      body: "Die Selbstbuchung wird gerade freigeschaltet. Bis dahin schicken Sie uns Ihr Projekt und wir melden uns innerhalb eines Werktags mit Terminen, oder Sie schreiben uns und wir antworten darauf.",
+      body: "Die Selbstbuchung wird gerade freigeschaltet. Bis dahin schicken Sie uns Ihr Projekt und wir melden uns innerhalb von 60 Minuten mit Terminen, oder Sie schreiben uns und wir antworten darauf.",
       loading: "Freie Zeiten werden geladen, {duration}",
     },
   },
@@ -373,7 +416,7 @@ const de = {
 
   contact: {
     responseTime:
-      "Wir lesen jede Projektbeschreibung und antworten innerhalb eines Werktags.",
+      "Wir lesen jede Projektbeschreibung und antworten innerhalb von 60 Minuten.",
   },
 
   stack: {

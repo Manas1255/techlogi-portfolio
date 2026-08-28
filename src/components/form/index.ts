@@ -11,4 +11,5 @@ export { DateField, type DateFieldProps } from "./date-field";
 export { ComboboxField, type ComboboxFieldProps } from "./combobox-field";
 export { FormActions, type FormActionsProps } from "./form-actions";
 export { FormDialog, type FormDialogProps } from "./form-dialog";
+export { FieldLabelRow, type FieldLabelRowProps } from "./field-label-row";
 export { useFieldError } from "./use-field-error";

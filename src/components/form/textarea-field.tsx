@@ -8,13 +8,9 @@ import {
   type FieldValues,
   type UseControllerProps,
 } from "react-hook-form";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldDescription, FieldError } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
+import { FieldLabelRow } from "./field-label-row";
 import { useFieldError } from "./use-field-error";
 
 export interface TextareaFieldProps<
@@ -22,6 +18,9 @@ export interface TextareaFieldProps<
   TName extends FieldPath<TFieldValues>,
 > extends UseControllerProps<TFieldValues, TName> {
   label: string;
+  /** Renders an "Optional" marker beside the label. */
+  optional?: boolean;
+  optionalLabel?: string;
   description?: string;
   placeholder?: string;
   rows?: number;
@@ -34,6 +33,8 @@ export function TextareaField<
   TName extends FieldPath<TFieldValues>,
 >({
   label,
+  optional,
+  optionalLabel,
   description,
   placeholder,
   rows = 4,
@@ -58,7 +59,12 @@ export function TextareaField<
 
   return (
     <Field data-invalid={!!error} className={className}>
-      <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>
+      <FieldLabelRow
+        htmlFor={fieldId}
+        label={label}
+        optional={optional}
+        optionalLabel={optionalLabel}
+      />
       <Textarea
         {...field}
         id={fieldId}
